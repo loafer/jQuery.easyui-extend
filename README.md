@@ -19,4 +19,9 @@ jQuery.easyui-extend
        customAttr:{
           headervalue: '--请选择--'
        }
-    }).combo('followCustomHandle');
+    }).combo('followCustomHandle');    
+
+
+
+网站:http://loafer.cloudfoundry.com/
+Blog:http://blog.csdn.net/zjh527
