@@ -9,4 +9,13 @@ jQuery.easyui-extend
   <li>datagrid</li>
   <li>window</li>
 </ul>
-要想扩展属性生效，必须执行方法followCustomHandle。
+要想扩展属性生效，必须执行方法followCustomHandle。<br>
+
+例如：
+$('#cc').combo({
+  required: true,
+  editable: false,
+  customAttr:{
+    headervalue: '--请选择--'
+  }
+});
