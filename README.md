@@ -11,11 +11,11 @@ jQuery.easyui-extend
 </ul>
 要想扩展属性生效，必须执行方法followCustomHandle。<br>
 
-例如：
-$('#cc').combo({
-  required: true,
-  editable: false,
-  customAttr:{
-    headervalue: '--请选择--'
-  }
-});
+例如：<br>
+$('#cc').combo({<br>
+  required: true,<br>
+  editable: false,<br>
+  customAttr:{<br>
+    headervalue: '--请选择--'<br>
+  }<br>
+});<br>
