@@ -11,6 +11,7 @@ jQuery.easyui-extend
 </ul>
 要想扩展属性生效，必须执行方法followCustomHandle。<br>
 
+
 例如：    
 ###  
     $('#cc').combo({
@@ -21,6 +22,9 @@ jQuery.easyui-extend
        }
     }).combo('followCustomHandle');    
 
+
+
+如要查看demo演示，请将所有文件放到jQuery.easyui解压后的根目录中。   
 
 
 网站:http://loafer.cloudfoundry.com/    
