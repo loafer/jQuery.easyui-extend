@@ -624,7 +624,9 @@
             return editingRow.length>0?editingRow[0]:null;
         },
         setPagination: function(jq, opts){
-            jq.datagrid('getPager').pagination(opts);
+            return jq.each(function(){
+                $(this).datagrid('getPager').pagination(opts);
+            });
         }
     });
 })(jQuery);
