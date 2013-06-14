@@ -26,9 +26,158 @@
  *  17、增加方法getRowContextMenu
  *  18、增加方法getEditingRow，返回当前正在编辑的row
  *  19、增加方法setPagination，设置分页栏样式
+ *  20、headerContextMenu菜单项的onclick接收三个参数，依次是item, field, target。
+ *      item:当前点击菜单项。
+ *      field: datagrid中触发右键菜单的Column的field属性
+ *      target: 当前datagrid的引用,非jQuery对象。
+ *
+ *      eg:
+ *      $('#dg').datagrid({
+ *          ....,
+ *          customAttr:{
+ *              headerContextMenu:{
+ *                  isShow: true,
+ *                  items:[{
+ *                      text: 'add',
+ *                      iconCls: 'icon-add',
+ *                      onclick: function(item, field, target){
+ *                          ......
+ *                      }
+ *                  }]
+ *              }
+ *          }
+ *      })
  *
  */
 (function($){
+    function buildContextMenu(target, menuitems, type){
+        var menuid = getContextMenuId(target, type);
+        var contextmenu = $('#'+menuid);
+        if(contextmenu.length==0){
+            contextmenu = $('<div>', {id: menuid}).menu().menu('appendItems', menuitems);
+        }
+        return contextmenu;
+    }
+
+    function getContextMenuId(target, surfix){
+        return $(target).attr('id')+'_'+surfix;
+    }
+
+    function getMenuItemOnClickHandler(menuitems){
+        var onclickHandler={};
+
+        $.each(menuitems, function(){
+            var item = this;
+            if(item.onclick){
+                var index = item.id || item.text;
+                onclickHandler[index] = item.onclick;
+                delete item.onclick;
+            }
+
+            if(item.submenu && $.isArray(item.submenu) && item.submenu.length>0){
+                $.extend(onclickHandler, getMenuItemOnClickHandler(item.submenu));
+            }
+        });
+
+        return onclickHandler;
+    }
+
+    function getDefaultHeaderContextMenuItems(target, customMenuItems){
+        var menuItems = customMenuItems || [];
+        if(!$.isArray(menuItems)) menuItems = [];
+
+        var menuid = getContextMenuId(target, 'headerContextMenu');
+        var defaultMenuItems = [{
+            text: '显示/隐藏列',
+            iconCls: 'icon-columns',
+            submenu:[{
+                id: menuid+'_showAll',
+                text: '全部显示',
+                iconCls: 'icon-columns',
+                onclick: function(item, field, datagrid){
+                    $.fn.datagrid.headerContextMenu.defaults.events.doShowAll(datagrid);
+                }
+            },{
+                id: menuid+'_restore',
+                text: '还原',
+                iconCls: 'icon-columns',
+                onclick: function(item, field, datagrid){
+                    $.fn.datagrid.headerContextMenu.defaults.events.doRestore(datagrid);
+                }
+            },
+            '-']
+        }];
+
+        $.merge(defaultMenuItems, customMenuItems);
+
+        var getFieldFromMenuItemId = function(id){
+            return id.substr(id.lastIndexOf('_')+1, id.length);
+        }
+
+        var columnFieldsItem = [];
+        var columnFields = $(target).datagrid('getColumnFields');
+        $.each(columnFields, function(i, field){
+            if(!field) return true;
+            var columnOption = $(target).datagrid('getColumnOption', field);
+            columnOption._hidden=columnOption.hidden;
+
+            columnFieldsItem.push({
+                id: menuid+'_'+field,
+                text: columnOption.title,
+                iconCls: columnOption.hidden?'icon-unchecked':'icon-checked',
+                onclick: function(item, fd, dg){
+                    var field = getFieldFromMenuItemId(item.id);
+                    var hidden = $(dg).datagrid('getColumnOption', field).hidden;
+                    if(!hidden){
+                        $.fn.datagrid.headerContextMenu.defaults.events.doHideColumn(dg, field, item);
+                    }else{
+                        $.fn.datagrid.headerContextMenu.defaults.events.doShowColumn(dg, field, item);
+                    }
+                }
+            });
+        });
+
+        $.merge(defaultMenuItems[0].submenu, columnFieldsItem);
+
+        return defaultMenuItems;
+    }
+
+    function initHeaderContextMenu(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
+        var headerContentMenuOptions = options.customAttr.headerContextMenu;
+        if(!headerContentMenuOptions.isShow) return;
+
+        var menuitems = [];
+        if(headerContentMenuOptions.isMerge){
+            menuitems = getDefaultHeaderContextMenuItems(target, headerContentMenuOptions.items);
+        }else{
+            menuitems = headerContentMenuOptions.items;
+        }
+
+
+        var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
+        var onHeaderContextMenuCallback = options.onHeaderContextMenu;
+        var headerContextMenu = buildContextMenu(target, menuitems, 'headerContextMenu');
+        $(target).datagrid({
+            onHeaderContextMenu: function(e, field){
+                e.preventDefault();
+                headerContextMenu.menu({
+                    onClick: function(item){
+                        var name = item.id || item.text;
+                        if(onClickHandlerCache[name]){
+                            onClickHandlerCache[name].call(this, item, field, target);
+                        }
+                    }
+                }).menu('show',{
+                    left: e.pageX,
+                    top: e.pageY
+                });
+
+                onHeaderContextMenuCallback.call(this, e, field);
+            }
+        });
+    }
+
 
     function buildMenu(menuid, menuitems){
         var contextMenu = $(menuid);
@@ -45,80 +194,8 @@
         $(target).menu('appendItems', menuitems);
     }
 
-    function showHeaderContentMenu(target){
-        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
-        var headerContentMenuOptions = options.customAttr.headerContextMenu;
-        if(!headerContentMenuOptions.isShow) return;
-
-        if(headerContentMenuOptions.isMerge){
-            var menuitems = buildHeaderContextMenuDefaultItems(target, headerContentMenuOptions.items);
-        }else{
-            var menuitems = headerContentMenuOptions.items;
-        }
-
-        var menuid = getHeaderContentMenuId(target);
-        var headerContextMenu = buildMenu(menuid, menuitems);
-        var onHeaderContextMenuCallback = options.onHeaderContextMenu;
-        $(target).datagrid({
-            onHeaderContextMenu: function(e, field){
-                e.preventDefault();
-                onHeaderContextMenuCallback.call(this, e, field);
-                headerContextMenu.menu('show',{
-                    left: e.pageX,
-                    top: e.pageY
-                });
-            }
-        });
-
-    }
-
     function getHeaderContentMenuId(target){
         return $(target).attr('id')+'_headerContextMenu';
-    }
-
-    function buildHeaderContextMenuDefaultItems(target, customMenuItems){
-        customMenuItems = customMenuItems || [];
-
-        var menuitems = [
-            {text: '显示/隐藏列', iconCls: 'icon-columns', submenu:[
-                {text: '全部显示', iconCls: 'icon-columns', onclick: (function(t){
-                    return function(){
-                        $.fn.datagrid.headerContextMenu.defaults.events.doShowAll(t);
-                    }
-                })(target)},
-                {text: '还原', iconCls: 'icon-columns',onclick:(function(t){
-                    return function(){
-                        $.fn.datagrid.headerContextMenu.defaults.events.doRestore(t);
-                    }
-                })(target)},
-                '-'
-            ]}
-        ];
-        $.merge(menuitems, customMenuItems);
-
-        var options = $(target).datagrid('options');
-        options.defaultColumnOptions = [];
-        var columnFields = $(target).datagrid('getColumnFields');
-        var columnFieldMenuItems = [];
-        for(i in columnFields){
-            var fieldOption = $(target).datagrid('getColumnOption', columnFields[i]);
-            options.defaultColumnOptions.push($.extend({},fieldOption));
-            columnFieldMenuItems.push({
-                text: fieldOption.title,
-                iconCls: fieldOption.hidden?'icon-unchecked':'icon-checked',
-                columnField: columnFields[i],
-                onclick: (function(target, field, itemText){return function(){
-                    var hidden = $(target).datagrid('getColumnOption', field).hidden;
-                    if(!hidden){
-                        $.fn.datagrid.headerContextMenu.defaults.events.doHideColumn(target, field, itemText);
-                    }else{
-                        $.fn.datagrid.headerContextMenu.defaults.events.doShowColumn(target, field, itemText);
-                    }
-                }})(target, columnFields[i], fieldOption.title)
-            });
-        }
-        $.merge(menuitems[0].submenu, columnFieldMenuItems);
-        return menuitems;
     }
 
     function showRowContextMenu(target){
@@ -401,31 +478,38 @@
     $.fn.datagrid.headerContextMenu = {};
     $.fn.datagrid.headerContextMenu.defaults = {};
     $.fn.datagrid.headerContextMenu.defaults.events = {
-        doHideColumn: function(target, field, itemText){
+        doHideColumn: function(target, field, item){
             $(target).datagrid('hideColumn', field);
             var menu = $(target).datagrid('getHeaderContextMenu');
-            var item = menu.menu('findItem', itemText);
             menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
         },
-        doShowColumn: function(target, field, itemText){
+        doShowColumn: function(target, field, item){
             $(target).datagrid('showColumn', field);
             var menu = $(target).datagrid('getHeaderContextMenu');
-            var item = menu.menu('findItem', itemText);
             menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
         },
         doShowAll: function(target){
-            var columnFields = $(target).datagrid('getColumnFields');
-            for(i in columnFields){
-                $(target).datagrid('showColumn', columnFields[i]);
+            var fields = $(target).datagrid('getColumnFields');
+            var menu = $(target).datagrid('getHeaderContextMenu');
+            for(i in fields){
+                $(target).datagrid('showColumn', fields[i]);
+                var columnOption = $(target).datagrid('getColumnOption', fields[i]);
+                var item = menu.menu('findItem', columnOption.title);
+                menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
             }
         },
         doRestore: function(target){
-            var columns = $(target).datagrid('options').defaultColumnOptions;
-            for(i in columns){
-                if(!columns[i].hidden){
-                    $(target).datagrid('showColumn', columns[i].field);
+            var fields = $(target).datagrid('getColumnFields');
+            var menu = $(target).datagrid('getHeaderContextMenu');
+            for(i in fields){
+                var columnOption = $(target).datagrid('getColumnOption', fields[i]);
+                var item = menu.menu('findItem', columnOption.title);
+                if(!columnOption._hidden){
+                    $(target).datagrid('showColumn', fields[i]);
+                    menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
                 }else{
-                    $(target).datagrid('hideColumn', columns[i].field);
+                    $(target).datagrid('hideColumn', fields[i]);
+                    menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
                 }
             }
         }
@@ -550,7 +634,7 @@
             displayMsg: undefined
         },
         /**
-         *  slave 应该是个数组，数组中的每个元素应该包含如下内容的一个object
+         *  slave: 一个数组，数组中的每个元素应该包含如下内容的一个object
          *  id: 一个字符串值，用来表示关联datagrid组件的id
          *  relatedfield: 一个字符串值，用来表示datagrid之间用来关联的字段名，即外键字段名成而非外键值
          *  queryParams: 一个object，查询参数
@@ -586,7 +670,7 @@
             return jq.each(function(){
                 var opts = $.extend(true, {}, $.fn.datagrid.defaults, $(this).datagrid('options'));
 
-                showHeaderContentMenu(this);
+                initHeaderContextMenu(this);
 
                 showRowContextMenu(this);
 
