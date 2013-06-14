@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Related Combobox - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combobox.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#ccb1').combobox({
+                    valueField: 'id',
+                    textField: 'text',
+                    editable: false,
+                    url: '../combobox/combobox_data2.json',
+                    customAttr:{
+                        headervalue: '--请选择--',
+                        slave:{
+                            id: 'ccb2',
+                            remote: false
+                        }
+                    }
+                })
+                .combobox('followCustomHandle');
+
+                $('#ccb2').combobox({
+                    valueField: 'id',
+                    textField: 'text',
+                    editable: false,
+                    customAttr:{
+                        headervalue: '--请选择--',
+                        slave:{
+                            id: 'ccb3',
+                            remote: false
+                        }
+                    }
+                })
+                .combobox('followCustomHandle');
+
+                $('#ccb3').combobox({
+                    valueField: 'id',
+                    textField: 'text',
+                    editable: false,
+                    customAttr:{
+                        headervalue: '--请选择--'
+                    }
+                })
+                .combobox('followCustomHandle');
+            });
+
+            function doClear(target){
+                $(target).combobox('clear');
+            }
+
+            function doGetValue(target){
+                alert($(target).combobox('getValue'))
+            }
+        </script>
+    </head>
+    <body>
+        <h2>使用本地数据联动操作</h2>
+        <!-- Using a local data cascade operation -->
+        <div style="padding-bottom: 5px;">
+            Combobox1: <input id="ccb1">
+            <input type="button" value="clear" onclick="doClear('#ccb1')">
+            <input type="button" value="getValue" onclick="doGetValue('#ccb1')">
+        </div>
+        <div style="padding-bottom: 5px;">
+            Combobox2: <input id="ccb2">
+            <input type="button" value="clear" onclick="doClear('#ccb2')">
+            <input type="button" value="getValue" onclick="doGetValue('#ccb2')">
+        </div>
+        <div style="padding-bottom: 5px;">
+            Combobox3: <input id="ccb3">
+            <input type="button" value="clear" onclick="doClear('#ccb3')">
+            <input type="button" value="getValue" onclick="doGetValue('#ccb3')">
+        </div>
+    </body>
+</html>

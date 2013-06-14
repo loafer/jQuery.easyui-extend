@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquer.easyui.window.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#btn1').click(function(){
+                    $.showWindow({content: '我是一个定位在最顶层的窗体。'});
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <a id="btn1" class="easyui-linkbutton" href="javascript:void(0)">打开窗体（定位到顶层）</a>
+        <a id="btn2" class="easyui-linkbutton" href="javascript:void(0)">打开窗体（定位到顶层）</a>
+    </body>
+</html>

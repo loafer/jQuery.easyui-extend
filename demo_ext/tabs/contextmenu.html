@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Tab's ContextMenu - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.tabs.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tabs({
+                    plain: true,
+                    tabPosition: 'top',
+                    customAttr: {
+                        contextMenu: {
+                            isShow: true,
+                            isMerge: true,
+                            items:[
+                                {text: 'Add', onclick: function(item, title, index, target){
+                                    var tab = $(target).tabs('add',{title:'new tab', useiframe: true, content: 'url:http://www.baidu.com'}).tabs('getSelected');
+//                                    $(target).tabs('update', {tab: tab, options:{title: 'New Tab'}});
+                                }},
+                                '-',
+                                {text: 'others', submenu:[
+                                    {text: 'item1'},
+                                    {text: 'item2'}
+                                ]}
+                            ]
+                        }
+                    }
+                }).tabs('followCustomHandle');
+
+
+
+                $('#testBtn').click(function(e){
+                   var tab = $('#tt').tabs('getSelected');
+                    alert(tab.panel('options').useiframe);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <input type="button" value="test" id="testBtn"><br>
+        <div id="tt"  style="width:500px;height:250px;">
+            <div title="Tab1" style="padding: 5px;">
+                tab1
+            </div>
+            <div title="Tab2" style="padding: 5px;" data-options="closable: true">
+                tab2
+            </div>
+            <div title="Tab3" style="padding: 5px;" data-options="closable: true">
+                tab3
+            </div>
+            <div title="Tab4" style="padding: 5px;" data-options="closable: true">
+                tab4
+            </div>
+            <div title="Tab5" style="padding: 5px;" data-options="closable: true">
+                tab5
+            </div>
+        </div>
+    </body>
+</html>

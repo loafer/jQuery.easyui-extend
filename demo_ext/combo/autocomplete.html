@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Basic Combo - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#cc').combobox({
+                    hasDownArrow: false,
+                    customAttr:{
+                        autocomplete:{
+                            enabled: true,
+                            url: '../combo/combobox_data1.json'
+                        }
+                    }
+                }).combo('followCustomHandle');
+            });
+        </script>
+    </head>
+    <body>
+        <input id="cc">
+    </body>
+</html>

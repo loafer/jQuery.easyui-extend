@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Basic Combobox - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combobox.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#ccb').combobox({
+                    valueField: 'id',
+                    textField: 'text',
+                    url: '../combobox/combobox_data1.json',
+                    required: false,
+                    multiple: true,
+                    customAttr:{
+                        headervalue: '--请选择--'
+                    }
+                })
+                .combobox('followCustomHandle');
+
+
+                $('#validateBtn').click(function(){
+                    $('#ccb').combobox('validate');
+                });
+
+                $('#clearBtn').click(function(){
+                    $('#ccb').combobox('clear');
+                });
+
+                $('#getValueBtn').click(function(){
+                    var s = 'value: ' + $('#ccb').combobox('getValue') +
+                            '\n' +
+                            'values: ' + $('#ccb').combobox('getValues').join(',')
+
+                    alert(s);
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <input type="button" value="validate" id="validateBtn">
+        <input type="button" value="clear" id="clearBtn">
+        <input type="button" value="getValue" id="getValueBtn">
+        <br>
+        <input id="ccb" type="text">
+    </body>
+</html>

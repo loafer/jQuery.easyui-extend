@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>DataGrid Tooltip -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../my97/skin/WdatePicker.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../my97/WdatePicker.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.dateformat.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#datagrid').datagrid({
+//                    frozenColumns:[[
+//                        {field: 'username', title: 'Name', width: 150, editor: 'text'},
+//                        {field: 'sex', title: 'Sex', width: 50, editor: 'text'}
+//                    ]],
+                    columns:[[
+                        {field: 'username', title: 'Name', width: 150, editor: 'text'},
+                        {field: 'sex', title: 'Sex', width: 50, editor: 'text'},
+                        {field: 'age', title: 'Age', width: 80, editor: 'numberspinner'},
+                        {field: 'brithday', title: 'Birthday', width: 100, editor: 'my97'},
+                        {field: 'registdate', title: 'Regist Date', width: 150, editor: 'datetimebox'},
+                        {field: 'arrivaltime', title: 'Arrival Time (AT)', width: 110, editor: 'timespinner'}
+                    ]],
+                    title: 'Row Editing DataGrid',
+                    singleSelect: true,
+                    rownumbers: true,
+                    height: 250,
+                    width: 600,
+                    url: '../datagrid/datagrid_data2.json',
+                    customAttr:{
+                        tooltip:{
+                            formatter: function(value, rowData, index){
+                                var fields = $.merge($('#datagrid').datagrid('getColumnFields', true), $('#datagrid').datagrid('getColumnFields'));
+                                var result = [];
+                                result.push('<table style="width: 300px" border="0">');
+                                result.push('<tr><th width="50%">Field</th><th width="50%">Value</th></tr>')
+                                $.each(fields, function(){
+                                    var field = this;
+                                    result.push('<tr><td><b>'+field+'</b></td><td>'+rowData[field]+'</td></tr>')
+                                });
+                                result.push('</table>');
+                                return result.join('');
+                            }
+                        }
+                    }
+                }).datagrid('followCustomHandle');
+            });
+        </script>
+    </head>
+    <body>
+        <table id="datagrid"></table>
+    </body>
+</html>

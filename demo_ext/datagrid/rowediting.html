@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Row Editing DataGrid -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../my97/skin/WdatePicker.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../my97/WdatePicker.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.dateformat.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#datagrid').datagrid({
+                    columns:[[
+                        {field: 'username', title: 'Name', width: 150, editor: 'text'},
+                        {field: 'sex', title: 'Sex', width: 50, editor: 'text'},
+                        {field: 'age', title: 'Age', width: 80, editor: 'numberspinner'},
+                        {field: 'brithday', title: 'Birthday', width: 100, editor: 'my97'},
+                        {field: 'registdate', title: 'Regist Date', width: 150, editor: 'datetimebox'},
+                        {field: 'arrivaltime', title: 'Arrival Time (AT)', width: 110, editor: 'timespinner'},
+                        {field: 'itemid', title: 'Product', width: 100, editor:{
+                            type: 'combogrid',
+                            options: {
+                                columns:[[
+                                    {checkbox: true},
+                                    {field: 'itemid', width: 80, title: 'Item ID', sortable: true},
+                                    {field: 'productname', width: 100, title: 'Product'},
+                                    {field: 'listprice', width: 80, align: 'right', title: 'List Price', sortable: true},
+                                    {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost'},
+                                    {field: 'attr1', width: 250, title: 'Attribute'},
+                                    {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
+                                ]],
+                                singleSelect: true,
+                                url: '../datagrid/datagrid_data1.json',
+                                idField: 'itemid',
+                                textField: 'productname',
+                                title: 'Product List'
+                            }
+                        }}
+                    ]],
+                    title: 'Row Editing DataGrid',
+                    singleSelect: true,
+                    rownumbers: true,
+                    height: 250,
+                    width: 700,
+                    url: '../datagrid/datagrid_data2.json',
+                    toolbar:[{
+                        text: 'save',
+                        iconCls: 'icon-save',
+                        handler: function(){
+                            var editingRow = $('#datagrid').datagrid('getEditingRow');
+                            if(editingRow){
+                                var index = $('#datagrid').datagrid('getRowIndex', editingRow);
+                                $('#datagrid').datagrid('endEdit', index);
+                            }
+                        }
+                    },{
+                        text: 'getChanges',
+                        handler: function(){
+                            alert($('#datagrid').datagrid('getChanges','updated'))
+                        }
+                    }],
+//                    customAttr:{
+//                        rowediting: false
+//                    },
+                    onClickRow: function(index){
+                        var editingRow = $('#datagrid').datagrid('getEditingRow');
+                        var editingRowIndex = $('#datagrid').datagrid('getRowIndex', editingRow);
+                        if(!editingRow){
+                            $('#datagrid').datagrid('selectRow', index)
+                                    .datagrid('beginEdit', index);
+                        }else{
+                            $('#datagrid').datagrid('selectRow', editingRowIndex);
+                        }
+                    }
+                })
+                .datagrid('followCustomHandle');
+            });
+
+        </script>
+    </head>
+    <body>
+        <table id="datagrid"></table>
+        <!--<div style="position: relative; width: 300px;height: 24px; background-color: #ADD8E6; left: 188px; top: 30px; z-index: 2008; display: block"></div>-->
+    </body>
+</html>
