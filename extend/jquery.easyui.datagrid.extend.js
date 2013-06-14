@@ -142,8 +142,8 @@
         return defaultMenuItems;
     }
 
-    function initHeaderContextMenu(target){
-        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
+    function initHeaderContextMenu(target, options){
+//        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var headerContentMenuOptions = options.customAttr.headerContextMenu;
         if(!headerContentMenuOptions.isShow) return;
 
@@ -151,7 +151,7 @@
         if(headerContentMenuOptions.isMerge){
             menuitems = getDefaultHeaderContextMenuItems(target, headerContentMenuOptions.items);
         }else{
-            menuitems = headerContentMenuOptions.items;
+            menuitems = $.isArray(headerContentMenuOptions.items) ? headerContentMenuOptions.items : [];
         }
 
 
@@ -178,73 +178,98 @@
         });
     }
 
+    function getDefaultRowContextMenuItems(target, customMenuItems){
+        var menuItems = customMenuItems || [];
+        if(!$.isArray(menuItems)) menuItems = [];
 
-    function buildMenu(menuid, menuitems){
-        var contextMenu = $(menuid);
-        if(contextMenu.length == 0){
-            var contextMenu = $('<div>',{id: menuid}).menu();
-            appendItems(contextMenu[0], menuitems);
-        }
+        var menuid = getContextMenuId(target, 'rowContextMenu');
+        var defaultMenuItems=[{
+            id: menuid + '_add',
+            text: '增加',
+            iconCls: 'icon-add',
+            onclick: function(){}
+        },{
+            id: menuid + '_edit',
+            text: '编辑',
+            iconCls: 'icon-edit',
+            onclick: function(){}
+        },{
+            id: menuid + '_delete',
+            text: '删除',
+            iconCls: 'icon-remove',
+            onclick: function(item, rowIndex, rowData, t){
+                $.messager.confirm('疑问','您确定要删除已选中的行？', function(r){
+                    if(r){
+                        $(t).datagrid('deleteRows', $(t).datagrid('getSelections'));
+                    }
+                })
+            }
+        },'-',{
+            id: menuid + '_reload',
+            text: '刷新',
+            iconCls: 'icon-reload',
+            onclick: function(item, rowIndex, rowData, t){
+                $(t).datagrid('load');
+            }
+        },{
+            id: menuid + '_reload_this_page',
+            text: '刷新当前页',
+            onclick: function(item, rowIndex, rowData, t){
+                $(t).datagrid('reload');
+            }
+        },'-',{
+            text: '导出',
+            iconCls: 'icon-table-export',
+            submenu:[{
+                id: menuid + '_export_this_page',
+                text: '本页',
+                iconCls: 'icon-export-excel',
+                onclick: function(){}
+            },{
+                id: menuid + '_export_all',
+                text: '全部',
+                iconCls: 'icon-table-excel',
+                onclick: function(){}
+            }]
+        }]
 
-        return contextMenu;
+        $.merge(defaultMenuItems, customMenuItems);
+        return defaultMenuItems;
     }
 
-    function appendItems(target, menuitems){
-        if(!menuitems && $.isArray(menuitems)) return;
-        $(target).menu('appendItems', menuitems);
-    }
-
-    function getHeaderContentMenuId(target){
-        return $(target).attr('id')+'_headerContextMenu';
-    }
-
-    function showRowContextMenu(target){
-        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
+    function initRowContextMenu(target, options){
+//        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var rowContentMenuOptions = options.customAttr.rowContextMenu;
         if(!rowContentMenuOptions.isShow) return;
 
+        var menuitems = [];
         if(rowContentMenuOptions.isMerge){
-            var menuitems = buildRowContextMenuDefaultItems(target, rowContentMenuOptions.items);
+            menuitems = getDefaultRowContextMenuItems(target, rowContentMenuOptions.items);
         }else{
-            var menuitems = rowContentMenuOptions.items;
+            menuitems = $.isArray(rowContentMenuOptions.items) ? rowContentMenuOptions.items : [];
         }
 
-        var menuid = getRowContentMenuId(target);
-        var rowContextMenu = buildMenu(menuid, menuitems);
+        var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
+        var onRowContextMenuCallback = options.onRowContextMenu;
+        var rowContextMenu = buildContextMenu(target, menuitems, 'rowContextMenu');
         $(target).datagrid({
             onRowContextMenu: function(e, rowIndex, rowData){
                 e.preventDefault();
-
-                rowContextMenu.menu('show', {
+                $(target).datagrid('selectRow', rowIndex);
+                rowContextMenu.menu({
+                    onClick: function(item){
+                        var name = item.id || item.text;
+                        if(onClickHandlerCache[name]){
+                            onClickHandlerCache[name].call(this, item, rowIndex, rowData, target);
+                        }
+                    }
+                }).menu('show', {
                     left: e.pageX,
                     top: e.pageY
                 });
+                onRowContextMenuCallback.call(this, e, rowIndex, rowData);
             }
         });
-    }
-
-    function getRowContentMenuId(target){
-        return $(target).attr('id')+'_rowContextMenu';
-    }
-
-    function buildRowContextMenuDefaultItems(target, customMenuItems){
-        customMenuItems = customMenuItems || [];
-        var menuitems = [
-            {text: '增加', iconCls: 'icon-add'},
-            {text: '编辑', iconCls: 'icon-edit'},
-            {text: '删除', iconCls: 'icon-remove'},
-            '-',
-            {text: '刷新', iconCls: 'icon-reload'},
-            {text: '刷新当前页', iconCls: 'icon-reload3'},
-            '-',
-            {text: '导出', iconCls: 'icon-table-export', submenu: [
-                {text: '本页', iconCls: 'icon-export-excel'},
-                {text: '全部', iconCls: 'icon-table-excel'}
-            ]}
-        ];
-
-        $.merge(menuitems, customMenuItems);
-        return menuitems;
     }
 
     function setMasterSlave(target, opts){
@@ -286,9 +311,9 @@
         }
     }
 
-    function registRowEditingHandler(target){
-        var opts = $.extend(true, {}, $.fn.datagrid.defaults, $.data(target, 'datagrid').options);
-        if(!opts.customAttr.rowediting) return;
+    function registRowEditingHandler(target, options){
+//        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
+        if(!options.customAttr.rowediting) return;
 
         var getEditorButtonsPanelId = function(target){
             return $(target).attr('id')+'_editor_buttons_panel';
@@ -366,9 +391,6 @@
             $(edtBtnPanelId).hide();
         }
 
-
-        var options = $.data(target, "datagrid").options;
-
         var onLoadSuccessCallBack = options.onLoadSuccess;
         var onBeforeEditCallBack = options.onBeforeEdit;
         var onAfterEditCallBack = options.onAfterEdit;
@@ -381,11 +403,11 @@
             },
             onBeforeEdit: function(index, data){
                 showEditorButtonsPanel(target, index);
-                onBeforeEditCallBack.call(this, target, index);
+                onBeforeEditCallBack.call(this, index, data);
             },
-            onAfterEdit: function(index, data){
+            onAfterEdit: function(index, data, changes){
                 hideEditorButtonsPanel(target);
-                onAfterEditCallBack.call(this, target);
+                onAfterEditCallBack.call(this, index, data, changes);
             },
             onCancelEdit: function(index, data){
                 hideEditorButtonsPanel(target);
@@ -394,14 +416,14 @@
         });
     }
 
-    function buildTooltip(target){
-        var opts = $.extend(true, {}, $.fn.datagrid.defaults, $.data(target, 'datagrid').options);
-        if(!opts.customAttr.tooltip.enable) return;
+    function buildTooltip(target, options){
+//        var opts = $.extend(true, {}, $.fn.datagrid.defaults, $.data(target, 'datagrid').options);
+        if(!options.customAttr.tooltip.enable) return;
 
         var showTooltip = function(target, content){
             $(target).tooltip({
                 content: content,
-                position: opts.customAttr.tooltip.position,
+                position: options.customAttr.tooltip.position,
                 trackMouse: true,
                 onHide: function(){
                     $(target).tooltip('destroy');
@@ -443,20 +465,20 @@
         }
 
         var initTooltip = function(){
-            if(opts.customAttr.tooltip.target == 'row'){
-                opts.finder.getTr(target, '', 'allbody').each(function(){
+            if(options.customAttr.tooltip.target == 'row'){
+                options.finder.getTr(target, '', 'allbody').each(function(){
                     var row = $(this);
                     if(row.hasClass('datagrid-row')){
-                        bindRow(row, opts.customAttr.tooltip.formatter);
+                        bindRow(row, options.customAttr.tooltip.formatter);
                     }
                 });
             }else{
-                if(opts.customAttr.tooltip.fields && $.isArray(opts.customAttr.tooltip.fields)){
+                if(options.customAttr.tooltip.fields && $.isArray(options.customAttr.tooltip.fields)){
                     var panel = $(target).datagrid('getPanel');
                     var datagrid_body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
-                    $.each(opts.customAttr.tooltip.fields, function(){
+                    $.each(options.customAttr.tooltip.fields, function(){
                         var field = this;
-                        bindCell($('td[field='+field+']', datagrid_body), opts.customAttr.tooltip.formatter);
+                        bindCell($('td[field='+field+']', datagrid_body), options.customAttr.tooltip.formatter);
                     });
                 }
 
@@ -464,7 +486,7 @@
         }
 
 
-        var onLoadSuccessCallback = opts.onLoadSuccess;
+        var onLoadSuccessCallback = options.onLoadSuccess;
         $(target).datagrid({
            onLoadSuccess: function(data){
                onLoadSuccessCallback.call(this, arguments);
@@ -514,6 +536,8 @@
             }
         }
     };
+
+
 
     $.extend($.fn.datagrid.defaults.editors, {
         my97:{
@@ -668,30 +692,30 @@
     $.extend($.fn.datagrid.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
-                var opts = $.extend(true, {}, $.fn.datagrid.defaults, $(this).datagrid('options'));
+                var options = $.extend(true, {}, $.fn.datagrid.defaults, $(this).datagrid('options'));
 
-                initHeaderContextMenu(this);
+                initHeaderContextMenu(this, options);
 
-                showRowContextMenu(this);
+                initRowContextMenu(this, options);
 
                 //pagination
                 if($(this).datagrid('options').pagination){
                     $(this).datagrid('setPagination', $(this).datagrid('options').pagination);
                 }
 
-                setMasterSlave(this, {slaveList: opts.customAttr.slaveList, activeSlave: opts.customAttr.activeSlave});
+                setMasterSlave(this, {slaveList: options.customAttr.slaveList, activeSlave: options.customAttr.activeSlave});
 
-                registRowEditingHandler(this);
+                registRowEditingHandler(this, options);
 
-                buildTooltip(this);
+                buildTooltip(this, options);
 
             });
         },
         getHeaderContextMenu: function(jq){
-            return $('#'+getHeaderContentMenuId(jq[0]));
+            return $('#'+getContextMenuId(jq[0], 'headerContextMenu'));
         },
         getRowContextMenu: function(jq){
-            return $('#'+getRowContentMenuId(jq[0]));
+            return $('#'+getContextMenuId(jq[0], 'rowContextMenu'));
         },
         getEditingRow: function(jq){
             var datagrid = $.data(jq[0], "datagrid");
@@ -710,6 +734,26 @@
         setPagination: function(jq, opts){
             return jq.each(function(){
                 $(this).datagrid('getPager').pagination(opts);
+            });
+        },
+        deleteRows: function(jq, rows){
+            return jq.each(function(){
+                var delRows = undefined;
+                if(!$.isArray(rows)){
+                    delRows = [rows];
+                }else{
+                    delRows = rows;
+                }
+
+                var target = this;
+                $.each(delRows, function(i, row){
+                    if($.isPlainObject(row)){
+                        var index = $(target).datagrid('getRowIndex', row);
+                        $(target).datagrid('deleteRow', index);
+                    }else{
+                        $(target).datagrid('deleteRow', row);
+                    }
+                });
             });
         }
     });
