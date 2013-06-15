@@ -296,39 +296,45 @@
         });
     }
 
-    function setMasterSlave(target, opts){
-        if(!opts.slaveList && !$.isArray(opts.slaveList)) return;
+    function setMasterSlave(target, options){
 
+        if(!$.isArray(options.customAttr.slaveList)) return;
+        if(options.customAttr.slaveList.length == 0) return;
+
+        var slaveOptions = {
+            slaveList: options.customAttr.slaveList,
+            activeSlave: options.customAttr.activeSlave
+        };
         var jq = $(target);
 
         //{id: 'slave1', params: {name: 'slave1'}}
         var commands = [];
-        for(i in opts.slaveList){
+        for(var i in slaveOptions.slaveList){
             var cmd = {
-                id: opts.slaveList[i].id,
+                id: slaveOptions.slaveList[i].id,
                 params:{}
             };
 
             var relatedfield = {}, relatedfieldName;
-            if(!opts.slaveList[i].relatedfield){
+            if(!slaveOptions.slaveList[i].relatedfield){
                 relatedfieldName = jq.datagrid('options').idField;
                 relatedfield[relatedfieldName]='undefined';
             }else{
-                relatedfieldName = opts.slaveList[i].relatedfield;
-                relatedfield[opts.slaveList[i].relatedfield] = 'undefined';
+                relatedfieldName = slaveOptions.slaveList[i].relatedfield;
+                relatedfield[slaveOptions.slaveList[i].relatedfield] = 'undefined';
             }
 
-            $.extend(cmd.params, relatedfield, opts.slaveList[i].queryParams);
+            $.extend(cmd.params, relatedfield, slaveOptions.slaveList[i].queryParams);
             commands.push(cmd);
         }
 
 
-        if(opts.activeSlave == $.fn.datagrid.defaults.customAttr.activeSlave){
+        if(slaveOptions.activeSlave == $.fn.datagrid.defaults.customAttr.activeSlave){
             jq.datagrid({
                 onDblClickRow: function(rowIndex, rowData){
-                    for(i in commands){
-                        commands[i].params[relatedfieldName] = rowData[relatedfieldName];
-                        $('#' + commands[i].id).datagrid('load', commands[i].params);
+                    for(var j in commands){
+                        commands[j].params[relatedfieldName] = rowData[relatedfieldName];
+                        $('#' + commands[j].id).datagrid('load', commands[j].params);
                     }
                 }
             });
@@ -727,7 +733,7 @@
                     $(this).datagrid('setPagination', $(this).datagrid('options').pagination);
                 }
 
-                setMasterSlave(this, {slaveList: options.customAttr.slaveList, activeSlave: options.customAttr.activeSlave});
+                setMasterSlave(this, options);
 
                 registRowEditingHandler(this, options);
 
