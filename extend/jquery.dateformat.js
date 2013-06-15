@@ -1,9 +1,6 @@
 /**
  * Created with IntelliJ IDEA.
- * User: zjh
- * Date: 13-5-26
- * Time: 下午8:00
- * To change this template use File | Settings | File Templates.
+ * @author: 爱看书不识字<zjh527@163.com>
  */
 (function($){
     $.extend({
