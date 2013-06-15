@@ -48,6 +48,30 @@
  *          }
  *      })
  *
+ * 21、rowContextMenu菜单项的onclick接收4个参数，依次是item, rowIndex, rowData, target 。
+ *      item: 当前点击菜单项
+ *      rowIndex: 触发右键菜单row的索引号
+ *      rowData: 触发右键菜单row的数据项
+ *      target: 当前datagrid的引用，非jQuery对象。
+ *
+ *      eg:
+ *          $('#dg').datagrid({
+ *              ......,
+ *              customAttr: {
+ *                  rowContextMenu: {
+ *                      isShow: true,
+ *                      items: [{
+ *                          text: 'item1',
+ *                          iconCls: 'icon-exit',
+ *                          onclick: function(item, rowIndex, rowData, target){
+ *                              ......
+ *                          }
+ *                      }]
+ *                  }
+ *              }
+ *          });
+ *
+ * 22、增加deleteRows方法批量删除行。参数row，数组类型。可以是一个rowIndex数组或是一个row数组
  */
 (function($){
     function buildContextMenu(target, menuitems, type){
@@ -255,7 +279,7 @@
         $(target).datagrid({
             onRowContextMenu: function(e, rowIndex, rowData){
                 e.preventDefault();
-                $(target).datagrid('selectRow', rowIndex);
+//                $(target).datagrid('selectRow', rowIndex);
                 rowContextMenu.menu({
                     onClick: function(item){
                         var name = item.id || item.text;
