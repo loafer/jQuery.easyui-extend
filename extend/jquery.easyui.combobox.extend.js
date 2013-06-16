@@ -158,7 +158,7 @@
         $(target).combobox({
             onLoadSuccess: function(){
                 onLoadSuccessCallback.call(target);
-                $(target).combo('textbox').trigger('blur');
+                $(target).combobox('textbox').trigger('blur');
             }
         })
     }
@@ -176,9 +176,9 @@
     $.extend($.fn.combobox.methods,{
         followCustomHandle: function(jq){
             return jq.each(function(){
-                $(this).combo('followCustomHandle');
                 fixShowHeaderValue(this);
                 slaveHandle(this);
+                $(this).combo('followCustomHandle');
             });
         }
     });
