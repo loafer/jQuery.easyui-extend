@@ -32,7 +32,19 @@
  *              }
  *          })
  *
+ *      4.2 数据格式：
+ *          [{
+ *              "id": 1,
+ *              "text": "Java"
+ *          },{
+ *              "id": 2,
+ *              "text": "Ruby"
+ *          }]
+ *          其中id 、 text 分别对应combo的value和text属性
+ *
  * 5、以上扩展属性和方法都可以被继承自combo的组件所获得。
+ *
+ *
  */
 (function($){
 
@@ -103,28 +115,30 @@
         var autocompleteOpts = optioins.customAttr.autocomplete;
         if(!autocompleteOpts.enabled) return;
 
-        $(target).combo('textbox').keypress(function(e){
-            if($(this).val().length != 0 && $(this).val().length % autocompleteOpts.minLength ==0 && autocompleteOpts.url){
+        $(target).combo('textbox').keyup(function(e){
+            if($(this).val().length != 0 && ($(this).val().length % autocompleteOpts.minLength==0) && autocompleteOpts.url){
                 $.ajax({
                     type: 'POST',
                     url: autocompleteOpts.url,
                     data: {wd: $(this).val()},
                     dataType: 'json',
                     success: function(data){
-                        var sp = $(target).combo('panel').empty();
+                        var panel = $(target).combo('panel').empty();
                         for(var i=0; i<data.length; i++){
                             $('<div>').addClass('combobox-item')
-                                .attr('value', data[i].value)
+                                .attr('value', data[i].id)
                                 .text(data[i].text)
                                 .click(function(e){
                                     var v = $(this).attr('value');
                                     var s = $(this).text();
-                                    $(target).combo('setValue', v).combo('setText', s).combo('hidePanel')
-                                }).hover(function(){
+                                    $(target).combo('setValue', v).combo('setText', s).combo('hidePanel');
+                                })
+                                .hover(function(){
                                     $(this).addClass('combobox-item-hover');
                                 }, function(){
                                     $(this).removeClass('combobox-item-hover');
-                                }).appendTo(sp);
+                                })
+                                .appendTo(panel);
                         }
 
                     },
@@ -134,6 +148,7 @@
                 });
             }
         });
+
     }
 
     $.fn.combo.defaults.customAttr={
