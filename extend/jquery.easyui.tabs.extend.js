@@ -58,6 +58,11 @@
  *              }
  *          }
  *
+ *      1.5 菜单项onclick事件接收item, title, index, target参数
+ *          item: 当前点击菜单项
+ *          title: 当前触发contextmenu标签页的标题
+ *          index: 当前触发contextmenu标签页的索引号
+ *          target: 当前tabs的引用，非jQuery对象。
  *
  *
  * 2、增加自定义属性解析方法followCustomHandle，只有调用此方法之后customAttr中定义的扩展属性才会被解析执行。
@@ -104,24 +109,23 @@
         return contextmenu;
     }
 
-    function interceptEvent(menuitems){
-        var onclickEvents={};
+    function getMenuItemOnClickHandler(menuitems){
+        var onclickHandler={};
 
         $.each(menuitems, function(){
             var item = this;
-
             if(item.onclick){
                 var index = item.id || item.text;
-                onclickEvents[index] = item.onclick;
+                onclickHandler[index] = item.onclick;
                 delete item.onclick;
             }
 
-            if(item.submenu){
-                $.extend(onclickEvents, interceptEvent(item.submenu));
+            if(item.submenu && $.isArray(item.submenu) && item.submenu.length>0){
+                $.extend(onclickHandler, getMenuItemOnClickHandler(item.submenu));
             }
         });
 
-        return onclickEvents;
+        return onclickHandler;
     }
 
     /**
@@ -142,7 +146,7 @@
             menuitems = menuOpts.items;
         }
 
-        var onclickEvents = interceptEvent(menuitems);
+        var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
         var contextmenu = buildContextMenu(target, menuitems);
         $(target).tabs({
             onContextMenu: function(e, title, index){
@@ -151,8 +155,8 @@
                 contextmenu.menu({
                     onClick: function(item){
                         var name = item.id || item.text;
-                        if(onclickEvents[name]){
-                            onclickEvents[name].call(this, item, title, index, target);
+                        if(onClickHandlerCache[name]){
+                            onClickHandlerCache[name].call(this, item, title, index, target);
                         }
                     }
                 }).menu('show',{
