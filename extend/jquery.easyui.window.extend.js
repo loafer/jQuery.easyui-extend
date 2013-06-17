@@ -47,7 +47,6 @@
          *      content: 支持使用前缀url指定要加载的页面。
          */
         showWindow: function(options){
-            console.log('====> showWindow.')
             options = options || {};
             var target;
             var winOpts = $.extend({},{
@@ -91,7 +90,7 @@
                     winOpts.href = url;
                     var onLoadCallback = winOpts.onLoad;
                     winOpts.onLoad = function(){
-                        onLoadCallback && onLoadCallback();
+                        onLoadCallback && onLoadCallback.call(this, callbackArguments);
                     }
                 }
 
@@ -109,6 +108,12 @@
                 if(typeof handler == 'string' && winOpts.useiframe){
                     return function(){
                         iframe[0].contentWindow[handler](callbackArguments);
+                    }
+                }
+
+                if(typeof handler == 'string'){
+                    return function(){
+                        eval(handler)(callbackArguments);
                     }
                 }
             }
@@ -148,7 +153,6 @@
 
         },
         showModalDialog: function(options){
-            console.log('===>showModalDialog');
             options = options || {};
             var opts = $.extend({}, options, {modal: true, minimizable: false, maximizable: false, resizable: false, collapsible: false});
             $.showWindow(opts);
