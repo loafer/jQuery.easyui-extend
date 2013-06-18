@@ -312,6 +312,22 @@
         tab.panel('body').empty().append(iframe);
     }
 
+    function appendIframeToTab(target, tabTitle, url){
+        var iframe = $('<iframe>')
+            .attr('height', '98%')
+            .attr('width', '100%')
+            .attr('marginheight', '0')
+            .attr('marginwidth', '0')
+            .attr('frameborder', '0');
+
+        setTimeout(function(){
+            iframe.attr('src', url);
+        }, 1);
+
+        var tab = $(target).tabs('getTab', tabTitle);
+        tab.panel('body').empty().append(iframe);
+    }
+
     $.fn.tabs.defaults.contextMenu={}
     $.fn.tabs.defaults.contextMenu.itemname={};
     $.fn.tabs.defaults.contextMenu.itemname.reload = '重新加载';
@@ -399,14 +415,24 @@
         },
         add: function(jq, options){
             return jq.each(function(){
-                var opts = {};
-                if(options.href && options.useiframe){
-                    opts[href] = options.href;
+                var url = null;
+                if(options.href || /^url:/.test(options.content)){
+                    url = options.href || options.content.substr(4, options.content.length);
+                    delete options.content;
                     delete options.href;
                 }
-                defaultMethods.add(jq, options);
-                if(options.useiframe) addTab(this, $.extend({}, options, opts));
 
+
+                if(url){
+                    if(options.useiframe){
+                        defaultMethods.add(jq, options);
+                        appendIframeToTab(this, options.title, url);
+                    }else{
+                        defaultMethods.add(jq, $.extend(options, {href: url}));
+                    }
+                }else{
+                    defaultMethods.add(jq, options);
+                }
             });
         }
     });
