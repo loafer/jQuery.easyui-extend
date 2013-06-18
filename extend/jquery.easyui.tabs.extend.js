@@ -289,29 +289,6 @@
         return fixedtabs;
     }
 
-    function addTab(target, options){
-        var isUrl = /^url:/.test(options.content);
-
-        var url = options.href || '#';
-        if(isUrl){
-            url = options.content.substr(4, options.content.length);
-        }
-
-        var iframe = $('<iframe>')
-            .attr('height', '98%')
-            .attr('width', '100%')
-            .attr('marginheight', '0')
-            .attr('marginwidth', '0')
-            .attr('frameborder', '0');
-
-        setTimeout(function(){
-            iframe.attr('src', url);
-        }, 1);
-
-        var tab = $(target).tabs('getTab', options.title);
-        tab.panel('body').empty().append(iframe);
-    }
-
     function appendIframeToTab(target, tabTitle, url){
         var iframe = $('<iframe>')
             .attr('height', '98%')
