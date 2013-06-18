@@ -72,6 +72,23 @@
  *          });
  *
  * 22、增加deleteRows方法批量删除行。参数row，数组类型。可以是一个rowIndex数组或是一个row数组
+ *
+ * 23、扩展rowContextMenu onClick事件，接收参数item, rowIndex, rowData, target。 当事件返回true时，覆盖原默认行为
+ *      item:       当前点击的菜单项
+ *      rowIndex:   触发rowContextMenu的row索引
+ *      rowData:    触发rowContextMenu的row数据
+ *      target:     当前datagrid的引用，非jQuery对象
+ *
+ *      eg:
+ *          $('#dg').datagrid('getRowContextMenu').menu({
+ *              onClick: function(item, rowIndex, rowData, target){
+ *                  if(item.text == 'delete'){
+ *                      return true //覆盖菜单delete的默认行为,即点击delete菜单项后，无动作。
+ *                  }
+ *              }
+ *          });
+ *
+ *
  */
 (function($){
     function buildContextMenu(target, menuitems, type){
