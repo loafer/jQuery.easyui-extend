@@ -167,7 +167,6 @@
     }
 
     function initHeaderContextMenu(target, options){
-//        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var headerContentMenuOptions = options.customAttr.headerContextMenu;
         if(!headerContentMenuOptions.isShow) return;
 
@@ -262,7 +261,6 @@
     }
 
     function initRowContextMenu(target, options){
-//        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var rowContentMenuOptions = options.customAttr.rowContextMenu;
         if(!rowContentMenuOptions.isShow) return;
 
@@ -280,12 +278,18 @@
             onRowContextMenu: function(e, rowIndex, rowData){
                 e.preventDefault();
 //                $(target).datagrid('selectRow', rowIndex);
+                var menuOptions = rowContextMenu.menu('options');
+                menuOptions.onClickCallback = menuOptions.onClickCallback || menuOptions.onClick;
+
                 rowContextMenu.menu({
                     onClick: function(item){
+                        if(menuOptions.onClickCallback.call(this, item, rowIndex, rowData, target)) return;
+
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, rowIndex, rowData, target);
                         }
+
                     }
                 }).menu('show', {
                     left: e.pageX,
@@ -342,7 +346,6 @@
     }
 
     function registRowEditingHandler(target, options){
-//        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         if(!options.customAttr.rowediting) return;
 
         var getEditorButtonsPanelId = function(target){
@@ -447,7 +450,6 @@
     }
 
     function buildTooltip(target, options){
-//        var opts = $.extend(true, {}, $.fn.datagrid.defaults, $.data(target, 'datagrid').options);
         if(!options.customAttr.tooltip.enable) return;
 
         var showTooltip = function(target, content){
@@ -709,8 +711,11 @@
         slaveList: undefined,
         activeSlave: 'dblclickrow',
         rowediting: true,
+        /**
+         * target: row|cell ,tooltip 的触发对象，默认row
+         */
         tooltip:{
-            enable: true,
+            enable: false,
             target: 'row',
             position: 'bottom',
             fields: undefined,
