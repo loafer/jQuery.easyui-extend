@@ -85,7 +85,7 @@
  *          });
  *
  *
- *      3.2 改写content参数，使其支持url 。注意：只有当useiframe为true时，此方式才生效。
+ *      3.2 改写content参数，使其支持url 。
  *          $('#tt').tabs('add',{
  *              title: 'New Tab',
  *              useiframe: true,
