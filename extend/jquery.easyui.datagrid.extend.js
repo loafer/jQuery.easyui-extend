@@ -183,7 +183,8 @@
         return defaultMenuItems;
     }
 
-    function initHeaderContextMenu(target, options){
+    function initHeaderContextMenu(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var headerContentMenuOptions = options.customAttr.headerContextMenu;
         if(!headerContentMenuOptions.isShow) return;
 
@@ -277,7 +278,8 @@
         return defaultMenuItems;
     }
 
-    function initRowContextMenu(target, options){
+    function initRowContextMenu(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var rowContentMenuOptions = options.customAttr.rowContextMenu;
         if(!rowContentMenuOptions.isShow) return;
 
@@ -317,8 +319,8 @@
         });
     }
 
-    function setMasterSlave(target, options){
-
+    function setMasterSlave(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         if(!$.isArray(options.customAttr.slaveList)) return;
         if(options.customAttr.slaveList.length == 0) return;
 
@@ -362,7 +364,8 @@
         }
     }
 
-    function registRowEditingHandler(target, options){
+    function registRowEditingHandler(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         if(!options.customAttr.rowediting) return;
 
         var getEditorButtonsPanelId = function(target){
@@ -466,18 +469,27 @@
         });
     }
 
-    function buildTooltip(target, options){
+    function buildTooltip(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         if(!options.customAttr.tooltip.enable) return;
 
-        var showTooltip = function(target, content){
-            $(target).tooltip({
-                content: content,
+        var showTooltip = function(target, opts){
+            var initOptions = {
                 position: options.customAttr.tooltip.position,
                 trackMouse: true,
                 onHide: function(){
                     $(target).tooltip('destroy');
+                },
+                onShow: function(){
+                    if($.isPlainObject(opts) && opts.css){
+                        $(this).tooltip('tip').css(opts.css);
+                    }
                 }
-            }).tooltip('show');
+            };
+
+            $.extend(initOptions, $.isPlainObject(opts) ? opts : {content: opts});
+
+            $(target).tooltip(initOptions).tooltip('show');
         }
 
         var bindRow = function(row, formatter){
@@ -507,8 +519,9 @@
             cell.mouseover(function(){
                 var rowIndex = $(this).parent().attr('datagrid-row-index');
                 var rowData = $(target).datagrid('getRows')[rowIndex];
-                var value = rowData[$(this).attr('field')];
-                var content = formatter ? formatter(value, rowData, rowIndex) : value;
+                var field = $(this).attr('field');
+                var value = rowData[field];
+                var content = formatter ? formatter(value, field) : value;
                 showTooltip(this, content);
             });
         }
@@ -538,13 +551,26 @@
         var onLoadSuccessCallback = options.onLoadSuccess;
         $(target).datagrid({
            onLoadSuccess: function(data){
-               onLoadSuccessCallback.call(this, arguments);
+               onLoadSuccessCallback.call(this, data);
                initTooltip();
            }
         });
 
     }
 
+    function initPagination(target){
+        var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
+        if(!options.pagination) return;
+
+        var onLoadSuccessCallback = options.onLoadSuccess;
+        $(target).datagrid({
+            onLoadSuccess: function(data){
+                $(target).datagrid('setPagination', options.customAttr.pagination);
+                onLoadSuccessCallback.call(this, data);
+
+            }
+        });
+    }
 
     $.fn.datagrid.headerContextMenu = {};
     $.fn.datagrid.headerContextMenu.defaults = {};
@@ -744,22 +770,19 @@
     $.extend($.fn.datagrid.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
-                var options = $.extend(true, {}, $.fn.datagrid.defaults, $(this).datagrid('options'));
+//                var options = $.extend(true, {}, $.fn.datagrid.defaults, $(this).datagrid('options'));
 
-                initHeaderContextMenu(this, options);
+                initHeaderContextMenu(this);
 
-                initRowContextMenu(this, options);
+                initRowContextMenu(this);
 
-                //pagination
-                if($(this).datagrid('options').pagination){
-                    $(this).datagrid('setPagination', $(this).datagrid('options').pagination);
-                }
+                initPagination(this);
 
-                setMasterSlave(this, options);
+                setMasterSlave(this);
 
-                registRowEditingHandler(this, options);
+                registRowEditingHandler(this);
 
-                buildTooltip(this, options);
+                buildTooltip(this);
 
             });
         },
