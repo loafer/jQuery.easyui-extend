@@ -18,7 +18,7 @@
                 columns:[[
                     {checkbox: true},
                     {field: 'itemid', width: 80, title: 'Item ID', sortable: true},
-                    {field: 'productid', width: 100, title: 'Product'},
+                    {field: 'productid', width: 100, title: 'Product ID'},
                     {field: 'listprice', width: 80, align: 'right', title: 'List Price', sortable: true},
                     {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost'},
                     {field: 'attr1', width: 250, title: 'Attribute'},
@@ -33,10 +33,7 @@
                 width: 700,
                 customAttr:{
                     headerContextMenu:{
-                        isShow: true,
-                        items:[
-                            {text: 'add', iconCls: 'icon-add', onclick:function(){alert('add click.')}}
-                        ]
+                        isShow: true
                     }
                 }
             }).datagrid('followCustomHandle');
@@ -45,6 +42,7 @@
     </script>
 </head>
 <body>
+    <h3>Header ContextMenu 及默认菜单项演示</h3>
     <table id="datagrid"></table>
 </body>
 </html>

@@ -10,26 +10,25 @@
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
         <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquer.easyui.window.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.window.extend.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('#btn1').click(function(){
-                    $.showWindow({content: '我是一个定位在最顶层的窗体。'});
+                    $.showWindow({content: '我是一个定位在最顶层的窗体。<br>拖拽下我看看^^'});
                 });
 
                 $('#btn2').click(function(){
-                    $.showWindow({content: '我是一个定位在Tab panel 中的窗体。', locate: '#center'});
+                    $.showWindow({content: '我是一个定位在Tab panel 中的窗体。<br>拖拽下我看看^^', locate: '#center'});
                 });
             })
         </script>
     </head>
     <body class="easyui-layout">
         <div data-options="region:'north', minHeight:80, maxHeight:80, split:true" style="height: 80px;"></div>
-        <div data-options="region:'south'" style="height: 30px;"></div>
         <div data-options="region:'west', title:'West', split:true, minWidth:200, maxWidth:250" style="width: 200px;"></div>
         <div data-options="region:'center'" style="padding: 20px;" id="center">
             <a id="btn1" class="easyui-linkbutton" href="javascript:void(0)">打开窗体（定位到顶层）</a>
-            <a id="btn2" class="easyui-linkbutton" href="javascript:void(0)">打开窗体（定位到指定位置）</a>
+            <a id="btn2" class="easyui-linkbutton" href="javascript:void(0)">打开窗体（我被定位在center中）</a>
             <!--<iframe src="../window/_content.html" height="98%" width="100%" marginheight="0" frameborder="0"></iframe>-->
         </div>
     </body>

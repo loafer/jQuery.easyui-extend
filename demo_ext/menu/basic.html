@@ -29,7 +29,7 @@
                     {text: 'About'}
                 ]);
 
-                $(document).bind('contextmenu', function(e){
+                $('#area').bind('contextmenu', function(e){
                     $('#mm').menu('show',{
                         left: e.pageX,
                         top: e.pageY
@@ -40,6 +40,10 @@
         </script>
     </head>
     <body>
+        <h3>此页面主要演示通过appendItems方法，动态批量添加Menu item（包括不同item组间的分割符）。</h3>
+        <div id="area" style="height: 200px; width: 300px; background-color: #eee">
+            请在此区域内点击鼠标右键
+        </div>
         <div id="mm" class="easyui-menu" style="width: 120px;">
             <div data-options="iconCls:'icon-help'">Help</div>
         </div>

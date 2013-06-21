@@ -6,14 +6,11 @@
         <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
         <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
         <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
-        <link rel="stylesheet" type="text/css" href="../../my97/skin/WdatePicker.css">
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../my97/WdatePicker.js"></script>
         <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.dateformat.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.dateformat.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('#datagrid').datagrid({
@@ -37,18 +34,7 @@
                     url: '../datagrid/datagrid_data2.json',
                     customAttr:{
                         tooltip:{
-                            formatter: function(value, rowData, index){
-                                var fields = $.merge($('#datagrid').datagrid('getColumnFields', true), $('#datagrid').datagrid('getColumnFields'));
-                                var result = [];
-                                result.push('<table style="width: 300px" border="0">');
-                                result.push('<tr><th width="50%">Field</th><th width="50%">Value</th></tr>')
-                                $.each(fields, function(){
-                                    var field = this;
-                                    result.push('<tr><td><b>'+field+'</b></td><td>'+rowData[field]+'</td></tr>')
-                                });
-                                result.push('</table>');
-                                return result.join('');
-                            }
+                            enable: true
                         }
                     }
                 }).datagrid('followCustomHandle');
@@ -56,6 +42,7 @@
         </script>
     </head>
     <body>
+        <h3>Row Tooltip</h3>
         <table id="datagrid"></table>
     </body>
 </html>

@@ -19,34 +19,16 @@
                     tabPosition: 'top',
                     customAttr: {
                         contextMenu: {
-                            isShow: true,
-                            isMerge: true,
-                            items:[
-                                {text: 'Add', onclick: function(item, title, index, target){
-                                    var tab = $(target).tabs('add',{title:'new tab', useiframe: true, content: 'url:http://www.baidu.com'}).tabs('getSelected');
-//                                    $(target).tabs('update', {tab: tab, options:{title: 'New Tab'}});
-                                }},
-                                '-',
-                                {text: 'others', submenu:[
-                                    {text: 'item1'},
-                                    {text: 'item2'}
-                                ]}
-                            ]
+                            isShow: true
                         }
                     }
                 }).tabs('followCustomHandle');
 
 
-
-                $('#testBtn').click(function(e){
-                   var tab = $('#tt').tabs('getSelected');
-                    alert(tab.panel('options').useiframe);
-                });
             });
         </script>
     </head>
     <body>
-        <input type="button" value="test" id="testBtn"><br>
         <div id="tt"  style="width:500px;height:250px;">
             <div title="Tab1" style="padding: 5px;">
                 tab1

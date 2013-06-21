@@ -1,3 +1,15 @@
 .datagrid-row-selected-extend{
     border: 2px solid #ddd;
 }
+
+.combo-item{
+    padding: 2px;
+    font-size: 12px;
+    padding: 3px;
+    padding-right: 0px;
+}
+
+.combo-item-hover {
+    background-color: #e6e6e6;
+    color: #00438a;
+}

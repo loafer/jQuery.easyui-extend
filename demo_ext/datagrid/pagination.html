@@ -17,7 +17,7 @@
                     columns:[[
                         {checkbox: true},
                         {field: 'itemid', width: 80, title: 'Item ID', sortable: true},
-                        {field: 'productid', width: 100, title: 'Product'},
+                        {field: 'productid', width: 100, title: 'Product ID'},
                         {field: 'listprice', width: 80, align: 'right', title: 'List Price', sortable: true},
                         {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost'},
                         {field: 'attr1', width: 250, title: 'Attribute'},
@@ -35,13 +35,23 @@
                         pagination:{
                             showRefresh: false,
                             displayMsg: 'hello world! HAHA~'
+                        },
+                        tooltip: {
+                            enable: true
                         }
                     }
-                }).datagrid('followCustomHandle');
+                })
+                .datagrid('followCustomHandle');
+
+                $('#btn').click(function(){
+                    $('#datagrid').datagrid('setPagination',{showRefresh: true})
+                })
             });
         </script>
     </head>
     <body>
+        <h3>pagination 设置演示</h3>
+        <input type="button" id="btn" value="显示刷新按钮"><br>
         <table id="datagrid"></table>
     </body>
 </html>

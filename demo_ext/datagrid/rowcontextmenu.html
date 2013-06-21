@@ -3,7 +3,7 @@
     <head>
         <meta charset="utf-8">
         <title>DataGrid with Row ContextMenu -- jQUery EasyUI Demo</title>
-        <link type="text/css" rel="stylesheet" href="../../themes/default/easyui.css">
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
         <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
         <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
         <script type="text/javascript" src="../../jquery.min.js"></script>
@@ -18,13 +18,13 @@
                     columns:[[
                         {checkbox: true},
                         {field: 'itemid', width: 80, title: 'Item ID'},
-                        {field: 'productid', width: 100, title: 'Product'},
+                        {field: 'productid', width: 100, title: 'Product ID'},
                         {field: 'listprice', width: 80, align: 'right', title: 'List Price'},
                         {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost'},
                         {field: 'attr1', width: 250, title: 'Attribute'},
                         {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
                     ]],
-                    singleSelect: true,
+                    singleSelect: false,
                     rownumbers: true,
                     title: 'Basic DataGrid',
                     url: '../datagrid/datagrid_data1.json',
@@ -32,26 +32,15 @@
                     width: 700,
                     customAttr:{
                         rowContextMenu:{
-                            isShow: true,
-                            items: [
-                                {text: 'item1', iconCls: 'icon-exit', onclick: function(){alert('item1 click')}}
-                            ]
+                            isShow: true
                         }
                     }
                 }).datagrid('followCustomHandle');
-
-
-                $('#datagrid').datagrid('getRowContextMenu').menu({
-                    onClick: function(item){
-                        alert(item.text);
-                    }
-                })
-
-
             });
         </script>
     </head>
     <body>
+        <h3>Row ContextMenu 及默认菜单项演示</h3>
         <table id="datagrid"></table>
     </body>
 </html>
