@@ -27,5 +27,5 @@ jQuery.easyui-extend
 如要查看demo演示，请将所有文件放到jQuery.easyui解压后的根目录中。   
 
 
-网站:http://loafer.cloudfoundry.com/    
-Blog:http://blog.csdn.net/zjh527
+演示地址：http://loafer.cloudfoundry.com/
+Blog：http://blog.csdn.net/zjh527
