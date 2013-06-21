@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>DataGrid with Header Contextmenu -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#datagrid').datagrid({
+                    columns:[[
+                        {checkbox: true},
+                        {field: 'itemid', width: 80, title: 'Item ID', sortable: true},
+                        {field: 'productid', width: 100, title: 'Product ID'},
+                        {field: 'listprice', width: 80, align: 'right', title: 'List Price', sortable: true},
+                        {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost'},
+                        {field: 'attr1', width: 250, title: 'Attribute'},
+                        {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
+                    ]],
+                    singleSelect: true,
+                    rownumbers: true,
+                    remoteSort: false,
+                    title: 'Basic DataGrid',
+                    url: '../datagrid/datagrid_data1.json',
+                    height: 250,
+                    width: 700,
+                    customAttr:{
+                        headerContextMenu:{
+                            isShow: true,
+                            items:[
+                                {text: 'other', iconCls: 'icon-add', onclick:function(item, field, target){
+                                    var msg = '当前点击的菜单项是[ '+item.text+' ]<br>'
+                                            + '此右键菜单在[ '+field+' ]列上触发<br>'
+                                            + '这是在ID为[ '+$(target).attr('id')+' ]DataGrid上的右键菜单响应事件';
+
+                                    $.messager.alert('信息', msg, 'info');
+                                }}
+                            ]
+                        }
+                    }
+                }).datagrid('followCustomHandle');
+
+            });
+        </script>
+    </head>
+    <body>
+        <h3>向Header ContextMenu中追加自定义菜单项 和 菜单项onclick事件扩展演示</h3>
+        <p>请点击菜单项[other]，查看菜单项onclick事件扩展</p>
+        <table id="datagrid"></table>
+    </body>
+</html>

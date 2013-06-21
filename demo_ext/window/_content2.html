@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style>
+            body{
+                font-size: 12px;
+            }
+
+            .window-form{
+                padding: 10px;
+            }
+
+            .window-form div{
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+
+            .form-label{
+                width: 100px;
+                padding-left: 2px;
+                text-align: left;
+                display: inline-block;
+            }
+        </style>
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript">
+            function doInit(win){
+                var record = win.getData('record');
+                $('#itemid').val(record.itemid);
+                $('#productname').val(record.productname);
+                $('#attr1').val(record.attr1);
+                $('#listprice').val(record.listprice);
+                $('#unitcost').val(record.unitcost);
+            }
+
+            function doOK(win){
+                var target = win.getData('datagrid');
+                var row = win.getData('record');
+                var index = target.datagrid('getRowIndex', row);
+                target.datagrid('updateRow',{
+                    index: index,
+                    row: {
+                        listprice: $('#listprice').val(),
+                        unitcost: $('#unitcost').val()
+                    }
+                });
+                win.close();
+            }
+
+            function doCancel(win){
+                win.close();
+            }
+        </script>
+    </head>
+    <body>
+        <div class="window-form">
+            <h3>我是一个由iframe加载的页面</h3>
+            <div>
+                <label class="form-label">Item ID:</label>
+                <input type="text" id="itemid" readonly>
+            </div>
+            <div>
+                <label class="form-label">Product:</label>
+                <input type="text" id="productname" readonly>
+            </div>
+            <div>
+                <label class="form-label">Attribute:</label>
+                <input type="text" id="attr1" readonly>
+            </div>
+            <div>
+                <label class="form-label">List Price:</label>
+                <input type="text" id="listprice">
+            </div>
+            <div>
+                <label class="form-label">Unit Cost:</label>
+                <input type="text" id="unitcost">
+            </div>
+        </div>
+    </body>
+</html>

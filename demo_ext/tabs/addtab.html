@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Add Tab - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.tabs.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tabs({
+                    plain: true
+                });
+
+
+                $('#btn1').click(function(){
+                    if($('#tt').tabs('exists', 'Tab2')){
+                        $('#tt').tabs('select', 'Tab2');
+                        return;
+                    }
+
+                    $('#tt').tabs('add',{
+                        title: 'Tab2',
+                        closable: true,
+                        content: 'Tab2 Content.'
+                    });
+                });
+
+                $('#btn2').click(function(){
+                    if($('#tt').tabs('exists', 'Tab3')){
+                        $('#tt').tabs('select', 'Tab3');
+                        return;
+                    }
+
+                    $('#tt').tabs('add',{
+                        title: 'Tab3',
+                        href: '_content3.html',
+                        closable: true
+                    });
+                });
+
+                $('#btn3').click(function(){
+                    if($('#tt').tabs('exists', 'Tab4')){
+                        $('#tt').tabs('select', 'Tab4');
+                        return;
+                    }
+
+                    $('#tt').tabs('add',{
+                        title: 'Tab4',
+                        content: 'url:_content4.html',
+                        closable: true
+                    });
+                });
+
+                $('#btn4').click(function(){
+                    if($('#tt').tabs('exists', 'Tab5')){
+                        $('#tt').tabs('select', 'Tab5');
+                        return;
+                    }
+
+                    $('#tt').tabs('add',{
+                        title: 'Tab5',
+                        content: 'url:_content5.html',
+                        useiframe: true,
+                        closable: true
+                    });
+                });
+            });
+
+        </script>
+    </head>
+    <body>
+        <input type="button" id="btn1" value="添加tab">
+        <input type="button" id="btn2" value="添加tab(href)">
+        <input type="button" id="btn3" value="添加tab(content)">
+        <input type="button" id="btn4" value="添加tab(content&&useiframe)">
+        <br>
+        <div id="tt"  style="width:500px;height:250px;">
+            <div title="Tab1" style="padding: 5px;">
+                tab1
+            </div>
+        </div>
+    </body>
+</html>

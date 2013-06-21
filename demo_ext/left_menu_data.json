@@ -1,0 +1,187 @@
+[{
+    "id": "combo",
+    "text": "Combo",
+    "children": [{
+        "id": "combo_basic",
+        "text": "headervalue 演示",
+        "attributes": {
+            "url": "combo/basic.html"
+        }
+    }]
+},{
+    "id": "combobox",
+    "text": "Combobox",
+    "children": [{
+        "id": "combobox_basic",
+        "text": "headervalue 演示",
+        "attributes": {
+            "url": "combobox/basic.html"
+        }
+    },{
+        "id": "combobox_related1",
+        "text": "远程数据联动",
+        "attributes": {
+            "url": "combobox/related1.html"
+        }
+    },{
+        "id": "combobox_related1",
+        "text": "本地数据联动",
+        "attributes": {
+            "url": "combobox/related2.html"
+        }
+    }]
+},{
+    "id": "menu",
+    "text": "Menu",
+    "children":[{
+        "id": "menu_baisc",
+        "text": "动态批量创建item",
+        "attributes": {
+            "url": "menu/basic.html"
+        }
+    }]
+},{
+    "id": "tabs",
+    "text": "Tabs",
+    "children": [{
+        "id": "tabs_contextmenu",
+        "text": "标签页右键菜单",
+        "attributes": {
+            "url": "tabs/contextmenu.html"
+        }
+    },{
+        "id": "tabs_custommenu",
+        "text": "自定义标签页右键菜单项",
+        "attributes": {
+            "url": "tabs/custommenu.html"
+        }
+    },{
+        "id": "tabs_mergeMenuItem",
+        "text": "标签页右键菜单项合并",
+        "attributes": {
+            "url": "tabs/mergeMenuItem.html"
+        }
+    },{
+        "id": "tabs_add",
+        "text": "add 方法扩展演示",
+        "attributes": {
+            "url": "tabs/addtab.html"
+        }
+    }]
+},{
+    "id": "window",
+    "text": "Window",
+    "children": [{
+        "id": "window_basic",
+        "text": "Window",
+        "attributes": {
+            "url": "window/basic.html"
+        }
+    },{
+        "id": "window_param",
+        "text": "与父页面间传值(非iframe)",
+        "attributes": {
+            "url": "window/param.html"
+        }
+    },{
+        "id": "window_param",
+        "text": "与父页面间传值(iframe)",
+        "attributes": {
+            "url": "window/iframeparam.html"
+        }
+    }]
+},{
+    "id": "datagrid",
+    "text": "DataGrid",
+    "children": [{
+        "id": "datagrid_headercontextmenu",
+        "text": "headerContextmenu",
+        "children": [{
+            "id": "datagrid_headercontextmenu_basic",
+            "text": "Header ContextMenu",
+            "attributes": {
+                "url": "datagrid/headercontextmenu.html"
+            }
+        },{
+            "id": "datagrid_headercontextmenu_merge",
+            "text": "Header ContextMenu 菜单项追加",
+            "attributes": {
+                "url": "datagrid/hcontextmenu2.html"
+            }
+        },{
+            "id": "datagrid_headercontextmenu_custom",
+            "text": "Header ContextMenu 菜单项替换",
+            "attributes": {
+                "url": "datagrid/hcontextmenu3.html"
+            }
+        }]
+    },{
+        "id": "datagrid_rowcontextmenu",
+        "text": "rowContextmenu",
+        "children":[{
+            "id": "datagrid_rowcontextmenu_basic",
+            "text": "Row ContextMenu",
+            "attributes": {
+                "url": "datagrid/rowcontextmenu.html"
+            }
+        },{
+            "id": "datagrid_rowcontextmenu_merge",
+            "text": "Row ContextMenu 菜单项追加",
+            "attributes": {
+                "url": "datagrid/rcontextmenu2.html"
+            }
+        },{
+            "id": "datagrid_rowcontextmenu_custom",
+            "text": "Row ContextMenu 菜单项替换",
+            "attributes": {
+                "url": "datagrid/rcontextmenu3.html"
+            }
+        },{
+            "id": "datagrid_rowcontextmenu_onclick",
+            "text": "Row ContextMenu onClick事件",
+            "attributes": {
+                "url": "datagrid/rcontextmenu4.html"
+            }
+        }]
+    },{
+        "id": "datagrid_tooltip",
+        "text": "Tooltip",
+        "children": [{
+            "id": "datagrid_rowtooltip_basic",
+            "text": "row tooltip",
+            "attributes": {
+                "url": "datagrid/tooltip.html"
+            }
+        },{
+            "id": "datagrid_rowtooltip_custom",
+            "text": "自定义row tooltip显示风格",
+            "attributes": {
+                "url": "datagrid/customtooltip.html"
+            }
+        },{
+            "id": "datagrid_celltooltip_basic",
+            "text": "cell tooltip",
+            "attributes": {
+                "url": "datagrid/celltooltip.html"
+            }
+        }]
+    },{
+        "id": "datagrid_masterslave",
+        "text": "级联操作",
+        "attributes": {
+            "url": "datagrid/masterslave.html"
+        }
+    },{
+        "id": "datagrid_pagination",
+        "text": "分页栏控制",
+        "attributes": {
+            "url": "datagrid/pagination.html"
+        }
+    },{
+        "id": "datagrid_rowediting",
+        "text": "仿Ext rowediting编辑风格",
+        "attributes": {
+            "url": "datagrid/rowediting.html"
+        }
+    }]
+}]

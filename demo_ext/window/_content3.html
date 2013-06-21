@@ -1,0 +1,59 @@
+<script type="text/javascript">
+    function doOK(win){
+        var target = win.getData('datagrid');
+        var row = win.getData('record');
+        var index = target.datagrid('getRowIndex', row);
+        target.datagrid('updateRow',{
+            index: index,
+            row: {
+                listprice: $('#listprice').val(),
+                unitcost: $('#unitcost').val()
+            }
+        });
+        win.close();
+    }
+
+    function doCancel(win){
+        win.close();
+    }
+</script>
+<style>
+    .window-form{
+        padding: 10px;
+    }
+
+    .window-form div{
+        padding-top: 2px;
+        padding-bottom: 2px;
+    }
+
+    .form-label{
+        width: 100px;
+        padding-left: 2px;
+        text-align: left;
+        display: inline-block;
+    }
+</style>
+<div class="window-form">
+    <h3>我不是通过iframe加载的window内容。</h3>
+    <div>
+        <label class="form-label">Item ID:</label>
+        <input type="text" id="itemid" readonly>
+    </div>
+    <div>
+        <label class="form-label">Product:</label>
+        <input type="text" id="productname" readonly>
+    </div>
+    <div>
+        <label class="form-label">Attribute:</label>
+        <input type="text" id="attr1" readonly>
+    </div>
+    <div>
+        <label class="form-label">List Price:</label>
+        <input type="text" id="listprice">
+    </div>
+    <div>
+        <label class="form-label">Unit Cost:</label>
+        <input type="text" id="unitcost">
+    </div>
+</div>
