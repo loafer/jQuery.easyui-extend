@@ -2,6 +2,8 @@
  * Created with IntelliJ IDEA.
  * @author: 爱看书不识字<zjh527@163.com>
  *
+ * depend on:
+ *  jquery.easyui.menu.extend.js
  *
  * 扩展说明：
  *  1、支持简单JSON格式数据加载，当简单JSON格式数据中，某条数据不带有表示父节点的字段，
