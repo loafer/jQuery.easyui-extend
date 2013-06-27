@@ -1,9 +1,30 @@
 <!DOCTYPE html>
 <html>
-<head>
-    <title></title>
-</head>
-<body>
-
-</body>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple Data - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tree({
+                    url: '../tree/tree_data1.json',
+                    customAttr:{
+                        textField: 'region',
+                        parentField: '_parentId'
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h3>简单JSON格式</h3>
+        <ul id="tt"></ul>
+    </body>
 </html>

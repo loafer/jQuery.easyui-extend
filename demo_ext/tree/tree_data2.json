@@ -7,7 +7,14 @@
 		"state":"closed",
 		"children":[{
 			"id":111,
-			"text":"Friend"
+			"text":"Friend",
+            "children":[{
+                "id": "tom",
+                "text": "Tom"
+            },{
+                "id":"jery",
+                "text": "Jery"
+            }]
 		},{
 			"id":112,
 			"text":"Wife"
@@ -36,6 +43,7 @@
 		"id":16,
 		"text":"Actions",
 		"children":[{
+            "id":"add",
 			"text":"Add",
 			"iconCls":"icon-add"
 		},{
