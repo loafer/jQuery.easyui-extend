@@ -43,3 +43,9 @@
 .icon-form{
     background:url('images/application_form.png') no-repeat center center;
 }
+.icon-moveup{
+    background:url('images/tree/move_up.png') no-repeat center center;
+}
+.icon-movedown{
+    background:url('images/tree/move_down.png') no-repeat center center;
+}
