@@ -136,14 +136,14 @@
                 text: '全部显示',
                 iconCls: 'icon-columns',
                 onclick: function(item, field, datagrid){
-                    $.fn.datagrid.headerContextMenu.defaults.events.doShowAll(datagrid);
+                    $.fn.datagrid.headerContextMenu.defaultEvents.doShowAll(datagrid);
                 }
             },{
                 id: menuid+'_restore',
                 text: '还原',
                 iconCls: 'icon-columns',
                 onclick: function(item, field, datagrid){
-                    $.fn.datagrid.headerContextMenu.defaults.events.doRestore(datagrid);
+                    $.fn.datagrid.headerContextMenu.defaultEvents.doRestore(datagrid);
                 }
             },
             '-']
@@ -170,9 +170,9 @@
                     var field = getFieldFromMenuItemId(item.id);
                     var hidden = $(dg).datagrid('getColumnOption', field).hidden;
                     if(!hidden){
-                        $.fn.datagrid.headerContextMenu.defaults.events.doHideColumn(dg, field, item);
+                        $.fn.datagrid.headerContextMenu.defaultEvents.doHideColumn(dg, field, item);
                     }else{
-                        $.fn.datagrid.headerContextMenu.defaults.events.doShowColumn(dg, field, item);
+                        $.fn.datagrid.headerContextMenu.defaultEvents.doShowColumn(dg, field, item);
                     }
                 }
             });
@@ -573,8 +573,7 @@
     }
 
     $.fn.datagrid.headerContextMenu = {};
-    $.fn.datagrid.headerContextMenu.defaults = {};
-    $.fn.datagrid.headerContextMenu.defaults.events = {
+    $.fn.datagrid.headerContextMenu.defaultEvents = {
         doHideColumn: function(target, field, item){
             $(target).datagrid('hideColumn', field);
             var menu = $(target).datagrid('getHeaderContextMenu');
@@ -770,20 +769,12 @@
     $.extend($.fn.datagrid.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
-//                var options = $.extend(true, {}, $.fn.datagrid.defaults, $(this).datagrid('options'));
-
                 initHeaderContextMenu(this);
-
                 initRowContextMenu(this);
-
                 initPagination(this);
-
                 setMasterSlave(this);
-
                 registRowEditingHandler(this);
-
                 buildTooltip(this);
-
             });
         },
         getHeaderContextMenu: function(jq){
