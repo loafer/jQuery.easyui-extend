@@ -9,13 +9,28 @@
  *  1、支持简单JSON格式数据加载，当简单JSON格式数据中，某条数据不带有表示父节点的字段，
  *     或父节点字段所存储的值与此节点id相同时，则视为根（子树根）节点下的第一级节点。
  *
+ *     1.1、属性说明：
+ *          idField:        值字段
+ *          textField:      节点文本字段
+ *          iconField:      节点图标字段
+ *          parentField:    父节点字段，无此属性设置，则不会执行简单JSON数据格式加载
+ *
+ *     1.2、如果某条数据中idField和parentField属性指向的字段对应值相等，或者不包含
+ *          parentField属性指定的字段时，则这条数据被视为根（子数根）节点。
+ *
+ *
+ *     1.3、加载时idField、textField、 iconField分别默认查找id、text、icon
+ *
+ *     1.4、示例：
  *          $('#tt').tree({
  *              url: '../tree/tree_data1.json',
  *              customAttr: {
  *                  textField: 'region',
+ *                  iconField: 'icon',
  *                  parentField: '_parentId'
  *              }
  *          });
+ *
  *
  *  2、支持右键菜单
  *      2.1 显示菜单
@@ -84,6 +99,36 @@
  *
  *      2.5 默认支持节点上移、下移操作
  *
+ *
+ *  3、节点收缩、展开控制
+ *      3.1、点击节点展开、收缩控制。
+ *          控制属性： expandOnNodeClick  ，默认值：true
+ *
+ *          $('#tt').tree({
+ *              lines: true,
+ *              url: '../tree/tree_data2.json',
+ *              customAttr:{
+ *                  expandOnNodeClick: true
+ *              }
+ *          }).tree('followCustomHandle');
+ *
+ *      3.2、双击节点展开、收缩控制。
+ *          控制属性：expandOnDblClick，默认值：false
+ *
+ *          $('#tt').tree({
+ *              lines: true,
+ *              url: '../tree/tree_data2.json',
+ *              customAttr: {
+ *                  expandOnNodeClick: false,
+ *                  expandOnDblClick: true
+ *              }
+ *          }).tree('followCustomHandle');
+ *
+ *      3.3、当expandOnNodeClick、 expandOnDblClick同时为true时，当expandOnNodeClick起作用。
+ *
+ *
+ *
+ *
  */
 (function($){
     function getContextMenuId(target){
@@ -122,8 +167,8 @@
     function getDefaultContextMenuItems(target){
         var menuid = getContextMenuId(target);
         return [
-            {text: '向上', iconCls: 'icon-moveup', onclick: $.fn.tree.contextmenu.defaultEvents.moveup},
-            {text: '向下', iconCls: 'icon-movedown', onclick: $.fn.tree.contextmenu.defaultEvents.movedown}
+            {id: menuid+'_moveup', text: '向上', iconCls: 'icon-moveup', onclick: $.fn.tree.contextmenu.defaultEvents.moveup},
+            {id: menuid+'_movedown', text: '向下', iconCls: 'icon-movedown', onclick: $.fn.tree.contextmenu.defaultEvents.movedown}
         ];
     }
 
@@ -201,6 +246,44 @@
         return null;
     }
 
+    function expandHandle(target){
+        var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
+        if(!options.customAttr.expandOnNodeClick && !options.customAttr.expandOnDblClick) return;
+
+
+        if(options.customAttr.expandOnNodeClick){
+            var onClickCallback = options.onClick;
+            $(target).tree({
+                onClick: function(node){
+                    $(target).tree('toggle', node.target);
+                    onClickCallback && onClickCallback.call(this, node);
+                }
+            });
+            return;
+        }
+
+        if(options.customAttr.expandOnDblClick){
+            var onDblClickCallback = options.onDblClick;
+            $(target).tree({
+                onDblClick: function(node){
+                    $(target).tree('toggle', node.target);
+                    onDblClickCallback && onDblClickCallback.call(this, node);
+                }
+            });
+        }
+
+    }
+
+    function getLevel(target, node){
+        var n = 1;
+        var parentNode = $(target).tree('getParent', node.target);
+        if(!parentNode){
+            return 1;
+        }
+
+        return n + getLevel(target, parentNode);
+    }
+
     $.fn.tree.contextmenu={};
     $.fn.tree.contextmenu.defaultEvents={
         moveup: function(item, node, target){
@@ -230,6 +313,15 @@
         idField: null,
         textField: null,
         parentField: null,
+        iconField: null,
+        /**
+         * 单击节点展开收缩
+         */
+        expandOnNodeClick: true,
+        /**
+         * 双击节点展开收缩
+         */
+        expandOnDblClick: false,
         contextMenu: {
             isShow: false,
             isMerge: true,
@@ -242,6 +334,7 @@
         if(cusOptions && cusOptions.parentField){
             var idField = cusOptions.idField || 'id',
                 textField = cusOptions.textField || 'text',
+                iconField = cusOptions.iconField || 'icon',
                 parentField = cusOptions.parentField;
 
             var treeData = [], tmpMap = [];
@@ -257,6 +350,7 @@
                     }
 
                     data[i]['text'] = data[i][textField];
+                    data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
                     tmpMap[data[i][parentField]]['children'].push(data[i]);
                 }else{
                     data[i]['text'] = data[i][textField];
@@ -274,7 +368,14 @@
         followCustomHandle: function(jq){
             return jq.each(function(){
                 initContextMenu(this);
+                expandHandle(this);
             });
+        },
+        /**
+         * 获得节点层级
+         */
+        getLevel: function(jq, node){
+            return getLevel(jq[0], node);
         }
     });
 })(jQuery);
