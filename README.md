@@ -38,12 +38,14 @@ jQuery.easyui-extend
 
 
 
-演示地址：http://loafer.cloudfoundry.com/    
+
+<h3>其他</h3>
+
+
+演示地址：http://loafer.cloudfoundry.com/
 Blog：http://blog.csdn.net/zjh527
 
 
-
-<h3>其他</h3>
 
 <i>
     说明：
