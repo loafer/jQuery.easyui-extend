@@ -42,7 +42,7 @@
                     $.showWindow({
                         title: 'Edit',
                         useiframe: true,
-                        content: 'url:../../demo_ext/window/_content2.html',
+                        content: 'url:../demo_ext/window/_content2.html',
                         data:{record: row, datagrid: $('#dg')},
                         buttons:[{
                             text: 'OK',
@@ -57,7 +57,6 @@
                         }],
                         onLoad: function(win, body){
                             //window打开时调用，初始化form内容
-                            console.log('===>onLoad')
                             if(body){
                                 body.doInit(win);
                             }
