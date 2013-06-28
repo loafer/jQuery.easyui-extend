@@ -18,14 +18,22 @@
  *
  *      4、其他参数请参考easyui.window。
  *
- *      5、onLoad方法接收两个参数win、body
+ *      5、onLoad方法接收两个参数win、body。
  *          win:    一个Object对象，包含以下两个方法:
  *                      getData: 参数name。用来获取data中设置的属性
  *                      close: 无参数，关闭当前窗体
  *
- *          body:   一个指向window.top或window.self的引用。当在没有开启useiframe=true的前提下，
- *                  要在onLoad中对easyui.window中的内容进行设置时，请使用类似如下形式操作:
- *                      body.$('#username').val('Tom')；
+ *          body:   一个指向弹出窗body的引用，分以下两种：
+ *                  a) 当useiframe=false时，是一个指向window.top或window.self的引用。
+ *                     要在onLoad中对easyui.window中的内容进行设置时，请使用类似如下形式操作:
+ *                          body.$('#username').val('Tom')；
+ *
+ *                  b) 当useiframe=true时，是一个指向iframe.contentWindow的引用。
+ *                     要在onLoad中对easyui.window中的内容进行设置时，操作前先判断body是否存在，如下形式操作:
+ *                          if(body) body.doInit();
+ *
+ *
+ *          注意：当useiframe=true时，不同浏览器对此方法的执行行为不同。
  *
  *
  *      6、toolbar和buttons中定义的每个元素的handler方法都接收一个参数win。参数win说明参见5
