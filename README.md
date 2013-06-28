@@ -12,14 +12,19 @@ jQuery.easyui-extend
 要想扩展属性生效，必须执行方法followCustomHandle。<br>
 
 
-使用
-===
+<h3>使用</h3>
     首先，在引入jquery.easyui所需要的资源之后，引入如下文件：
 ###
     <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
     <script type="text/javascript" src="jquery.easyui.extend.min.js"></script>
 
-    然后
+
+
+
+然后
+
+
+
 ###  
     $('#cc').combo({
        required: true,
@@ -40,8 +45,8 @@ Blog：http://blog.csdn.net/zjh527
 
 
 
-其他
-===
+<h3>其他</h3>
+
 <i>
     说明：
     <ul>
