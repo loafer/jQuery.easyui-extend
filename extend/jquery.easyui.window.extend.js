@@ -38,6 +38,9 @@
  *
  *      6、toolbar和buttons中定义的每个元素的handler方法都接收一个参数win。参数win说明参见5
  *
+ *
+ *      7、窗体大小，默认计算规则：父页面大小*0.6 ，如用户指定大小，则不使用默认规则。
+ *
  */
 (function($){
 
@@ -57,6 +60,28 @@
         return w['top'];
     }
 
+    function setWindowSize(w, options){
+        var _top = getTop(w, options);
+        var wHeight = $(_top).height(), wWidth = $(_top).width();
+        if(options.locate == 'top' || options.locate == 'document'){
+            if(options.height == 'auto'){
+                options.height = wHeight * 0.6
+            }
+
+            if(options.width == 'auto'){
+                options.width = wWidth * 0.6
+            }
+        }else{
+            var locate = /^#/.test(options.locate)? options.locate:'#'+options.locate;
+            if(options.height == 'auto'){
+                options.height = $(locate).height() * 0.6
+            }
+
+            if(options.width == 'auto'){
+                options.width = $(locate).width() * 0.6
+            }
+        }
+    }
 
     $.extend({
         /**
@@ -79,8 +104,8 @@
                 useiframe: false,
                 locate: 'top',
                 data: undefined,
-                width: 500,
-                height: 400,
+                width: 'auto',
+                height: 'auto',
                 cache: false,
                 minimizable: true,
                 maximizable: true,
@@ -90,16 +115,6 @@
             }, options);
 
 
-            var callbackArguments={
-                getData: function(name){
-                    return winOpts.data ? winOpts.data[name]:null;
-                },
-                close: function(){
-                    target.panel('close');
-                }
-            };
-
-            var _top = getTop(window, winOpts);
             var iframe = null;
 
             if(/^url:/.test(winOpts.content)){
@@ -123,7 +138,16 @@
                 delete winOpts.content;
             }
 
+            var callbackArguments={
+                getData: function(name){
+                    return winOpts.data ? winOpts.data[name]:null;
+                },
+                close: function(){
+                    target.panel('close');
+                }
+            };
 
+            var _top = getTop(window, winOpts);
             var warpHandler = function(handler){
                 if(typeof handler == 'function'){
                     return function(){
@@ -143,6 +167,9 @@
                     }
                 }
             }
+
+            setWindowSize(window, winOpts);
+
 
             //包装toolbar中各对象的handler
             if(winOpts.toolbar && $.isArray(winOpts.toolbar)){
@@ -183,7 +210,13 @@
         },
         showModalDialog: function(options){
             options = options || {};
-            var opts = $.extend({}, options, {modal: true, minimizable: false, maximizable: false, resizable: false, collapsible: false});
+            var opts = $.extend({}, options, {
+                modal: true,
+                minimizable: false,
+                maximizable: false,
+                resizable: false,
+                collapsible: false
+            });
             $.showWindow(opts);
         }
     })
