@@ -18,7 +18,7 @@
  *          parentField属性指定的字段时，则这条数据被视为根（子数根）节点。
  *
  *
- *     1.3、加载时idField、textField、 iconField分别默认查找id、text、icon
+ *     1.3、加载时idField、textField、 iconField、parentField 分别默认查找id、text、icon、pid
  *
  *     1.4、示例：
  *          $('#tt').tree({
@@ -334,7 +334,7 @@
             var idField = cusOptions.idField || 'id',
                 textField = cusOptions.textField || 'text',
                 iconField = cusOptions.iconField || 'icon',
-                parentField = cusOptions.parentField;
+                parentField = cusOptions.parentField || 'pid';
 
             var treeData = [], tmpMap = [];
 
