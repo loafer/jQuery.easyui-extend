@@ -372,6 +372,7 @@
             return $(target).attr('id')+'_editor_buttons_panel';
         }
 
+        var deltaX = 120;
         var buildEditorButtonsPanel = function(target){
             var panelId = getEditorButtonsPanelId(target);
             if($('#'+panelId).length > 0) return;
@@ -389,7 +390,7 @@
                     'border-bottom': '1px solid #ddd',
                     'border-left': '1px solid #ddd',
                     'border-right': '1px solid #ddd',
-                    'left': parseInt(panel.width()/2)-120,
+                    'left': parseInt(panel.width()/2)-deltaX,
                     'z-index': 2013,
                     'display': 'none',
                     'padding': '4px 5px'
@@ -416,27 +417,32 @@
 
         var showEditorButtonsPanel = function(target, index){
             var opts = $.data(target, "datagrid").options;
-            var tr = opts.finder.getTr(target, index);
+            var tr = opts.finder.getTr(target, index, "body", 2);
             var position = tr.position();
-
             var fixPosition = function(){
-                var offset = tr.height() * 2 + 10;
-                var t = position.top + datagrid_body.scrollTop();
+                var y_offset = tr.height(), x_offset = tr.width();
+                var top = position.top + datagrid_body.scrollTop(), left = position.left;
 
-                if((position.top+offset) > datagrid_body.height()){
-                    return {top: t - offset};
+                if(x_offset > datagrid_body.width()){
+                    left = datagrid_body.width()/2 - deltaX;
                 }else{
-                    return {top: t};
+                    left = x_offset/2 - deltaX;
                 }
+
+                if(top + y_offset*2 > datagrid_body.height()){
+                    top = top - (y_offset  + 11)
+                }else{
+                    top = top + y_offset;
+                }
+
+                return {top: top, left: left};
             }
 
             var edtBtnPanelId = '#'+getEditorButtonsPanelId(target);
             var panel = $(target).datagrid('getPanel');
             var datagrid_body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
 
-            $(edtBtnPanelId).css({
-                top: fixPosition().top
-            }).show();
+            $(edtBtnPanelId).css(fixPosition()).show();
         }
 
         var hideEditorButtonsPanel = function(target){
