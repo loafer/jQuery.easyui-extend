@@ -420,7 +420,7 @@
             var position = tr.position();
 
             var fixPosition = function(){
-                var offset = tr.width() * 2 + 10;
+                var offset = tr.height() * 2 + 10;
                 var t = position.top + datagrid_body.scrollTop();
 
                 if((position.top+offset) > datagrid_body.height()){
