@@ -66,6 +66,9 @@
                             alert($('#datagrid').datagrid('getChanges','updated'))
                         }
                     }],
+                    customAttr: {
+                        rowediting: true
+                    },
                     onClickRow: function(index){
                         var editingRow = $('#datagrid').datagrid('getEditingRow');
                         var editingRowIndex = $('#datagrid').datagrid('getRowIndex', editingRow);

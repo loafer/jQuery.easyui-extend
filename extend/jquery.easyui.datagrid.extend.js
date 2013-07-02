@@ -752,7 +752,7 @@
          */
         slaveList: undefined,
         activeSlave: 'dblclickrow',
-        rowediting: true,
+        rowediting: false,
         /**
          * target: row|cell ,tooltip 的触发对象，默认row
          */
