@@ -123,7 +123,7 @@
  *              }
  *          }).tree('followCustomHandle');
  *
- *      3.3、当expandOnNodeClick、 expandOnDblClick同时为true时，当expandOnNodeClick起作用。
+ *      3.3、当expandOnNodeClick、 expandOnDblClick同时为true时，expandOnNodeClick起作用。
  *
  *
  *
