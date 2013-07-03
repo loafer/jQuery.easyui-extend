@@ -96,7 +96,8 @@
  *              }
  *          }).tree('followCustomHandle');
  *
- *      2.5 默认支持节点上移、下移操作
+ *
+ *      2.5 默认支持节点位置上移、下移操作
  *
  *
  *  3、节点收缩、展开控制
@@ -126,7 +127,27 @@
  *      3.3、当expandOnNodeClick、 expandOnDblClick同时为true时，expandOnNodeClick起作用。
  *
  *
+ *  4、增加getLevel方法，返回节点层级
  *
+ *
+ *  5、增加onAfterMove事件，节点位置上移、下移操作之后被触发。
+ *      此事件接收两个参数：
+ *          target:     被互换位置的节点对象
+ *          source:     当前被操作要改变位置的节点对象
+ *
+ *      eg.
+ *          $('#tt').tree({
+ *              url: '../tree/tree_data2.json',
+ *              customAttr: {
+ *                  contextMenu: {
+ *                      isShow: true
+ *                  },
+ *                  onAfterMove: function(target, source){
+ *                      var msg = '位置互换节点为：[ ' + target.text + ' ]和[ ' + source.text + ' ]';
+ *                      $.messager.alert('信息', msg, 'info');
+ *                  }
+ *              }
+ *          }).tree('followCustomHandle');
  *
  */
 (function($){
@@ -166,8 +187,8 @@
     function getDefaultContextMenuItems(target){
         var menuid = getContextMenuId(target);
         return [
-            {id: menuid+'_moveup', text: '向上', iconCls: 'icon-moveup', onclick: $.fn.tree.contextmenu.defaultEvents.moveup},
-            {id: menuid+'_movedown', text: '向下', iconCls: 'icon-movedown', onclick: $.fn.tree.contextmenu.defaultEvents.movedown}
+            {id: menuid+'_moveup', text: '位置上移', iconCls: 'icon-moveup', onclick: $.fn.tree.contextmenu.defaultEvents.moveup},
+            {id: menuid+'_movedown', text: '位置下移', iconCls: 'icon-movedown', onclick: $.fn.tree.contextmenu.defaultEvents.movedown}
         ];
     }
 
@@ -210,7 +231,7 @@
     function getPrevNode(target, node){
         var nodeTag = node.id || node.text;
         var parent = $(target).tree('getParent', node.target);
-        var children = $(target).tree('getChildren', parent.target);
+        var children = getChildren(target, parent.target, false);
         var prevNodeIndex = -1;
         for(var i= 0, len = children.length; i<len; i++){
             var childrenTag = children[i].id || children[i].text;
@@ -229,7 +250,7 @@
     function getNextNode(target, node){
         var nodeTag = node.id || node.text;
         var parent = $(target).tree('getParent', node.target);
-        var children = $(target).tree('getChildren', parent.target);
+        var children = getChildren(target, parent.target, false);
         var nextNodeIndex = -1;
         for(var i= 0, len = children.length; i<len; i++){
             var childrenTag = children[i].id || children[i].text;
@@ -243,6 +264,19 @@
             return children[nextNodeIndex];
         }
         return null;
+    }
+
+    function getChildren(target, nodeTarget, depth){
+        if(depth){
+            return $(target).tree('getChildren', nodeTarget);
+        }else{
+            var children = [];
+            $(nodeTarget).next().find('>li>div.tree-node').each(function(){
+                children.push($(target).tree('getNode', this));
+            });
+
+            return children;
+        }
     }
 
     function expandHandle(target){
@@ -286,6 +320,7 @@
     $.fn.tree.contextmenu={};
     $.fn.tree.contextmenu.defaultEvents={
         moveup: function(item, node, target){
+            var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
             var prevnode = getPrevNode(target, node);
             if(prevnode){
                 var nodeData = $(target).tree('pop', node.target);
@@ -293,9 +328,11 @@
                     before: prevnode.target,
                     data: nodeData
                 });
+                options.customAttr.onAfterMove.call(this, prevnode, node);
             }
         },
         movedown: function(item, node, target){
+            var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
             var nextnode = getNextNode(target, node);
             if(nextnode){
                 var nodeData = $(target).tree('pop', node.target);
@@ -303,6 +340,7 @@
                     after: nextnode.target,
                     data: nodeData
                 });
+                options.customAttr.onAfterMove.call(this, nextnode, node);
             }
         }
     }
@@ -325,7 +363,13 @@
             isShow: false,
             isMerge: true,
             items:[]
-        }
+        },
+        /**
+         * 节点位置上、下移动后触发事件
+         * @param target    被互换位置的节点对象
+         * @param source    当前被操作要改变位置的节点对象
+         */
+        onAfterMove: function(target, source){}
     };
 
     $.fn.tree.defaults.loadFilter = function(data, parent){
