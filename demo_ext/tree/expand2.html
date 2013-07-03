@@ -14,25 +14,17 @@
             $(function(){
                 $('#tt').tree({
                     lines: true,
-                    url: '../tree/tree_data2.json'
-                });
-
-
-                $('#btn1').click(function(){
-                    var node = $('#tt').tree('getSelected');
-                    if(node){
-                        alert($('#tt').tree('getLevel', node));
-                    }else{
-                        alert('请先选中一个节点。');
+                    url: '../tree/tree_data2.json',
+                    customAttr:{
+                        expandOnDblClick: true
                     }
+                }).tree('followCustomHandle');
 
-                });
             });
         </script>
     </head>
     <body>
-        <h3>基本演示</h3>
-        <input type="button" id="btn1" value="getLevel">
+        <h3>双击节点展开/收缩</h3>
         <ul id="tt"></ul>
     </body>
 </html>

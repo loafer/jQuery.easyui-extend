@@ -16,10 +16,13 @@
             $(function(){
                 $('#tt').tree({
                     url: '../tree/tree_data2.json',
-                    dnd: true,
                     customAttr:{
                         contextMenu: {
                             isShow: true
+                        },
+                        onAfterMove: function(target , source){
+                            var msg = '位置互换节点为：[ ' + target.text + ' ]和[ ' + source.text + ' ]';
+                            $.messager.alert('信息', msg, 'info');
                         }
                     }
                 }).tree('followCustomHandle');
@@ -27,7 +30,8 @@
         </script>
     </head>
     <body>
-        <h3>右键菜单及右键菜单默认行为演示</h3>
+        <h3>右键菜单及节点位置上移、下移和onAfterMove事件演示</h3>
+        <p>请点击右键菜单项[位置上移动]、[位置下移动]，查看演示效果</p>
         <ul id="tt"></ul>
     </body>
 </html>
