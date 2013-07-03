@@ -101,7 +101,7 @@
  *
  *  3、节点收缩、展开控制
  *      3.1、点击节点展开、收缩控制。
- *          控制属性： expandOnNodeClick  ，默认值：true
+ *          控制属性： expandOnNodeClick  ，默认值：false
  *
  *          $('#tt').tree({
  *              lines: true,
@@ -316,7 +316,7 @@
         /**
          * 单击节点展开收缩
          */
-        expandOnNodeClick: true,
+        expandOnNodeClick: false,
         /**
          * 双击节点展开收缩
          */
