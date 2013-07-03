@@ -49,3 +49,9 @@
 .icon-movedown{
     background:url('images/tree/move_down.png') no-repeat center center;
 }
+.icon-collapse{
+    background:url('images/tree/toggle_collapse.png') no-repeat center center;
+}
+.icon-expand{
+    background:url('images/tree/toggle_expand.png') no-repeat center center;
+}
