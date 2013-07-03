@@ -8,7 +8,11 @@ jQuery.easyui-extend
   <li>combobox</li>
   <li>datagrid</li>
   <li>window</li>
+  <li>tree</li>
+  <li>treegrid</li>
 </ul>
+
+每个组件的扩展内容，请自行查看extend下相应文件的开头说明。
 要想扩展属性生效，必须执行方法followCustomHandle。<br>
 
 
