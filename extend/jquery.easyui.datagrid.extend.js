@@ -420,19 +420,20 @@
             var tr = opts.finder.getTr(target, index, "body", 2);
             var position = tr.position();
             var fixPosition = function(){
-                var y_offset = tr.height(), x_offset = tr.width();
+                var trHeight = tr.height(), trWidth = tr.width();
                 var top = position.top + datagrid_body.scrollTop(), left = position.left;
+                var delta = 11;
 
-                if(x_offset > datagrid_body.width()){
+                if(trWidth > datagrid_body.width()){
                     left = datagrid_body.width()/2 - deltaX;
                 }else{
-                    left = x_offset/2 - deltaX;
+                    left = trWidth/2 - deltaX;
                 }
 
-                if(top + y_offset*2 > datagrid_body.height()){
-                    top = top - (y_offset  + 11)
+                if(position.top + (trHeight * 2 + delta) > datagrid_body.height()){
+                    top = top - (trHeight  + delta)
                 }else{
-                    top = top + y_offset;
+                    top = top + trHeight;
                 }
 
                 return {top: top, left: left};
