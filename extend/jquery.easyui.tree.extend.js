@@ -28,7 +28,7 @@
  *                  iconField: 'icon',
  *                  parentField: '_parentId'
  *              }
- *          });
+ *          }).tree('followCustomHandle');
  *
  *
  *  2、支持右键菜单
@@ -40,7 +40,7 @@
  *                      isShow: true
  *                  }
  *              }
- *          });
+ *          }).tree('followCustomHandle');
  *
  *
  *      2.2  自定义菜单项
@@ -60,7 +60,7 @@
  *                      }]
  *                  }
  *              }
- *          });
+ *          }).tree('followCustomHandle');
  *
  *
  *      2.3  自定义菜单项替换默认菜单项
@@ -75,7 +75,7 @@
  *                      }]
  *                  }
  *              }
- *          });
+ *          }).tree('followCustomHandle');
  *
  *
  *      2.4  菜单项onclick事件参数说明：
@@ -94,7 +94,7 @@
  *                      }]
  *                  }
  *              }
- *          });
+ *          }).tree('followCustomHandle');
  *
  *      2.5 默认支持节点上移、下移操作
  *
