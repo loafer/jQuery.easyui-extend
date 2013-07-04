@@ -272,5 +272,34 @@
         "attributes": {
             "url": "treegrid/simpledata.html"
         }
+    },{
+        "id": "treegrid_tooltip",
+        "text": "tooltip",
+        "state":"closed",
+        "children": [{
+            "id": "treegrid_rowtooltip",
+            "text": "Row显示风格",
+            "attributes": {
+                "url": "treegrid/rowtooltip.html"
+            }
+        },{
+            "id": "treegrid_rowtooltip_custom",
+            "text": "自定义Row显示风格",
+            "attributes": {
+                "url": "treegrid/rowtooltip_custom.html"
+            }
+        },{
+            "id": "treegrid_celltooltip",
+            "text": "Cell显示风格",
+            "attributes": {
+                "url": "treegrid/celltooltip.html"
+            }
+        },{
+            "id": "treegrid_celltooltip_custom",
+            "text": "自定义Cell显示风格",
+            "attributes": {
+                "url": "treegrid/celltooltip_custom.html"
+            }
+        }]
     }]
 }]

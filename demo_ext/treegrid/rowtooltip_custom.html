@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>TreeGrid Custom Tooltip -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.treegrid.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').treegrid({
+                    url: '../treegrid/treegrid_data1.json',
+                    idField: 'id',
+                    treeField: 'name',
+                    columns:[[
+                        {field: 'name', title: 'Name', width: 220},
+                        {field: 'size', title: 'Size', width: 100},
+                        {field: 'date', title: 'Date', width: 150}
+                    ]],
+                    customAttr: {
+                        tooltip: {
+                            enable: true,
+                            formatter: function(nodeid, node){
+                                var fields = $.merge(
+                                        $('#tt').treegrid('getColumnFields', true),
+                                        $('#tt').treegrid('getColumnFields')
+                                );
+
+                                var result = [];
+                                result.push('<table style="width: 300px" border="0">');
+                                result.push('<tr><th width="50%">Field</th><th width="50%">Value</th></tr>');
+                                $.each(fields, function(){
+                                    var field = this;
+                                    result.push('<tr><td><b>'+field+'</b></td><td>'+node[field]+'</td></tr>')
+                                });
+                                result.push('</table>');
+                                return {
+                                    content: result.join(''),
+                                    css: {
+                                        backgroundColor: '#FFFF88',
+                                        borderColor: '#df8505'
+                                    }
+                                };
+                            }
+                        }
+                    }
+                }).treegrid('followCustomHandle');
+            });
+        </script>
+    </head>
+    <body>
+        <h3>Tooltip显示风格之row 自定义样式</h3>
+        <p>请将鼠标移动到每一行上，查看显示效果。</p>
+        <table id="tt"></table>
+    </body>
+</html>
