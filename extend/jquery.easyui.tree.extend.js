@@ -149,6 +149,12 @@
  *              }
  *          }).tree('followCustomHandle');
  *
+ *
+ *  6、增强expandTo方法，参数target支持两种类型：
+ *      1) Dom对象（原始用法，看easyui API说明）
+ *      2) 数字， 层级数（增强功能），表示从根开始，展开到第几层
+ *
+ *
  */
 (function($){
     function getContextMenuId(target){
@@ -266,8 +272,8 @@
         return null;
     }
 
-    function getChildren(target, nodeTarget, depth){
-        if(depth){
+    function getChildren(target, nodeTarget, isAll){
+        if(isAll){
             return $(target).tree('getChildren', nodeTarget);
         }else{
             var children = [];
@@ -278,6 +284,7 @@
             return children;
         }
     }
+
 
     function expandHandle(target){
         var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
@@ -315,6 +322,23 @@
         }
 
         return n + getLevel(target, parentNode);
+    }
+
+    function expandTo(target, level, node){
+        var nodes = node ? [node] : $(target).tree('getRoots');
+        for(var i= 0; i<nodes.length; i++){
+            var children = getChildren(target, nodes[i].target, false);
+            for(var j=0; j<children.length; j++){
+                $(target).tree('expandTo', children[j].target);
+            }
+
+            level--;
+            if(level > 0){
+                for(var j=0; j<children.length; j++){
+                    expandTo(target, level, children[j]);
+                }
+            }
+        }
     }
 
     $.fn.tree.contextmenu={};
@@ -407,6 +431,8 @@
         return data;
     }
 
+    var defaultMethods = $.extend({}, $.fn.tree.methods);
+
     $.extend($.fn.tree.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
@@ -419,6 +445,16 @@
          */
         getLevel: function(jq, node){
             return getLevel(jq[0], node);
+        },
+        expandTo: function(jq, target){
+            return jq.each(function(){
+                if($.type(target) == 'number'){
+                    var level = target;
+                    expandTo(this, level);
+                }else{
+                    defaultMethods.expandTo(jq, target);
+                }
+            });
         }
     });
 })(jQuery);
