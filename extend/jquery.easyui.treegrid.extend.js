@@ -160,6 +160,126 @@
  *
  *
  *      6、执行followCustomHandle，扩展属性才能生效。
+ *
+ *
+ *      7、支持tooltip显示
+ *          7.1 控制属性
+ *              tooltip: {
+ *                  enable：         tooltip显示开关，true|false
+ *                  target：         tooltip触发对象，
+ *                                   值：row或cell。row整行触发，cell只在指定的field对应的cell中触发。
+ *                                   默认值：row
+ *                  position：       tooltip显示位置
+ *                  fields：         定义触发显示tooltip的列
+ *                  formatter：      定义tooltip内容显示风格，方法接收参数受target属性影响。
+ *                                   a) 当target:'row'时：
+ *                                          formatter: function(nodeid, node){}
+ *
+ *                                   b) 当target:'cell'时：
+ *                                          formatter: function(value, field, nodeid, node){}
+ *
+ *                                   c) 方法返回值String或Object
+ *                                      i) 当返回String时, 其值直接作为tooltip内容显示
+ *                                     ii) 当返回Object时, Object包含如下属性:
+ *                                          content: tooltip显示内容
+ *                                          css: tooltip显示样式，此属性值为一个Object
+ *              }
+ *
+ *
+ *          7.2 row触发设置
+ *              $('#tt').treegrid({
+ *                  url: '../treegrid/treegrid_data1.json',
+ *                  idField: 'id',
+ *                  treeField: 'name',
+ *                  columns:[[
+ *                      {field: 'name', title: 'Name', width: 220},
+ *                      {field: 'size', title: 'Size', width: 100},
+ *                      {field: 'date', title: 'Date', width: 150}
+ *                  ]],
+ *                  customAttr: {
+ *                      tooltip: {
+ *                          enable: true
+ *                      }
+ *                  }
+ *              }).treegrid('followCustomHandle');
+ *
+ *
+ *          7.3 row触发设置，自定义显示风格
+ *              $('#tt').treegrid({
+ *                  url: '../treegrid/treegrid_data1.json',
+ *                  idField: 'id',
+ *                  treeField: 'name',
+ *                  columns: [[
+ *                      {field: 'name', title: 'Name', width: 220},
+ *                      {field: 'size', title: 'Size', width: 100},
+ *                      {field: 'date', title: 'Date', width: 150}
+ *                  ]],
+ *                  customAttr: {
+ *                      tooltip: {
+ *                          enable: true,
+ *                          formatter: function(nodeid, node){
+ *                              return {
+ *                                  content: $.param(node),
+ *                                  css: {
+ *                                      backgroundColor: '#FFFF88',
+ *                                      borderColor: '#df8505'
+ *                                  }
+ *                              }
+ *                          }
+ *                      }
+ *                  }
+ *              }).treegrid('followCustomHandle');
+ *
+ *
+ *          7.4 cell触发设置
+ *              $('#tt').treegrid({
+ *                  url: '../treegrid/treegrid_data1.json',
+ *                  idField: 'id',
+ *                  treeField: 'name',
+ *                  columns: [[
+ *                      {field: 'name', title: 'Name', width: 220},
+ *                      {field: 'size', title: 'Size', width: 100},
+ *                      {field: 'date', title: 'Date', width: 150}
+ *                  ]],
+ *                  customAttr: {
+ *                      tooltip: {
+ *                          enable: true,
+ *                          target: 'cell'
+ *                      }
+ *                  }
+ *              }).treegrid('followCustomHandle');
+ *
+ *
+ *          7.5  cell触发设置，自定义显示风格
+ *              $('#tt').treegrid({
+ *                  url: '../treegrid/treegrid_data1.json',
+ *                  idField: 'id',
+ *                  treeField: 'name',
+ *                  columns: [[
+ *                      {field: 'name', title: 'Name', width: 220},
+ *                      {field: 'size', title: 'Size', width: 100},
+ *                      {field: 'date', title: 'Date', width: 150}
+ *                  ]],
+ *                  customAttr: {
+ *                      tooltip: {
+ *                          enable: true,
+ *                          target: 'cell',
+ *                          fields: ['name', 'date'],
+ *                          formatter: function(value, field, nodeid, node){
+ *                              return {
+ *                                  content: value,
+ *                                  css: {
+ *                                      backgroundColor: '#FFFF88',
+ *                                      borderColor: '#df8505'
+ *                                  }
+ *                              }
+ *                          }
+ *                      }
+ *                  }
+ *              }).treegrid('followCustomHandle');
+ *
+ *
+ *
  */
 (function($){
     function getContextMenuId(target){
@@ -406,6 +526,99 @@
         });
     }
 
+
+    function buildTooltip(target){
+        var options = $.extend(true, {}, $.fn.treegrid.defaults, $(target).treegrid('options'));
+        if(!options.customAttr.tooltip.enable) return;
+
+        var showTooltip = function(target, opts){
+            var initOptions = {
+                position: options.customAttr.tooltip.position,
+                trackMouse: true,
+                onHide: function(){
+                    $(target).tooltip('destroy');
+                },
+                onShow: function(){
+                    if($.isPlainObject(opts) && opts.css){
+                        $(this).tooltip('tip').css(opts.css);
+                    }
+                }
+            };
+
+            $.extend(initOptions, $.isPlainObject(opts) ? opts : {content: opts});
+
+            $(target).tooltip(initOptions).tooltip('show');
+        }
+
+
+        var bindRow = function(tr, formatter){
+            var nodeid = $(tr).attr('node-id');
+            var node = $(target).treegrid('find', nodeid);
+            var getDefaultContent = function(node){
+                var result = [];
+                //排除没有设置field的column
+                var fields = $.grep(
+                    $.merge($(target).treegrid('getColumnFields',true),
+                    $(target).treegrid('getColumnFields')),
+                    function(n, i){
+                        return $.trim(n).length>0;
+                });
+
+                $.each(fields, function(){
+                    var field = this;
+                    var title = $(target).treegrid('getColumnOption', field).title;
+                    result.push(title + ': ' + node[field]);
+                });
+
+                return result.join('<br>');
+            }
+            var content = formatter ? formatter(nodeid, node) : getDefaultContent(node);
+            $(tr).mouseover(function(){
+                showTooltip(this, content);
+            });
+        }
+
+        var bindCell = function(cell, formatter){
+            cell.mouseover(function(){
+                var nodeid = $(this).parent().attr('node-id');
+                var node = $(target).treegrid('find', nodeid);
+                var field = $(this).attr('field');
+                var value = node[field];
+                var content = formatter ? formatter(value, field, nodeid, node) : value;
+                showTooltip(this, content);
+            });
+        }
+
+
+        var initTooltip = function(){
+            if(options.customAttr.tooltip.target == 'row'){
+                options.finder.getTr(target, '', 'allbody').each(function(){
+                    if($(this).hasClass('datagrid-row')){
+                        bindRow(this, options.customAttr.tooltip.formatter);
+                    }
+                });
+            }else{
+                if(options.customAttr.tooltip.fields &&
+                    $.isArray(options.customAttr.tooltip.fields)){
+                    var panel = $(target).treegrid('getPanel');
+                    var datagrid_body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
+                    $.each(options.customAttr.tooltip.fields, function(){
+                        var field = this;
+                        bindCell($('td[field='+field+']', datagrid_body), options.customAttr.tooltip.formatter);
+                    });
+                }
+            }
+        }
+
+        var onLoadSuccessCallback = options.onLoadSuccess;
+        $(target).treegrid({
+            onLoadSuccess: function(row, data){
+                onLoadSuccessCallback.call(this, row, data);
+                initTooltip();
+            }
+        });
+    }
+
     $.fn.treegrid.headerContextMenu = {};
     $.fn.treegrid.headerContextMenu.defaultEvents={
         doRemove: function(item, row, target){
@@ -432,7 +645,17 @@
             isMerge: true,
             items: []
         },
-        rowediting: false
+        rowediting: false,
+        /**
+         * target: row|cell ,tooltip 的触发对象，默认row
+         */
+        tooltip:{
+            enable: false,
+            target: 'row',
+            position: 'bottom',
+            fields: undefined,
+            formatter: undefined
+        }
     }
 
     $.fn.treegrid.defaults.loadFilter = function(data, parentId){
@@ -463,6 +686,7 @@
                 initContextMenu(this);
                 expandHandle(this);
                 registRowEditingHandler(this);
+                buildTooltip(this);
             });
         },
         getEditingRow: function(jq){
