@@ -19,11 +19,31 @@
                     }
                 })
             });
+
+            function doExpand(){
+                $('#tt').tree('expandAll');
+            }
+
+            function doCollapse(){
+                $('#tt').tree('collapseAll');
+            }
         </script>
     </head>
     <body class="easyui-layout">
-        <div data-options="region:'west', split: true, minWidth: 250, maxWidth:250">
-            <ul id="tt" class="easyui-tree" data-options="url:'left_menu_data.json'"></ul>
+        <div data-options="region:'west', split: true, minWidth: 250, maxWidth:300">
+            <div class="easyui-panel" data-options="fit: true, border: false">
+                <div class="easyui-layout" data-options="fit: true">
+                    <div data-options="region: 'north', border: false, minHeight: 30, maxHeight: 30">
+                        <div class="datagrid-toolbar" style="text-align: right">
+                            <a href="javascript: void(0)" class="easyui-linkbutton" data-options="plain: true, iconCls: 'icon-expand'" onclick="doExpand()">展开</a>
+                            <a href="javascript: void(0)" class="easyui-linkbutton" data-options="plain: true, iconCls: 'icon-collapse'" onclick="doCollapse()">收缩</a>
+                        </div>
+                    </div>
+                    <div data-options="region: 'center', border: false">
+                        <ul id="tt" class="easyui-tree" data-options="url:'left_menu_data.json', fit: true"></ul>
+                    </div>
+                </div>
+            </div>
         </div>
         <div data-options="region:'south', minHeight: 30, maxHeight: 30">
             <div style="text-align: center; padding-top: 5px;">

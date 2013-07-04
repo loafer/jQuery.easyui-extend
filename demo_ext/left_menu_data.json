@@ -96,6 +96,7 @@
     "children": [{
         "id": "datagrid_headercontextmenu",
         "text": "headerContextmenu",
+        "state":"closed",
         "children": [{
             "id": "datagrid_headercontextmenu_basic",
             "text": "Header ContextMenu",
@@ -118,6 +119,7 @@
     },{
         "id": "datagrid_rowcontextmenu",
         "text": "rowContextmenu",
+        "state":"closed",
         "children":[{
             "id": "datagrid_rowcontextmenu_basic",
             "text": "Row ContextMenu",
@@ -146,6 +148,7 @@
     },{
         "id": "datagrid_tooltip",
         "text": "Tooltip",
+        "state":"closed",
         "children": [{
             "id": "datagrid_rowtooltip_basic",
             "text": "row tooltip",
@@ -182,6 +185,92 @@
         "text": "仿Ext rowediting编辑风格",
         "attributes": {
             "url": "datagrid/rowediting.html"
+        }
+    }]
+},{
+    "id": "tree",
+    "text": "tree",
+    "children": [{
+        "id": "tree_basic",
+        "text": "基本功能",
+        "attributes": {
+            "url": "tree/basic.html"
+        }
+    },{
+        "id": "tree_contextmenu",
+        "text": "右键菜单演示",
+        "attributes": {
+            "url": "tree/contextmenu.html"
+        }
+    },{
+        "id": "tree_custommenu",
+        "text": "自定义右键菜单演示",
+        "attributes": {
+            "url": "tree/custommenu.html"
+        }
+    },{
+        "id": "tree_expand1",
+        "text": "点击节点展开/收缩",
+        "attributes": {
+            "url": "tree/expand1.html"
+        }
+    },{
+        "id": "tree_expand2",
+        "text": "双击节点展开/收缩",
+        "attributes": {
+            "url": "tree/expand2.html"
+        }
+    },{
+        "id": "tree_simpledata",
+        "text": "简单数据加载",
+        "attributes": {
+            "url": "tree/simpledata.html"
+        }
+    },{
+        "id": "tree_expand3",
+        "text": "expandTo增强演示",
+        "attributes": {
+            "url": "tree/expand3.html"
+        }
+    }]
+},{
+    "id": "treegrid",
+    "text": "treegrid",
+    "children": [{
+        "id": "treegrid_contextmenu",
+        "text": "右键菜单演示",
+        "attributes":{
+            "url": "treegrid/contextmenu.html"
+        }
+    },{
+        "id": "treegrid_custommenu",
+        "text": "自定义右键菜单演示",
+        "attributes": {
+            "url": "treegrid/custommenu.html"
+        }
+    },{
+        "id": "treegrid_expand1",
+        "text": "点击节点展开/收缩",
+        "attributes": {
+            "url": "treegrid/expand1.html"
+        }
+    },{
+        "id": "treegrid_expand2",
+        "text": "双击节点展开/收缩",
+        "attributes": {
+            "url": "treegrid/expand2.html"
+        }
+    },{
+        "id": "treegrid_rowediting",
+        "text": "RowEditing编辑风格",
+        "attributes": {
+            "url": "treegrid/rowediting.html"
+        }
+    },{
+        "id": "treegrid_simpledata",
+        "text": "简单数据加载",
+        "attributes": {
+            "url": "treegrid/simpledata.html"
         }
     }]
 }]
