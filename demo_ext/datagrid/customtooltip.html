@@ -31,7 +31,7 @@
                     customAttr:{
                         tooltip:{
                             enable: true,
-                            formatter: function(value, rowData, index){
+                            formatter: function(rowData, rowIndex){
                                 var fields = $.merge($('#datagrid').datagrid('getColumnFields', true), $('#datagrid').datagrid('getColumnFields'));
                                 var result = [];
                                 result.push('<table style="width: 300px" border="0">');
