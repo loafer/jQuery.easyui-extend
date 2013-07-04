@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>expandTo Method of Tree - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tree({
+                    lines: true,
+                    url: '../tree/tree_data2.json'
+                });
+
+                $('#btn1').click(function(){
+                    var children = $('#tt').tree('getChildren');
+                    $('#tt').tree('expandTo', children[3].target);
+                });
+
+                $('#btn2').click(function(){
+                    $('#tt').tree('expandTo', 2);
+                });
+
+                $('#btn3').click(function(){
+                    $('#tt').tree('collapseAll');
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <h3>expandTo增强演示</h3>
+        <p>原始功能演示：展开到达指定节点。 增强功能演示： 展开到第几层</p>
+        <input type="button" id="btn1" value="原始功能演示">
+        <input type="button" id="btn2" value="增强功能演示">
+        <input type="button" id="btn3" value="收合树">
+        <ul id="tt"></ul>
+    </body>
+</html>

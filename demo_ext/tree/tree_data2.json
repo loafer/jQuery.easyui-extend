@@ -8,6 +8,7 @@
 		"children":[{
 			"id":111,
 			"text":"Friend",
+            "state":"closed",
             "children":[{
                 "id": "tom",
                 "text": "Tom"
@@ -42,6 +43,7 @@
 	},{
 		"id":16,
 		"text":"Actions",
+        "state":"closed",
 		"children":[{
             "id":"add",
 			"text":"Add",
