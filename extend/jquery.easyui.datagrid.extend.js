@@ -516,7 +516,7 @@
 
                 return result.join('<br>');
             }
-            var content = formatter ? formatter(null, rowData, rowIndex) : getDefaultContent(rowData);
+            var content = formatter ? formatter(rowData, rowIndex) : getDefaultContent(rowData);
             row.mouseover(function(){
                 showTooltip(this, content);
             });
