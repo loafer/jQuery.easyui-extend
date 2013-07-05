@@ -249,6 +249,18 @@
             "url": "treegrid/custommenu.html"
         }
     },{
+        "id": "treegrid_headercontextmenu",
+        "text": "表头右键菜单演示",
+        "attributes": {
+            "url": "treegrid/headercontextmenu.html"
+        }
+    },{
+        "id": "treegrid_headercontextmenu_custom",
+        "text": "自定义表头右键菜单",
+        "attributes": {
+            "url": "treegrid/headercontextmenu2.html"
+        }
+    },{
         "id": "treegrid_expand1",
         "text": "点击节点展开/收缩",
         "attributes": {

@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Header ComtextMenu of Treegrid - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.treegrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').treegrid({
+                    url: '../treegrid/treegrid_data1.json',
+                    idField: 'id',
+                    treeField: 'name',
+                    columns:[[
+                        {field: 'name', title: 'Name', width: 220},
+                        {field: 'size', title: 'Size', width: 100},
+                        {field: 'date', title: 'Date', width: 150}
+                    ]],
+                    customAttr: {
+                        headerContextMenu: {
+                            isShow: true,
+                            items: ['-',{
+                                text: 'others',
+                                submenu: [{
+                                    text: 'item1',
+                                    onclick: itemOnClickHandler
+                                },{
+                                    text: 'item2',
+                                    onclick: itemOnClickHandler
+                                }]
+                            }]
+                        }
+                    }
+                }).treegrid('followCustomHandle');
+            });
+
+            function itemOnClickHandler(item, field, target){
+                var msg = '当前点击的菜单项是[ '+item.text+' ]<br>'
+                        + '触发右键菜单的列为[ '+field+' ]<br>'
+                        + '此右键菜单发生在id为[ '+$(target).attr('id')+' ]的treegrid上';
+                $.messager.alert('信息', msg, 'info');
+            }
+        </script>
+    </head>
+    <body>
+        <h3>Header ContextMenu 自定义菜单项演示</h3>
+        <p>请点击自定义菜单项[item1]和[item2]查看菜单onclick事件</p>
+        <table id="tt"></table>
+    </body>
+</html>
