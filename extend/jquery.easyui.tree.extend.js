@@ -315,13 +315,15 @@
     }
 
     function getLevel(target, node){
-        var n = 1;
-        var parentNode = $(target).tree('getParent', node.target);
-        if(!parentNode){
-            return 1;
-        }
-
-        return n + getLevel(target, parentNode);
+//        var n = 1;
+//        var parentNode = $(target).tree('getParent', node.target);
+//        if(!parentNode){
+//            return 1;
+//        }
+//
+//        return n + getLevel(target, parentNode);
+        var p = $(node.target).parentsUntil('ul.tree', 'ul');
+        return p.length + 1;
     }
 
     function expandTo(target, level, node){
