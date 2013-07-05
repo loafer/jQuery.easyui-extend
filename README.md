@@ -47,7 +47,7 @@ jQuery.easyui-extend
 <h3>其他</h3>
 
 
-演示地址：http://loafer.cloudfoundry.com/<br>
+演示地址：http://loafer.sturgeon.mopaas.com/<br>
 Blog：http://blog.csdn.net/zjh527
 
 
