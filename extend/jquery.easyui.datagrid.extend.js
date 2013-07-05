@@ -598,7 +598,9 @@
                 $(target).datagrid('showColumn', fields[i]);
                 var columnOption = $(target).datagrid('getColumnOption', fields[i]);
                 var item = menu.menu('findItem', columnOption.title);
-                menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
+                if(item){
+                    menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
+                }
             }
         },
         doRestore: function(target){
@@ -609,10 +611,10 @@
                 var item = menu.menu('findItem', columnOption.title);
                 if(!columnOption._hidden){
                     $(target).datagrid('showColumn', fields[i]);
-                    menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
+                    item && menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
                 }else{
                     $(target).datagrid('hideColumn', fields[i]);
-                    menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
+                    item && menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
                 }
             }
         }
