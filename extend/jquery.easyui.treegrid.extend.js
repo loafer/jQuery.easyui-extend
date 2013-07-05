@@ -279,6 +279,64 @@
  *              }).treegrid('followCustomHandle');
  *
  *
+ *      8、支持列头显示ContextMenu
+ *          8.1 控制属性
+ *              headerContextMenu: {
+ *                  isShow:     右键菜单显示控制开关，值:true|false，默认:false
+ *                  isMerge:    自定义菜单项与默认菜单项合并控制开关，值:true|false，默认:true
+ *                  items:      自定义菜单项内容，类型:数组,支持'-'定义菜单项分割符
+ *              }
+ *
+ *
+ *          8.2 默认菜单项支持列的显示和隐藏（被控制的列必须是在columns属性中定义的），
+ *              treeField属性指定的列不支持此操作。
+ *
+ *
+ *          8.3 显示默认菜单项
+ *              $('#tt').treegrid({
+ *                  url: '../treegrid/treegrid_data1.json',
+ *                  idField: 'id',
+ *                  treeField: 'name',
+ *                  columns: [[
+ *                      {field: 'name', title: 'Name', width: 220},
+ *                      {field: 'size', title: 'Size', width: 100},
+ *                      {field: 'date', title: 'Date', width: 150}
+ *                  ]],
+ *                  customAttr: {
+ *                      headerContextMenu: {
+ *                          isShow: true
+ *                      }
+ *                  }
+ *              }).treegrid('followCustomHandle');
+ *
+ *         8.4 自定义右键菜单项
+ *              $('#tt').treegrid({
+ *                  url: '../treegrid/treegrid_data1.json',
+ *                  idField: 'id',
+ *                  treeField: 'name',
+ *                  columns: [[
+ *                      {field: 'name', title: 'Name', width: 220},
+ *                      {field: 'size', title: 'Size', width: 100},
+ *                      {field: 'date', title: 'Date', width: 150}
+ *                  ]],
+ *                  customAttr: {
+ *                      headerContextMenu: {
+ *                          isShow: true,
+ *                          items: [{
+ *                              text: 'item1',
+ *                              onclick: function(item, field, target){}
+ *                          }]
+ *                      }
+ *                  }
+ *              }).treegrid('followCustomHandle');
+ *
+ *        8.5 菜单项onclick事件参数说明
+ *              item:       当前点击的菜单项
+ *              field:      触发右键菜单的列字段
+ *              target:     一个指向当前treegrid的引用，非jquery对象
+ *
+ *
+ *
  *
  */
 (function($){
