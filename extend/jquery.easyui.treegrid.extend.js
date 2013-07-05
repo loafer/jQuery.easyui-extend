@@ -282,12 +282,12 @@
  *
  */
 (function($){
-    function getContextMenuId(target){
-        return $(target).attr('id')+'_contextmenu';
+    function getContextMenuId(target, surfix){
+        return $(target).attr('id')+'_'+surfix;
     }
 
-    function buildContextMenu(target, menuitems){
-        var menuid = getContextMenuId(target);
+    function buildContextMenu(target, menuitems, type){
+        var menuid = getContextMenuId(target, type);
         var contextmenu = $('#'+menuid);
         if(contextmenu.length==0){
             contextmenu = $('<div>', {id: menuid}).menu();
@@ -317,7 +317,7 @@
 
 
     function getDefaultContextMenuItems(target){
-        var menuid = getContextMenuId(target);
+        var menuid = getContextMenuId(target, 'rowContextMenu');
         return [
             {
                 id: menuid+'_delete',
@@ -342,7 +342,7 @@
 
         var menuitems = getDefaultContextMenuItems(target);
         if(menuOpts.isMerge && $.isArray(menuOpts.items) && menuOpts.items.length>0){
-            menuitems = $.merge(menuitems, menuOpts.items);
+            $.merge(menuitems, menuOpts.items);
         }
 
         if(!menuOpts.isMerge && $.isArray(menuOpts.items) && menuOpts.items.length>0){
@@ -350,7 +350,7 @@
         }
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
-        var contextmenu = buildContextMenu(target, menuitems);
+        var contextmenu = buildContextMenu(target, menuitems, 'rowContextMenu');
         $(target).treegrid({
             onContextMenu: function(e, row){
                 e.preventDefault();
@@ -371,6 +371,106 @@
                     left: e.pageX,
                     top: e.pageY
                 });
+            }
+        });
+    }
+
+    function getDefaultHeaderContextMenuItems(target){
+        var menuid = getContextMenuId(target, 'headerContextMenu');
+        var defaultMenuItems = [{
+            text: '显示/隐藏列',
+            iconCls: 'icon-columns',
+            submenu:[{
+                id: menuid+'_showAll',
+                text: '全部显示',
+                iconCls: 'icon-columns',
+                onclick: function(item, field, datagrid){
+                    $.fn.datagrid.headerContextMenu.defaultEvents.doShowAll(datagrid);
+                }
+            },{
+                id: menuid+'_restore',
+                text: '还原',
+                iconCls: 'icon-columns',
+                onclick: function(item, field, datagrid){
+                    $.fn.datagrid.headerContextMenu.defaultEvents.doRestore(datagrid);
+                }
+            },
+            '-']
+        }];
+
+
+        var getFieldFromMenuItemId = function(id){
+            return id.substr(id.lastIndexOf('_')+1, id.length);
+        }
+
+        var columnFieldsItem = [];
+        var columnFields = $(target).treegrid('getColumnFields');
+        var treeField = $(target).treegrid('options').treeField;
+        $.each(columnFields, function(i, field){
+            if(!field) return true;
+
+            var disabled = field == treeField ? true : false;
+            var columnOption = $(target).treegrid('getColumnOption', field);
+            columnOption._hidden=columnOption.hidden;
+
+            columnFieldsItem.push({
+                id: menuid+'_'+field,
+                text: columnOption.title,
+                iconCls: columnOption.hidden?'icon-unchecked':'icon-checked',
+                disabled: disabled,
+                onclick: function(item, fd, dg){
+                    var field = getFieldFromMenuItemId(item.id);
+                    var hidden = $(dg).treegrid('getColumnOption', field).hidden;
+                    if(!hidden){
+                        $.fn.datagrid.headerContextMenu.defaultEvents.doHideColumn(dg, field, item);
+                    }else{
+                        $.fn.datagrid.headerContextMenu.defaultEvents.doShowColumn(dg, field, item);
+                    }
+                }
+            });
+        });
+
+        $.merge(defaultMenuItems[0].submenu, columnFieldsItem);
+
+        return defaultMenuItems;
+    }
+
+    function initHeaderContextMenu(target){
+        var options = $.extend(true, {}, $.fn.treegrid.defaults, $(target).treegrid('options'));
+        var headerContentMenuOptions = options.customAttr.headerContextMenu;
+        if(!headerContentMenuOptions.isShow) return;
+
+        var menuitems = getDefaultHeaderContextMenuItems(target);
+        if(headerContentMenuOptions.isMerge){
+            $.merge(menuitems, headerContentMenuOptions.items);
+        }
+
+        if(!headerContentMenuOptions.isMerge &&
+                $.isArray(headerContentMenuOptions.items) &&
+                    headerContentMenuOptions.items.length > 0){
+            menuitems = headerContentMenuOptions.items;
+        }
+
+
+        var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
+        var onHeaderContextMenuCallback = options.onHeaderContextMenu;
+        var headerContextMenu = buildContextMenu(target, menuitems, 'headerContextMenu');
+        $(target).treegrid({
+            onHeaderContextMenu: function(e, field){
+                e.preventDefault();
+                headerContextMenu.menu({
+                    onClick: function(item){
+                        var name = item.id || item.text;
+                        if(onClickHandlerCache[name]){
+                            onClickHandlerCache[name].call(this, item, field, target);
+                        }
+                    }
+                }).menu('show',{
+                        left: e.pageX,
+                        top: e.pageY
+                    });
+
+                onHeaderContextMenuCallback.call(this, e, field);
             }
         });
     }
@@ -640,6 +740,11 @@
         parentField: null,
         expandOnNodeClick: false,
         expandOnDblClick: false,
+        headerContextMenu: {
+            isShow: false,
+            isMerge: true,
+            items: []
+        },
         contextMenu: {
             isShow: false,
             isMerge: true,
@@ -683,6 +788,7 @@
     $.extend($.fn.treegrid.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
+                initHeaderContextMenu(this);
                 initContextMenu(this);
                 expandHandle(this);
                 registRowEditingHandler(this);
