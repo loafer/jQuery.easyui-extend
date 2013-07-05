@@ -123,10 +123,7 @@
         return onclickHandler;
     }
 
-    function getDefaultHeaderContextMenuItems(target, customMenuItems){
-        var menuItems = customMenuItems || [];
-        if(!$.isArray(menuItems)) menuItems = [];
-
+    function getDefaultHeaderContextMenuItems(target){
         var menuid = getContextMenuId(target, 'headerContextMenu');
         var defaultMenuItems = [{
             text: '显示/隐藏列',
@@ -149,7 +146,6 @@
             '-']
         }];
 
-        $.merge(defaultMenuItems, customMenuItems);
 
         var getFieldFromMenuItemId = function(id){
             return id.substr(id.lastIndexOf('_')+1, id.length);
@@ -188,11 +184,15 @@
         var headerContentMenuOptions = options.customAttr.headerContextMenu;
         if(!headerContentMenuOptions.isShow) return;
 
-        var menuitems = [];
+        var menuitems = getDefaultHeaderContextMenuItems(target);
         if(headerContentMenuOptions.isMerge){
-            menuitems = getDefaultHeaderContextMenuItems(target, headerContentMenuOptions.items);
-        }else{
-            menuitems = $.isArray(headerContentMenuOptions.items) ? headerContentMenuOptions.items : [];
+            $.merge(menuitems, headerContentMenuOptions.items);
+        }
+
+        if(!headerContentMenuOptions.isMerge &&
+                $.isArray(headerContentMenuOptions.items) &&
+                    headerContentMenuOptions.items > 0){
+            menuitems = headerContentMenuOptions.items;
         }
 
 
@@ -219,10 +219,7 @@
         });
     }
 
-    function getDefaultRowContextMenuItems(target, customMenuItems){
-        var menuItems = customMenuItems || [];
-        if(!$.isArray(menuItems)) menuItems = [];
-
+    function getDefaultRowContextMenuItems(target){
         var menuid = getContextMenuId(target, 'rowContextMenu');
         var defaultMenuItems=[{
             id: menuid + '_add',
@@ -274,7 +271,6 @@
             }]
         }]
 
-        $.merge(defaultMenuItems, customMenuItems);
         return defaultMenuItems;
     }
 
@@ -283,11 +279,15 @@
         var rowContentMenuOptions = options.customAttr.rowContextMenu;
         if(!rowContentMenuOptions.isShow) return;
 
-        var menuitems = [];
+        var menuitems = getDefaultRowContextMenuItems(target);
         if(rowContentMenuOptions.isMerge){
-            menuitems = getDefaultRowContextMenuItems(target, rowContentMenuOptions.items);
-        }else{
-            menuitems = $.isArray(rowContentMenuOptions.items) ? rowContentMenuOptions.items : [];
+            $.merge(menuitems, rowContentMenuOptions.items);
+        }
+
+        if(!rowContentMenuOptions.isMerge &&
+            $.isArray(rowContentMenuOptions.items) &&
+                rowContentMenuOptions.items.length>0){
+            menuitems = rowContentMenuOptions.items;
         }
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
