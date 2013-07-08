@@ -88,7 +88,7 @@
  *              }
  *          });
  *
- *
+ * 24、修复当列字段过长时，加载的数据个数为0时，列字段显示不全问题。
  */
 (function($){
     function buildContextMenu(target, menuitems, type){
@@ -579,6 +579,35 @@
         });
     }
 
+    function fixNoDataBug(target){
+        var options = $(target).datagrid('options');
+
+        var fixBug = function(data){
+            var panel = $(target).datagrid('getPanel');
+            if(data.rows.length == 0){
+                var header = $('div.datagrid-view2>div.datagrid-header>div.datagrid-header-inner>table', panel)[0];
+                var body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
+                $('<div>').html('&nbsp;').width($(header).width()).appendTo(body);
+            }else{
+                $('div.datagrid-view2>div.datagrid-body>div', panel).remove();
+            }
+
+        }
+
+        var onLoadSuccessCallback = options.onLoadSuccess;
+        var onLoadErrorCallback = options.onLoadError;
+        $(target).datagrid({
+            onLoadSuccess: function(data){
+                fixBug(data);
+                onLoadSuccessCallback.call(this, data);
+            },
+            onLoadError: function(){
+                fixBug({rows: []});
+                onLoadErrorCallback.call(this);
+            }
+        })
+    }
+
     $.fn.datagrid.headerContextMenu = {};
     $.fn.datagrid.headerContextMenu.defaultEvents = {
         doHideColumn: function(target, field, item){
@@ -778,6 +807,7 @@
     $.extend($.fn.datagrid.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
+                fixNoDataBug(this);
                 initHeaderContextMenu(this);
                 initRowContextMenu(this);
                 initPagination(this);
