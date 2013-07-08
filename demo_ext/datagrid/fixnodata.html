@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Fix Bug -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#dg1').datagrid({
+                    columns:[[
+                        {field: 'username', title: 'Name', width: 150, editor: 'text'},
+                        {field: 'sex', title: 'Sex', width: 50, editor: 'text'},
+                        {field: 'age', title: 'Age', width: 80, editor: 'numberspinner'},
+                        {field: 'brithday', title: 'Birthday', width: 100, editor: 'my97'},
+                        {field: 'registdate', title: 'Regist Date', width: 150, editor: 'datetimebox'},
+                        {field: 'arrivaltime', title: 'Arrival Time (AT)', width: 110, editor: 'timespinner'}
+                    ]],
+                    title: 'Row Editing DataGrid',
+                    singleSelect: true,
+                    rownumbers: true,
+                    fit: true,
+                    url: '../datagrid/datagrid_data.json'
+                });
+
+
+
+                $('#dg2').datagrid({
+                    columns:[[
+                        {field: 'username', title: 'Name', width: 150, editor: 'text'},
+                        {field: 'sex', title: 'Sex', width: 50, editor: 'text'},
+                        {field: 'age', title: 'Age', width: 80, editor: 'numberspinner'},
+                        {field: 'brithday', title: 'Birthday', width: 100, editor: 'my97'},
+                        {field: 'registdate', title: 'Regist Date', width: 150, editor: 'datetimebox'},
+                        {field: 'arrivaltime', title: 'Arrival Time (AT)', width: 110, editor: 'timespinner'}
+                    ]],
+                    title: 'Row Editing DataGrid',
+                    singleSelect: true,
+                    rownumbers: true,
+                    fit: true,
+                    url: '../datagrid/datagrid_data.json'
+                }).datagrid('followCustomHandle');
+            });
+        </script>
+    </head>
+    <body>
+        <h3>列字段个数过多且无数据加载时，列字段显示不全bug修复</h3>
+        <div class="easyui-panel" data-options="title: '修复之前问题', height: 250, width: 500">
+            <table id="dg1"></table>
+        </div>
+        <br>
+        <div class="easyui-panel" data-options="title: '修复之后效果', height: 250, width: 500">
+            <table id="dg2"></table>
+        </div>
+
+    </body>
+</html>
