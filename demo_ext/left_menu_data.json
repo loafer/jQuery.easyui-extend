@@ -387,4 +387,25 @@
             }
         }]
     }]
+},{
+    "id": "others",
+    "text": "Others",
+    "children": [{
+        "id": "others_toolbar",
+        "text": "Toolbar",
+        "state": "closed",
+        "children": [{
+            "id": "others_toolbar_baisc",
+            "text": "toolbar",
+            "attributes": {
+                "url": "toolbar/basic.html"
+            }
+        },{
+            "id": "others_toolbar_complex",
+            "text": "复杂Toolbar",
+            "attributes": {
+                "url": "toolbar/complextoolbar.html"
+            }
+        }]
+    }]
 }]
