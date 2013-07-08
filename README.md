@@ -20,6 +20,7 @@ jQuery.easyui-extend
 <h3>使用</h3>
 首先，在引入jquery.easyui所需要的资源之后，引入如下文件：
 ###
+    <link rel="stylesheet" type="text/css" href="../../extend/themes/easyui.extend.css">
     <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
     <script type="text/javascript" src="jquery.easyui.extend.min.js"></script>
 
