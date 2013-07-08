@@ -2,14 +2,17 @@ jQuery.easyui-extend
 ====================
 基于jQuery.easyui 1.3+ 对部分组件扩展了额外属性和方法。目前已扩展的部分组件如下：<br>
 <ul>
+  <li>panel</li>
   <li>tabs</li>
   <li>menu</li>
   <li>combo</li>
   <li>combobox</li>
-  <li>datagrid</li>
   <li>window</li>
+  <li>dialog</li>
+  <li>datagrid</li>
   <li>tree</li>
   <li>treegrid</li>
+  <li>toolbar</li>
 </ul>
 
 快速了解各组件扩展信息，请查看demo_ext/left_menu_data.json<br>
