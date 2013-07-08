@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.toolbar.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.panel.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#p').panel({
+                    width: 500,
+                    height: 150,
+                    title: 'Panel',
+                    customAttr: {
+                        toolbar: '#toolbar'
+                    }
+                })
+                .panel('followCustomHandle');
+            });
+        </script>
+    </head>
+    <body>
+        <h3>复杂Toolbar演示</h3>
+        <div id="p"></div>
+        <div id="toolbar">
+            <table cellspacing="0" cellpadding="0">
+                <tr>
+                    <td>
+                        <a href="#" class="easyui-linkbutton" data-options="plain:true, iconCls: 'icon-add'">Add</a>
+                    </td>
+                    <td>
+                        <div class="dialog-tool-separator"></div>
+                    </td>
+                    <td>
+                        <input id="ss" type="text" style="width: 120px;">
+                        <a href="#" class="easyui-linkbutton" data-options="plain: true, iconCls:'icon-search'">查询</a>
+                    </td>
+                </tr>
+            </table>
+        </div>
+    </body>
+</html>

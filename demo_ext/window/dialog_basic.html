@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Basic Dialog - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.window.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#btn1').click(function(){
+                    $.showModalDialog({content: '我是一个定位在最顶层的窗体。<br>拖拽下我看看^^'})
+                });
+
+                $('#btn2').click(function(){
+                    $.showModalDialog({content: '我是一个定位在最顶层的窗体。<br>拖拽下我看看^^', locate: 'document'})
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <input type="button" id="btn1" value="打开窗体(top)">
+        <input type="button" id="btn2" value="打开窗体(iframe)">
+    </body>
+</html>
