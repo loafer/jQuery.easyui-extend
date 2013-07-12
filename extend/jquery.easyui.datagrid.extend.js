@@ -145,6 +145,23 @@
             },
             '-']
         }];
+//        ,'-',{
+//            id: menuid + '_freezeColumn',
+//            text: '冻结此列',
+//            iconCls: 'icon-lock',
+//            disabled: true,
+//            onclick: function(item, field, datagrid){
+//                $.fn.datagrid.headerContextMenu.defaultEvents.freezeColumn(datagrid, field, item, true);
+//            }
+//        },{
+//            id: menuid + '_unfreezeColumn',
+//            text: '取消冻结',
+//            iconCls: 'icon-unlock',
+//            disabled: true,
+//            onclick: function(item, field, datagrid){
+//                $.fn.datagrid.headerContextMenu.defaultEvents.unfreezeColumn(datagrid, field, item);
+//            }
+//        }
 
 
         var getFieldFromMenuItemId = function(id){
@@ -152,27 +169,34 @@
         }
 
         var columnFieldsItem = [];
+        var frozenCloumnFields = $(target).datagrid('getColumnFields', true);
         var columnFields = $(target).datagrid('getColumnFields');
-        $.each(columnFields, function(i, field){
-            if(!field) return true;
-            var columnOption = $(target).datagrid('getColumnOption', field);
-            columnOption._hidden=columnOption.hidden;
+//        columnSubMenuHandle(frozenCloumnFields, true);
+        columnSubMenuHandle(columnFields, false);
 
-            columnFieldsItem.push({
-                id: menuid+'_'+field,
-                text: columnOption.title,
-                iconCls: columnOption.hidden?'icon-unchecked':'icon-checked',
-                onclick: function(item, fd, dg){
-                    var field = getFieldFromMenuItemId(item.id);
-                    var hidden = $(dg).datagrid('getColumnOption', field).hidden;
-                    if(!hidden){
-                        $.fn.datagrid.headerContextMenu.defaultEvents.doHideColumn(dg, field, item);
-                    }else{
-                        $.fn.datagrid.headerContextMenu.defaultEvents.doShowColumn(dg, field, item);
+        function columnSubMenuHandle(columnFields, disabled){
+            $.each(columnFields, function(i, field){
+                if(!field || field == 'ck') return true;
+                var columnOption = $(target).datagrid('getColumnOption', field);
+                columnOption._hidden=columnOption.hidden;
+
+                columnFieldsItem.push({
+                    id: menuid+'_'+field,
+                    text: columnOption.title,
+                    disabled: disabled,
+                    iconCls: columnOption.hidden?'icon-unchecked':'icon-checked',
+                    onclick: function(item, fd, dg){
+                        var field = getFieldFromMenuItemId(item.id);
+                        var hidden = $(dg).datagrid('getColumnOption', field).hidden;
+                        if(!hidden){
+                            $.fn.datagrid.headerContextMenu.defaultEvents.doHideColumn(dg, field, item);
+                        }else{
+                            $.fn.datagrid.headerContextMenu.defaultEvents.doShowColumn(dg, field, item);
+                        }
                     }
-                }
+                });
             });
-        });
+        }
 
         $.merge(defaultMenuItems[0].submenu, columnFieldsItem);
 
@@ -183,6 +207,10 @@
         var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         var headerContentMenuOptions = options.customAttr.headerContextMenu;
         if(!headerContentMenuOptions.isShow) return;
+
+        if(options.columns[0][0].checkbox){
+            options.columns[0][0].field = 'ck';
+        }
 
         var menuitems = getDefaultHeaderContextMenuItems(target);
         if(headerContentMenuOptions.isMerge){
@@ -208,6 +236,13 @@
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, field, target);
                         }
+                    },
+                    onShow: function(){
+//                        switchFreezeAndUnfreezeMenuItem(field, target);
+                        headerContentMenuOptions.onShow && headerContentMenuOptions.onShow.call(this, field, target);
+                    },
+                    onHide: function(){
+                        headerContentMenuOptions.onHide && headerContentMenuOptions.onHide.call(this);
                     }
                 }).menu('show',{
                     left: e.pageX,
@@ -608,8 +643,177 @@
         })
     }
 
+    /**
+     * 只对当前数据页有效，重新加载数据后失效（类似freezeRow）
+     * 只冻结columns属性中定义的列
+     */
+    function _freezeColumn1(target, field){
+        var options = $(target).datagrid('options');
+        var frozenColumnFields = $(target).datagrid('getColumnFields', true);
+        var firstColumn = options.columns[0][0];
+        if(frozenColumnFields.length == 0 && firstColumn.checkbox){
+            moveColumn(target, 'ck', 2, 1);
+        }
+
+
+        setMenuFieldItemState(target, field, true);
+        moveColumn(target, field, 2, 1);
+    }
+
+    /**
+     * 对所有数据页有效，重新加载数据后仍然有效
+     */
+    function _freezeColumn2(target, field){
+        var options = $(target).datagrid('options');
+        if(!options.frozenColumns[0]){
+            options.frozenColumns=[[]];
+        }
+
+        var fieldOption = $(target).datagrid('getColumnOption', field);
+        options.frozenColumns[0].push(fieldOption);
+        removeColumn(fieldOption);
+        $(target).datagrid(options);
+        var fielditem = $(target).datagrid('getHeaderContextMenu').menu('findItem', fieldOption.title);
+        $(target).datagrid('getHeaderContextMenu').menu('disableItem', fielditem.target);
+
+        function removeColumn(fieldOption){
+            for(var i=0; i<options.columns.length; i++){
+                for(var j=0; j<options.columns[i].length; j++){
+                    if(options.columns[i][j].field == fieldOption.field){
+                        options.columns[i].splice(j, 1);
+                        return;
+                    }
+                }
+            }
+        }
+    }
+
+    /**
+     * 列移动
+     */
+    function moveColumn(target, field, from, to){
+        var options = $(target).datagrid('options');
+        var dc = $.data(target, "datagrid").dc;
+        var headerTd = null;
+
+        var headerTd = (from==1 ? dc.header1 : dc.header2).find('>table>tbody>tr.datagrid-header-row>td[field=' + field + ']');
+        if(from > to){
+            //datagrid-view2 -> datagrid-view1
+            (to == 1 ? dc.header1 : dc.header2).find('>table>tbody>tr.datagrid-header-row').append(headerTd);
+        }else{
+            //datagrid-view1 -> datagrid-view2
+            (to == 1 ? dc.header1 : dc.header2).find('>table>tbody>tr.datagrid-header-row').children('td[field]').each(function(){
+                if(isBefore(field, $(this).attr('field'))){
+                    $(this).before(headerTd);
+                    return false;
+                }
+            });
+        }
+
+
+        var bodyTd = (from == 1 ? dc.body1 : dc.body2).find('>table>tbody>tr>td[field=' + field + ']');
+        if(from > to){
+            //datagrid-view2 -> datagrid-view1
+            $.each(bodyTd, function(i, td){
+                options.finder.getTr(target, i, 'body', to).append(td);
+            });
+        }else{
+            //datagrid-view1 -> datagrid-view2
+            $.each(bodyTd, function(i, td){
+                options.finder.getTr(target, i, 'body', to).children('td[field]').each(function(){
+                    if(isBefore(field, $(this).attr('field'))){
+                        $(this).before(td);
+                        return false;
+                    }
+                });
+            });
+        }
+
+        $(target).datagrid('fixColumnSize');
+
+
+        function isBefore(f1, f2){
+            return getFieldIndex(f1) < getFieldIndex(f2);
+        }
+
+        function getFieldIndex(field){
+            return $.inArray(field, $(target).datagrid('getColumnFields'));
+        }
+    }
+
+    function setMenuFieldItemState(target, field, disabled){
+        var index = getFieldIndex(field);
+        var fieldOption = $(target).datagrid('getColumnOption', field);
+        $.extend(fieldOption, {index: index});
+
+        var headerContextMenu = $(target).datagrid('getHeaderContextMenu');
+        var item = headerContextMenu.menu('findItem', fieldOption.title);
+        if(disabled){
+            headerContextMenu.menu('disableItem', item.target);
+        }else{
+            headerContextMenu.menu('enableItem', item.target);
+        }
+
+        function getFieldIndex(field){
+            return $.inArray(field, $(target).datagrid('getColumnFields'));
+        }
+    }
+
+    /**
+     * 根据'显示/隐藏'子菜单中字段项是否可用来控制，当前列右键菜单中的"冻结此列"和"取消冻结"是否可用
+     */
+    function switchFreezeAndUnfreezeMenuItem(field, target){
+        var headerContextMenu = $(target).datagrid('getHeaderContextMenu');
+        var fieldOption = $(target).datagrid('getColumnOption', field);
+        var fieldItem = headerContextMenu.menu('findItem', fieldOption.title);
+
+        if(fieldItem){
+            if(!fieldItem.disabled){
+                enableItem('冻结此列');
+                disableItem('取消冻结');
+            }else{
+                enableItem('取消冻结');
+                disableItem('冻结此列');
+            }
+        }else{
+            disableItem('冻结此列');
+            disableItem('取消冻结');
+        }
+
+
+        function disableItem(title){
+            var item = headerContextMenu.menu('findItem', title);
+            if(item){
+                headerContextMenu.menu('disableItem', item.target);
+            }
+        }
+
+        function enableItem(title){
+            var item = headerContextMenu.menu('findItem', title);
+            if(item){
+                headerContextMenu.menu('enableItem', item.target);
+            }
+        }
+    }
+
+    function freezeColumn(target, field, isTemporary){
+        if(isTemporary){
+            _freezeColumn1(target, field);
+        }else{
+            _freezeColumn2(target, field);
+        }
+    }
+
+    function unfreezeColumn(target, field){
+        setMenuFieldItemState(target, field, false);
+        moveColumn(target, field, 1, 2);
+    }
+
     $.fn.datagrid.headerContextMenu = {};
     $.fn.datagrid.headerContextMenu.defaultEvents = {
+        /**
+         *  对frozenColumns属性中的列不做隐藏控制
+         */
         doHideColumn: function(target, field, item){
             $(target).datagrid('hideColumn', field);
             var menu = $(target).datagrid('getHeaderContextMenu');
@@ -647,6 +851,7 @@
                 }
             }
         }
+
     };
 
 
@@ -755,7 +960,9 @@
         headerContextMenu:{
             isShow: false,
             isMerge: true,
-            items:[]
+            items:[],
+            onShow: function(field, target){},
+            onHide: function(){}
         },
         rowContextMenu:{
             isShow: false,
@@ -859,6 +1066,16 @@
                         $(target).datagrid('deleteRow', row);
                     }
                 });
+            });
+        },
+        freezeColumn: function(jq, field){
+            return jq.each(function(){
+                freezeColumn(this, field, true);
+            });
+        },
+        unfreezColumn: function(jq, field){
+            return jq.each(function(){
+                unfreezeColumn(this, field);
             });
         }
     });
