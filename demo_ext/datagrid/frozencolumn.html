@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Row Editing DataGrid -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#dg').datagrid({
+                    frozenColumns: [[
+                        {field: 'ck', checkbox: true}
+                    ]],
+                    columns:[[
+
+                        {field: 'username', title: 'Name', width: 150},
+                        {field: 'sex', title: 'Sex', width: 50},
+                        {field: 'age', title: 'Age', width: 80},
+                        {field: 'brithday', title: 'Birthday', width: 100},
+                        {field: 'registdate', title: 'Regist Date', width: 150},
+                        {field: 'arrivaltime', title: 'Arrival Time (AT)', width: 110},
+                        {field: 'itemid', title: 'Item ID', width: 100}
+                    ]],
+                    rownumbers: true,
+                    height: 250,
+                    width: 600,
+                    url: '../datagrid/datagrid_data2.json',
+                    customAttr: {
+                        headerContextMenu: {
+                            isShow: true,
+                            items: [{
+                                text: '冻结此列',
+                                iconCls: 'icon-lock',
+                                onclick: function(item, field, target){
+                                    $(target).datagrid('freezeColumn', field);
+                                }
+                            },{
+                                text: '取消冻结',
+                                iconCls: 'icon-unlock',
+                                onclick: function(item, field, target){
+                                    $(target).datagrid('unfreezColumn', field);
+                                }
+                            }],
+                            onShow: function(field, target){
+                                switchFreezeAndUnfreezeMenuItem(target, field);
+                            }
+                        },
+                        rowContextMenu: {
+                            isShow: true,
+                            items: ['-',{
+                                text: '冻结此行',
+                                iconCls: 'icon-lock',
+                                onclick: function(item, rowIndex, rowData, target){
+                                    $(target).datagrid('freezeRow', rowIndex);
+                                }
+                            }]
+                        }
+                    }
+                }).datagrid('followCustomHandle');
+            });
+
+            /**
+             * 控制菜单项"冻结此列"和"冻结此列"是否可用
+             * @param target
+             * @param field
+             */
+            function switchFreezeAndUnfreezeMenuItem(target, field){
+                var headerContextMenu = $(target).datagrid('getHeaderContextMenu');
+                var fieldOption = $(target).datagrid('getColumnOption', field);
+                var fieldItem = headerContextMenu.menu('findItem', fieldOption.title);
+
+                if(fieldItem){
+                    if(!fieldItem.disabled){
+                        enableItem('冻结此列');
+                        disableItem('取消冻结');
+                    }else{
+                        enableItem('取消冻结');
+                        disableItem('冻结此列');
+                    }
+                }else{
+                    disableItem('冻结此列');
+                    disableItem('取消冻结');
+                }
+
+
+                function disableItem(title){
+                    var item = headerContextMenu.menu('findItem', title);
+                    if(item){
+                        headerContextMenu.menu('disableItem', item.target);
+                    }
+                }
+
+                function enableItem(title){
+                    var item = headerContextMenu.menu('findItem', title);
+                    if(item){
+                        headerContextMenu.menu('enableItem', item.target);
+                    }
+                }
+            }
+        </script>
+    </head>
+    <body>
+        <h3>行、列冻结演示</h3>
+        <p>
+            <ul>
+                <li>列冻结适用于单表头列，不适用于多表头列</li>
+                <li>列冻结只对当前数据页有效，重新加载数据后失效（与freezeRow一样）</li>
+                <li>行冻结方法freezeRow非扩展方法</li>
+            </ul>
+        </p>
+        <table id="dg"></table>
+    </body>
+</html>
