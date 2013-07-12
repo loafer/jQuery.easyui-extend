@@ -55,3 +55,9 @@
 .icon-expand{
     background:url('images/tree/toggle_expand.png') no-repeat center center;
 }
+.icon-lock{
+    background:url('images/datagrid/lock.png') no-repeat center center;
+}
+.icon-unlock{
+    background:url('images/datagrid/lock-unlock.png') no-repeat center center;
+}
