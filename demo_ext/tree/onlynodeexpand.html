@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tree({
+                    lines: true,
+                    url: '../tree/tree_data2.json',
+                    customAttr: {
+                        onlyNodeExpand: true,
+                        expandOnNodeClick: true
+                    }
+                }).tree('followCustomHandle');
+            });
+        </script>
+    </head>
+    <body>
+        <h3>同级节点只能展开一个</h3>
+        <ul id="tt"></ul>
+    </body>
+</html>
