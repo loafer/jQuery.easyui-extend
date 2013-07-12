@@ -286,7 +286,7 @@
     }
 
 
-    function expandHandle(target){
+    function expandHandler(target){
         var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
         if(!options.customAttr.expandOnNodeClick && !options.customAttr.expandOnDblClick) return;
 
@@ -343,6 +343,29 @@
         }
     }
 
+    function onlyNodeExpandHandler(target){
+        var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
+        if(!options.customAttr.onlyNodeExpand) return;
+
+        var onBeforeExpandCallback = options.onBeforeExpand;
+        $(target).tree({
+            onBeforeExpand: function(node){
+                onBeforeExpandCallback.call(this, node);
+                var parent = $(target).tree('getParent', node.target);
+                if(parent){
+                    var children = getChildren(target, parent.target, false);
+                    for(var i=0; i<children.length; i++){
+                        if(children[i].state == 'open'){
+                            $(target).tree('collapseAll', children[i].target);
+                        }
+                    }
+                }else{
+                    $(target).tree('collapseAll');
+                }
+            }
+        });
+    }
+
     $.fn.tree.contextmenu={};
     $.fn.tree.contextmenu.defaultEvents={
         moveup: function(item, node, target){
@@ -385,6 +408,7 @@
          * 双击节点展开收缩
          */
         expandOnDblClick: false,
+        onlyNodeExpand: false,
         contextMenu: {
             isShow: false,
             isMerge: true,
@@ -439,7 +463,8 @@
         followCustomHandle: function(jq){
             return jq.each(function(){
                 initContextMenu(this);
-                expandHandle(this);
+                expandHandler(this);
+                onlyNodeExpandHandler(this);
             });
         },
         /**
