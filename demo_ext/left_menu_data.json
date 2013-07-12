@@ -246,6 +246,12 @@
             "attributes":{
                 "url": "datagrid/fixnodata.html"
             }
+        },{
+            "id": "datagrid_freezeColumn",
+            "text": "行/列冻结演示",
+            "attributes": {
+                "url": "datagrid/frozencolumn.html"
+            }
         }]
     },{
         "id": "tree",
@@ -280,6 +286,12 @@
             "text": "双击节点展开/收缩",
             "attributes": {
                 "url": "tree/expand2.html"
+            }
+        },{
+            "id": "tree_onlynodeexpand",
+            "text": "节点展开控制",
+            "attributes": {
+                "url": "tree/onlynodeexpand.html"
             }
         },{
             "id": "tree_simpledata",
