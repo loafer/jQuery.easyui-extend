@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tree({
@@ -45,8 +51,62 @@
         </script>
     </head>
     <body>
-        <h3>自定义右键菜单</h3>
-        <p>请点击自定义菜单项[others]下的[item1]、[item2]项，查看菜单项点击事件处理。</p>
-        <ul id="tt"></ul>
+        <!--<h3>自定义右键菜单</h3>-->
+        <!--<p>请点击自定义菜单项[others]下的[item1]、[item2]项，查看菜单项点击事件处理。</p>-->
+        <!--<ul id="tt"></ul>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>自定义右键菜单</h3>
+                <p>请点击自定义菜单项[others]下的[item1]、[item2]项，查看菜单项点击事件处理。</p>
+                <ul id="tt"></ul>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,21,25]">
+                        $(function(){
+                            $('#tt').tree({
+                                url: '../tree/tree_data2.json',
+                                customAttr:{
+                                    contextMenu: {
+                                        isShow: true,
+                                        items:['-',{
+                                            text: "others",
+                                            submenu:[{
+                                                text: 'item1',
+                                                iconCls: 'icon-help',
+                                                onclick: nodeOnClickHandler
+                                            },{
+                                                text: 'item2',
+                                                onclick: nodeOnClickHandler
+                                            }]
+                                        }]
+                                    }
+                                }
+                            })
+                            .tree('followCustomHandle');
+                        });
+
+
+                        function nodeOnClickHandler(item, node, target){
+                            var msg = '当前点击菜单项[ '+item.text+' ]<br>'
+                                    + '触发右键菜单节点为[ '+node.text+' ]<br>'
+                                    + '此操作是在id为[ '+$(target).attr('id')+' ]tree上执行的。';
+                            $.messager.alert('信息', msg, 'info');
+                        }
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>自定义右键菜单</h3>
+                        <p>请点击自定义菜单项[others]下的[item1]、[item2]项，查看菜单项点击事件处理。</p>
+                        <ul id="tt"></ul>
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

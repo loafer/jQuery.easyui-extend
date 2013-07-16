@@ -9,8 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tree({
@@ -25,8 +32,43 @@
         </script>
     </head>
     <body>
-        <h3>简单JSON格式</h3>
-        <p>类似ztree简单JSON格式加载方式</p>
-        <ul id="tt"></ul>
+        <!--<h3>简单JSON格式</h3>-->
+        <!--<p>类似ztree简单JSON格式加载方式</p>-->
+        <!--<ul id="tt"></ul>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>简单JSON格式</h3>
+                <p>类似ztree简单JSON格式加载方式</p>
+                <ul id="tt"></ul>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[4,5,6,7,8]">
+                        $(function(){
+                            $('#tt').tree({
+                                url: '../tree/tree_data1.json',
+                                customAttr:{
+                                    textField: 'region',
+                                    iconField: 'icon',
+                                    parentField: '_parentId'
+                                }
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>简单JSON格式</h3>
+                        <p>类似ztree简单JSON格式加载方式</p>
+                        <ul id="tt"></ul>
+                    </body>
+                </textarea>
+            </div>
+        </div>
+
     </body>
 </html>

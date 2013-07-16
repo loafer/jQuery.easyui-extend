@@ -9,8 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.window.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#btn1').click(function(){
@@ -24,7 +31,41 @@
         </script>
     </head>
     <body>
-        <input type="button" id="btn1" value="打开窗体(top)">
-        <input type="button" id="btn2" value="打开窗体(iframe)">
+        <!--<h3>Dialog 演示</h3>-->
+        <!--<input type="button" id="btn1" value="打开窗体(top)">-->
+        <!--<input type="button" id="btn2" value="打开窗体(iframe)">-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>Dialog 演示</h3>
+                <input type="button" id="btn1" value="打开窗体(top)">
+                <input type="button" id="btn2" value="打开窗体(iframe)">
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight: [3,7]">
+                        $(function(){
+                            $('#btn1').click(function(){
+                                $.showModalDialog({content: '我是一个定位在最顶层的窗体。<br>拖拽下我看看^^'})
+                            });
+
+                            $('#btn2').click(function(){
+                                $.showModalDialog({content: '我是一个定位在最顶层的窗体。<br>拖拽下我看看^^', locate: 'document'})
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>Dialog 演示</h3>
+                        <input type="button" id="btn1" value="打开窗体(top)">
+                        <input type="button" id="btn2" value="打开窗体(iframe)">
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

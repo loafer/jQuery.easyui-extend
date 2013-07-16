@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tree({
@@ -30,8 +36,49 @@
         </script>
     </head>
     <body>
-        <h3>右键菜单及节点位置上移、下移和onAfterMove事件演示</h3>
-        <p>请点击右键菜单项[位置上移动]、[位置下移动]，查看演示效果</p>
-        <ul id="tt"></ul>
+        <!--<h3>右键菜单及节点位置上移、下移和onAfterMove事件演示</h3>-->
+        <!--<p>请点击右键菜单项[位置上移动]、[位置下移动]，查看演示效果</p>-->
+        <!--<ul id="tt"></ul>-->
+
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>右键菜单及节点位置上移、下移和onAfterMove事件演示</h3>
+                <p>请点击右键菜单项[位置上移动]、[位置下移动]，查看演示效果</p>
+                <ul id="tt"></ul>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[4,5,6,7,8,9,10,11,12,14]">
+                        $(function(){
+                            $('#tt').tree({
+                                url: '../tree/tree_data2.json',
+                                customAttr:{
+                                    contextMenu: {
+                                        isShow: true
+                                    },
+                                    onAfterMove: function(target , source){
+                                        var msg = '位置互换节点为：[ ' + target.text + ' ]和[ ' + source.text + ' ]';
+                                        $.messager.alert('信息', msg, 'info');
+                                    }
+                                }
+                            })
+                            .tree('followCustomHandle');
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>右键菜单及节点位置上移、下移和onAfterMove事件演示</h3>
+                        <p>请点击右键菜单项[位置上移动]、[位置下移动]，查看演示效果</p>
+                        <ul id="tt"></ul>
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

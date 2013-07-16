@@ -9,10 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.combobox.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#ccb').combobox({
@@ -47,10 +52,71 @@
         </script>
     </head>
     <body>
-        <input type="button" value="validate" id="validateBtn">
-        <input type="button" value="clear" id="clearBtn">
-        <input type="button" value="getValue" id="getValueBtn">
-        <br>
-        <input id="ccb" type="text">
+        <!--<h3>headervalue演示</h3>-->
+        <!--<input type="button" value="validate" id="validateBtn">-->
+        <!--<input type="button" value="clear" id="clearBtn">-->
+        <!--<input type="button" value="getValue" id="getValueBtn">-->
+        <!--<br>-->
+        <!--<input id="ccb" type="text">-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>headervalue演示</h3>
+                <input type="button" value="validate" id="validateBtn">
+                <input type="button" value="clear" id="clearBtn">
+                <input type="button" value="getValue" id="getValueBtn">
+                <br>
+                <input id="ccb" type="text">
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight: [8,9,10,12]">
+                        $(function(){
+                            $('#ccb').combobox({
+                                valueField: 'id',
+                                textField: 'text',
+                                url: '../combobox/combobox_data1.json',
+                                required: true,
+                                multiple: false,
+                                customAttr:{
+                                    headervalue: '--请选择--'
+                                }
+                            })
+                                    .combobox('followCustomHandle');
+
+
+                            $('#validateBtn').click(function(){
+                                $('#ccb').combobox('validate');
+                            });
+
+                            $('#clearBtn').click(function(){
+                                $('#ccb').combobox('clear');
+                            });
+
+                            $('#getValueBtn').click(function(){
+                                var s = 'value: ' + $('#ccb').combobox('getValue') +
+                                        '\n' +
+                                        'values: ' + $('#ccb').combobox('getValues').join(',')
+
+                                alert(s);
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>headervalue演示</h3>
+                        <input type="button" value="validate" id="validateBtn">
+                        <input type="button" value="clear" id="clearBtn">
+                        <input type="button" value="getValue" id="getValueBtn">
+                        <br>
+                        <input id="ccb" type="text">
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

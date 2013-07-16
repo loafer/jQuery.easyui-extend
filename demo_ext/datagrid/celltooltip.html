@@ -9,8 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.dateformat.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#datagrid').datagrid({
@@ -50,8 +57,69 @@
         </script>
     </head>
     <body>
-        <h3>Cell Tooltip 及自定义样式</h3>
-        <p>请将鼠标移到 Name、 Regist Date这两列对应的Cell上查看效果</p>
-        <table id="datagrid"></table>
+        <!--<h3>Cell Tooltip 及自定义样式</h3>-->
+        <!--<p>请将鼠标移到 Name、 Regist Date这两列对应的Cell上查看效果</p>-->
+        <!--<table id="datagrid"></table>-->
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>Cell Tooltip 及自定义样式</h3>
+                <p>请将鼠标移到 Name、 Regist Date这两列对应的Cell上查看效果</p>
+                <table id="datagrid"></table>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight: [17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,35]">
+                        $(function(){
+                            $('#datagrid').datagrid({
+                                columns:[[
+                                    {field: 'username', title: 'Name', width: 150, editor: 'text'},
+                                    {field: 'sex', title: 'Sex', width: 50, editor: 'text'},
+                                    {field: 'age', title: 'Age', width: 80, editor: 'numberspinner'},
+                                    {field: 'brithday', title: 'Birthday', width: 100, editor: 'my97'},
+                                    {field: 'registdate', title: 'Regist Date', width: 150, editor: 'datetimebox'},
+                                    {field: 'arrivaltime', title: 'Arrival Time (AT)', width: 110, editor: 'timespinner'}
+                                ]],
+                                title: 'Row Editing DataGrid',
+                                singleSelect: true,
+                                rownumbers: true,
+                                height: 250,
+                                width: 700,
+                                url: '../datagrid/datagrid_data2.json',
+                                customAttr:{
+                                    tooltip:{
+                                        enable: true,
+                                        target: 'cell',
+                                        fields: ['username', 'registdate'],
+                                        formatter: function(value, field){
+                                            if(field == 'registdate'){
+                                                var date = $.parseDate(value, 'yyyy-MM-dd hh:mm');
+                                                var content = $.dateFormat(date, 'yyyy年MM月dd日 hh点mm分')
+                                                return {content: content, css:{backgroundColor: '#FFFF88', borderColor: '#df8505'}}
+                                            }else{
+                                                return value;
+                                            }
+
+                                        }
+                                    }
+                                }
+                            })
+                            .datagrid('followCustomHandle');
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>Cell Tooltip 及自定义样式</h3>
+                        <p>请将鼠标移到 Name、 Regist Date这两列对应的Cell上查看效果</p>
+                        <table id="datagrid"></table>
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

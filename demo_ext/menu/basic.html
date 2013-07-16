@@ -3,14 +3,21 @@
     <head>
         <meta charset="utf-8">
         <title>Basic Menu - jQuery EasyUI Demo</title>
-        <link type="text/css" rel="stylesheet" href="../../themes/default/easyui.css">
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
         <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
         <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#mm').menu('appendItems',[
@@ -40,12 +47,69 @@
         </script>
     </head>
     <body>
-        <h3>此页面主要演示通过appendItems方法，动态批量添加Menu item（包括不同item组间的分割符）。</h3>
-        <div id="area" style="height: 200px; width: 300px; background-color: #eee">
-            请在此区域内点击鼠标右键
-        </div>
-        <div id="mm" class="easyui-menu" style="width: 120px;">
-            <div data-options="iconCls:'icon-help'">Help</div>
+        <!--<h3>此页面主要演示通过appendItems方法，动态批量添加Menu item（包括不同item组间的分割符）。</h3>-->
+        <!--<div id="area" style="height: 200px; width: 300px; background-color: #eee">-->
+            <!--请在此区域内点击鼠标右键-->
+        <!--</div>-->
+        <!--<div id="mm" class="easyui-menu" style="width: 120px;">-->
+            <!--<div data-options="iconCls:'icon-help'">Help</div>-->
+        <!--</div>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>此页面主要演示通过appendItems方法，动态批量添加Menu item（包括不同item组间的分割符）。</h3>
+                <div id="area" style="height: 200px; width: 300px; background-color: #eee">
+                    请在此区域内点击鼠标右键
+                </div>
+                <div id="mm" class="easyui-menu" style="width: 120px;">
+                    <div data-options="iconCls:'icon-help'">Help</div>
+                </div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[2,3,4,5,6,7,8,9,10,11,12,13,14,15,16]">
+                        $(function(){
+                            $('#mm').menu('appendItems',[
+                                '-',
+                                {text: 'submenu', submenu:[
+                                    {text: 'subitem1'},
+                                    '-',
+                                    {text: 'subitem2', submenu:[
+                                        {text: 'subitem3'}
+                                    ]}
+                                ]},
+                                '-',
+                                {text: 'Add', iconCls: 'icon-add'},
+                                {text: 'Save', iconCls: 'icon-save'},
+                                '-',
+                                {text: 'About'}
+                            ]);
+
+                            $('#area').bind('contextmenu', function(e){
+                                $('#mm').menu('show',{
+                                    left: e.pageX,
+                                    top: e.pageY
+                                });
+                                return false;
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html; highlight: [6,7,8]">
+                    <body>
+                        <h3>此页面主要演示通过appendItems方法，动态批量添加Menu item（包括不同item组间的分割符）。</h3>
+                        <div id="area" style="height: 200px; width: 300px; background-color: #eee">
+                            请在此区域内点击鼠标右键
+                        </div>
+                        <div id="mm" class="easyui-menu" style="width: 120px;">
+                            <div data-options="iconCls:'icon-help'">Help</div>
+                        </div>
+                    </body>
+                </textarea>
+            </div>
         </div>
     </body>
 </html>

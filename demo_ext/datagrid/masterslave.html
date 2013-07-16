@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#master').datagrid({
@@ -97,23 +103,95 @@
         </script>
     </head>
     <body>
-        <h3>Datagrid级联操作演示</h3>
-        <p>请双击Master DataGrid中的某一行</p>
-        <div class="easyui-layout" style="height: 500px; width: 800px;">
-            <div data-options="region: 'north', title: 'Master', split:true" style="height: 300px">
-                <table id="master"></table>
-            </div>
-            <div data-options="region: 'center'">
-                <div class="easyui-layout" data-options="fit: true">
-                    <div data-options="region: 'west', split: true" style="width: 400px">
-                        <div class="easyui-panel" data-options="title: 'Slave 1', fit: true, border: false">
-                            <table id="slave1"></table>
+        <!--<h3>Datagrid级联操作演示</h3>-->
+        <!--<p>请双击Master DataGrid中的某一行</p>-->
+        <!--<div class="easyui-layout" style="height: 500px; width: 800px;">-->
+            <!--<div data-options="region: 'north', title: 'Master', split:true" style="height: 300px">-->
+                <!--<table id="master"></table>-->
+            <!--</div>-->
+            <!--<div data-options="region: 'center'">-->
+                <!--<div class="easyui-layout" data-options="fit: true">-->
+                    <!--<div data-options="region: 'west', split: true" style="width: 400px">-->
+                        <!--<div class="easyui-panel" data-options="title: 'Slave 1', fit: true, border: false">-->
+                            <!--<table id="slave1"></table>-->
+                        <!--</div>-->
+                    <!--</div>-->
+                    <!--<div data-options="region: 'center', title: 'Slave 2'">-->
+                        <!--<table id="slave2"></table>-->
+                    <!--</div>-->
+                <!--</div>-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>Datagrid级联操作演示</h3>
+                <p>请双击Master DataGrid中的某一行</p>
+                <div class="easyui-layout" style="height: 400px; width: 800px;">
+                    <div data-options="region: 'north', title: 'Master', split:true" style="height: 250px">
+                        <table id="master"></table>
+                    </div>
+                    <div data-options="region: 'center'">
+                        <div class="easyui-layout" data-options="fit: true">
+                            <div data-options="region: 'west', split: true" style="width: 400px">
+                                <div class="easyui-panel" data-options="title: 'Slave 1', fit: true, border: false">
+                                    <table id="slave1"></table>
+                                </div>
+                            </div>
+                            <div data-options="region: 'center', title: 'Slave 2'">
+                                <table id="slave2"></table>
+                            </div>
                         </div>
                     </div>
-                    <div data-options="region: 'center', title: 'Slave 2'">
-                        <table id="slave2"></table>
-                    </div>
                 </div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight: [19,20,21,22,23,24,25,26,27,28,30]">
+                        $(function(){
+                            $('#master').datagrid({
+                                columns:[[
+                                    {field: 'ck', checkbox: true},
+                                    {field: 'itemid', width: 80, title: 'Item ID', sortable: true},
+                                    {field: 'productname', width: 100, title: 'Product'},
+                                    {field: 'listprice', width: 80, align: 'right', title: 'List Price', sortable: true, hidden: true},
+                                    {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost', hidden: true},
+                                    {field: 'attr1', width: 250, title: 'Attribute', hidden: true},
+                                    {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
+                                ]],
+                                singleSelect: true,
+                                rownumbers: true,
+                                remoteSort: false,
+                                title: 'Master DataGrid',
+                                url: '../datagrid/datagrid_data1.json',
+                                fit: true,
+                                idField: 'itemid',
+                                customAttr:{
+                                    headerContextMenu:{
+                                        isShow: true
+                                    },
+                                    slaveList:[
+                                        {id: 'slave1', relatedfield: 'itemid', queryParams:{name: 'slave1'}},
+                                        {id: 'slave2', queryParams: {name: 'slave2'}},
+                                        {id: 'slave3'}
+                                    ]
+                                }
+                            })
+                            .datagrid('followCustomHandle');
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <table id="master"></table>
+                        <table id="slave1"></table>
+                        <table id="slave2"></table>
+                    </body>
+                </textarea>
             </div>
         </div>
     </body>

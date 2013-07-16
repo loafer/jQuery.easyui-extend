@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tabs.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tabs({
@@ -76,14 +82,115 @@
         </script>
     </head>
     <body>
-        <input type="button" id="btn1" value="添加tab">
-        <input type="button" id="btn2" value="添加tab(href)">
-        <input type="button" id="btn3" value="添加tab(content)">
-        <input type="button" id="btn4" value="添加tab(content&&useiframe)">
-        <br>
-        <div id="tt"  style="width:500px;height:250px;">
-            <div title="Tab1" style="padding: 5px;">
-                tab1
+        <!--<h3>add方法演示</h3>-->
+        <!--<input type="button" id="btn1" value="添加tab">-->
+        <!--<input type="button" id="btn2" value="添加tab(href)">-->
+        <!--<input type="button" id="btn3" value="添加tab(content)">-->
+        <!--<input type="button" id="btn4" value="添加tab(content&&useiframe)">-->
+        <!--<br>-->
+        <!--<div id="tt"  style="width:500px;height:250px;">-->
+            <!--<div title="Tab1" style="padding: 5px;">-->
+                <!--tab1-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'" style="padding-left: 20px; padding-top: 20px;">
+                <h3>add方法演示</h3>
+                <input type="button" id="btn1" value="添加tab">
+                <input type="button" id="btn2" value="添加tab(href)">
+                <input type="button" id="btn3" value="添加tab(content)">
+                <input type="button" id="btn4" value="添加tab(content&&useiframe)">
+                <br>
+                <div id="tt"  style="width:500px;height:250px;">
+                    <div title="Tab1" style="padding: 5px;">
+                        tab1
+                    </div>
+                </div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[13,14,15,16,17,26,27,28,29,30,39,40,41,42,43,52,53,54,55,56,57]">
+                        $(function(){
+                            $('#tt').tabs({
+                                plain: true
+                            });
+
+
+                            $('#btn1').click(function(){
+                                if($('#tt').tabs('exists', 'Tab2')){
+                                    $('#tt').tabs('select', 'Tab2');
+                                    return;
+                                }
+
+                                $('#tt').tabs('add',{
+                                    title: 'Tab2',
+                                    closable: true,
+                                    content: 'Tab2 Content.'
+                                });
+                            });
+
+                            $('#btn2').click(function(){
+                                if($('#tt').tabs('exists', 'Tab3')){
+                                    $('#tt').tabs('select', 'Tab3');
+                                    return;
+                                }
+
+                                $('#tt').tabs('add',{
+                                    title: 'Tab3',
+                                    href: '_content3.html',
+                                    closable: true
+                                });
+                            });
+
+                            $('#btn3').click(function(){
+                                if($('#tt').tabs('exists', 'Tab4')){
+                                    $('#tt').tabs('select', 'Tab4');
+                                    return;
+                                }
+
+                                $('#tt').tabs('add',{
+                                    title: 'Tab4',
+                                    content: 'url:_content4.html',
+                                    closable: true
+                                });
+                            });
+
+                            $('#btn4').click(function(){
+                                if($('#tt').tabs('exists', 'Tab5')){
+                                    $('#tt').tabs('select', 'Tab5');
+                                    return;
+                                }
+
+                                $('#tt').tabs('add',{
+                                    title: 'Tab5',
+                                    content: 'url:_content5.html',
+                                    useiframe: true,
+                                    closable: true
+                                });
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>add方法演示</h3>
+                        <input type="button" id="btn1" value="添加tab">
+                        <input type="button" id="btn2" value="添加tab(href)">
+                        <input type="button" id="btn3" value="添加tab(content)">
+                        <input type="button" id="btn4" value="添加tab(content&&useiframe)">
+                        <br>
+                        <div id="tt"  style="width:500px;height:250px;">
+                            <div title="Tab1" style="padding: 5px;">
+                                tab1
+                            </div>
+                        </div>
+                    </body>
+                </textarea>
             </div>
         </div>
     </body>

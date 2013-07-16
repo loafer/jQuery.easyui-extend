@@ -9,7 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tree({
@@ -31,8 +39,50 @@
         </script>
     </head>
     <body>
-        <h3>基本演示</h3>
-        <input type="button" id="btn1" value="getLevel">
-        <ul id="tt"></ul>
+        <!--<h3>基本演示</h3>-->
+        <!--<input type="button" id="btn1" value="getLevel">-->
+        <!--<ul id="tt"></ul>-->
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>基本演示</h3>
+                <input type="button" id="btn1" value="getLevel">
+                <ul id="tt"></ul>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[11]">
+                        $(function(){
+                            $('#tt').tree({
+                                lines: true,
+                                url: '../tree/tree_data2.json'
+                            });
+
+
+                            $('#btn1').click(function(){
+                                var node = $('#tt').tree('getSelected');
+                                if(node){
+                                    alert($('#tt').tree('getLevel', node));
+                                }else{
+                                    alert('请先选中一个节点。');
+                                }
+
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>基本演示</h3>
+                        <input type="button" id="btn1" value="getLevel">
+                        <ul id="tt"></ul>
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

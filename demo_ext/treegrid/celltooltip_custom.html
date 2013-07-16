@@ -9,8 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.treegrid.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').treegrid({
@@ -47,8 +54,67 @@
         </script>
     </head>
     <body>
-        <h3>Tooltip显示风格之Cell,自定义显示样式</h3>
-        <p>请将鼠标移动到每行记录对应[Name]列或[Date]列，查看显示效果。</p>
-        <table id="tt"></table>
+        <!--<h3>Tooltip显示风格之Cell,自定义显示样式</h3>-->
+        <!--<p>请将鼠标移动到每行记录对应[Name]列或[Date]列，查看显示效果。</p>-->
+        <!--<table id="tt"></table>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>Tooltip显示风格之Cell,自定义显示样式</h3>
+                <p>请将鼠标移动到每行记录对应[Name]列或[Date]列，查看显示效果。</p>
+                <table id="tt"></table>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,32]">
+                        $(function(){
+                            $('#tt').treegrid({
+                                url: '../treegrid/treegrid_data1.json',
+                                idField: 'id',
+                                treeField: 'name',
+                                columns:[[
+                                    {field: 'name', title: 'Name', width: 220},
+                                    {field: 'size', title: 'Size', width: 100},
+                                    {field: 'date', title: 'Date', width: 150}
+                                ]],
+                                customAttr: {
+                                    tooltip: {
+                                        enable: true,
+                                        target: 'cell',
+                                        fields: ['name', 'date'],
+                                        formatter: function(value, field, nodeid, node){
+                                            if(field == 'name'){
+                                                return {
+                                                    content: value,
+                                                    css: {
+                                                        backgroundColor: '#FFFF88',
+                                                        borderColor: '#df8505'
+                                                    }
+                                                };
+                                            }else{
+                                                return value;
+                                            }
+                                        }
+                                    }
+                                }
+                            })
+                            .treegrid('followCustomHandle');
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>Tooltip显示风格之Cell,自定义显示样式</h3>
+                        <p>请将鼠标移动到每行记录对应[Name]列或[Date]列，查看显示效果。</p>
+                        <table id="tt"></table>
+                    </body>
+                </textarea>
+            </div>
+        </div>
+
+
     </body>
 </html>

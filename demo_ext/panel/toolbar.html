@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.toolbar.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.panel.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#p').panel({
@@ -42,7 +48,53 @@
         </script>
     </head>
     <body>
-        <h3>Toolbar演示</h3>
-        <div id="p"></div>
+        <!--<h3>Toolbar演示</h3>-->
+        <!--<div id="p"></div>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit:true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>Toolbar演示</h3>
+                <div id="p"></div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,25]">
+                        $(function(){
+                            $('#p').panel({
+                                width: 500,
+                                height: 150,
+                                title: 'Panel',
+                                customAttr: {
+                                    toolbar: {
+                                        buttonPosition: 'right',
+                                        data: [{
+                                            text: 'Save',
+                                            iconCls: 'icon-save',
+                                            handler: function(){alert('save')}
+                                        },{
+                                            text: 'Add',
+                                            iconCls: 'icon-add',
+                                            handler: function(){alert('add')}
+                                        },'-',{
+                                            text: 'Reload',
+                                            iconCls: 'icon-reload',
+                                            disabled: true
+                                        }]
+                                    }
+                                }
+                            })
+                            .panel('followCustomHandle');
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <h3>Toolbar演示</h3>
+                    <div id="p"></div>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>

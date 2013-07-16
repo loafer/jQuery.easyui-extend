@@ -9,8 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.toolbar.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tb').toolbar();
@@ -18,13 +25,53 @@
         </script>
     </head>
     <body>
-        <h3>复杂Toolbar演示</h3>
-        <div id="tb">
-            <a href="#" class="easyui-linkbutton" data-options="iconCls: 'icon-add', plain:true" style="float: left">Add</a>
-            <div class="dialog-tool-separator"></div>
-            <a href="#" class="easyui-linkbutton" data-options="iconCls: 'icon-save', plain:true" style="float: left">Save</a>
-            <div class="dialog-tool-separator"></div>
-            <input class="easyui-searchbox" style="width: 120px;">
+        <!--<h3>复杂Toolbar演示</h3>-->
+        <!--<div id="tb">-->
+            <!--<a href="#" class="easyui-linkbutton" data-options="iconCls: 'icon-add', plain:true" style="float: left">Add</a>-->
+            <!--<div class="dialog-tool-separator"></div>-->
+            <!--<a href="#" class="easyui-linkbutton" data-options="iconCls: 'icon-save', plain:true" style="float: left">Save</a>-->
+            <!--<div class="dialog-tool-separator"></div>-->
+            <!--<input class="easyui-searchbox" style="width: 120px;">-->
+        <!--</div>-->
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>复杂Toolbar演示</h3>
+                <div id="tb">
+                    <a href="#" class="easyui-linkbutton" data-options="iconCls: 'icon-add', plain:true" style="float: left">Add</a>
+                    <div class="dialog-tool-separator"></div>
+                    <a href="#" class="easyui-linkbutton" data-options="iconCls: 'icon-save', plain:true" style="float: left">Save</a>
+                    <div class="dialog-tool-separator"></div>
+                    <input class="easyui-searchbox" style="width: 120px;">
+                </div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[1,2,3]">
+                        $(function(){
+                            $('#tb').toolbar();
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>复杂Toolbar演示</h3>
+                        <div id="tb">
+                            <a href="#" class="easyui-linkbutton"
+                               data-options="iconCls: 'icon-add', plain:true" style="float: left">Add</a>
+                            <div class="dialog-tool-separator"></div>
+                            <a href="#" class="easyui-linkbutton"
+                               data-options="iconCls: 'icon-save', plain:true" style="float: left">Save</a>
+                            <div class="dialog-tool-separator"></div>
+                            <input class="easyui-searchbox" style="width: 120px;">
+                        </div>
+                    </body>
+                </textarea>
+            </div>
         </div>
     </body>
 </html>

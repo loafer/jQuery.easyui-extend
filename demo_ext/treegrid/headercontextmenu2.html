@@ -9,10 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.treegrid.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').treegrid({
@@ -51,8 +56,69 @@
         </script>
     </head>
     <body>
-        <h3>Header ContextMenu 自定义菜单项演示</h3>
-        <p>请点击自定义菜单项[item1]和[item2]查看菜单onclick事件</p>
-        <table id="tt"></table>
+        <!--<h3>Header ContextMenu 自定义菜单项演示</h3>-->
+        <!--<p>请点击自定义菜单项[item1]和[item2]查看菜单onclick事件</p>-->
+        <!--<table id="tt"></table>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>Header ContextMenu 自定义菜单项演示</h3>
+                <p>请点击自定义菜单项[item1]和[item2]查看菜单onclick事件</p>
+                <table id="tt"></table>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,27,30]">
+                        $(function(){
+                            $('#tt').treegrid({
+                                url: '../treegrid/treegrid_data1.json',
+                                idField: 'id',
+                                treeField: 'name',
+                                columns:[[
+                                    {field: 'name', title: 'Name', width: 220},
+                                    {field: 'size', title: 'Size', width: 100},
+                                    {field: 'date', title: 'Date', width: 150}
+                                ]],
+                                customAttr: {
+                                    headerContextMenu: {
+                                        isShow: true,
+                                        items: ['-',{
+                                            text: 'others',
+                                            submenu: [{
+                                                text: 'item1',
+                                                onclick: itemOnClickHandler
+                                            },{
+                                                text: 'item2',
+                                                onclick: itemOnClickHandler
+                                            }]
+                                        }]
+                                    }
+                                }
+                            })
+                            .treegrid('followCustomHandle');
+                        });
+
+                        function itemOnClickHandler(item, field, target){
+                            var msg = '当前点击的菜单项是[ '+item.text+' ]<br>'
+                                    + '触发右键菜单的列为[ '+field+' ]<br>'
+                                    + '此右键菜单发生在id为[ '+$(target).attr('id')+' ]的treegrid上';
+                            $.messager.alert('信息', msg, 'info');
+                        }
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>Header ContextMenu 自定义菜单项演示</h3>
+                        <p>请点击自定义菜单项[item1]和[item2]查看菜单onclick事件</p>
+                        <table id="tt"></table>
+                    </body>
+                </textarea>
+            </div>
+        </div>
+
+
     </body>
 </html>

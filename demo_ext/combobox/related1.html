@@ -9,10 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.combobox.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#ccb1').combobox({
@@ -83,26 +88,142 @@
         </script>
     </head>
     <body>
-        <h2>使用服务端数据级联操作</h2>
-        <!-- Using a local data cascade operation -->
-        <div style="padding-bottom: 5px;">
-            Combobox1: <input id="ccb1">
-            <input type="button" value="clear" onclick="doClear('#ccb1')">
-            <input type="button" value="getValue" onclick="doGetValue('#ccb1')">
-        </div>
-        <div style="padding-bottom: 5px;">
-            Combobox2: <input id="ccb2">
-            <input type="button" value="clear" onclick="doClear('#ccb2')">
-            <input type="button" value="getValue" onclick="doGetValue('#ccb2')">
-        </div>
-        <div style="padding-bottom: 5px;">
-            Combobox3: <input id="ccb3">
-            <input type="button" value="clear" onclick="doClear('#ccb3')">
-            <input type="button" value="getValue" onclick="doGetValue('#ccb3')">
-        </div>
-        <div style="padding-bottom: 5px;">
-            Combobox4: <input id="ccb4">
-            <input type="button" value="getValue" onclick="doGetValue('#ccb4')">
+        <!--<h2>使用服务端数据级联操作</h2>-->
+        <!--&lt;!&ndash; Using a local data cascade operation &ndash;&gt;-->
+        <!--<div style="padding-bottom: 5px;">-->
+            <!--Combobox1: <input id="ccb1">-->
+            <!--<input type="button" value="clear" onclick="doClear('#ccb1')">-->
+            <!--<input type="button" value="getValue" onclick="doGetValue('#ccb1')">-->
+        <!--</div>-->
+        <!--<div style="padding-bottom: 5px;">-->
+            <!--Combobox2: <input id="ccb2">-->
+            <!--<input type="button" value="clear" onclick="doClear('#ccb2')">-->
+            <!--<input type="button" value="getValue" onclick="doGetValue('#ccb2')">-->
+        <!--</div>-->
+        <!--<div style="padding-bottom: 5px;">-->
+            <!--Combobox3: <input id="ccb3">-->
+            <!--<input type="button" value="clear" onclick="doClear('#ccb3')">-->
+            <!--<input type="button" value="getValue" onclick="doGetValue('#ccb3')">-->
+        <!--</div>-->
+        <!--<div style="padding-bottom: 5px;">-->
+            <!--Combobox4: <input id="ccb4">-->
+            <!--<input type="button" value="getValue" onclick="doGetValue('#ccb4')">-->
+        <!--</div>-->
+
+
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h2>使用服务端数据级联操作</h2>
+                <div style="padding-bottom: 5px;">
+                    Combobox1: <input id="ccb1">
+                    <input type="button" value="clear" onclick="doClear('#ccb1')">
+                    <input type="button" value="getValue" onclick="doGetValue('#ccb1')">
+                </div>
+                <div style="padding-bottom: 5px;">
+                    Combobox2: <input id="ccb2">
+                    <input type="button" value="clear" onclick="doClear('#ccb2')">
+                    <input type="button" value="getValue" onclick="doGetValue('#ccb2')">
+                </div>
+                <div style="padding-bottom: 5px;">
+                    Combobox3: <input id="ccb3">
+                    <input type="button" value="clear" onclick="doClear('#ccb3')">
+                    <input type="button" value="getValue" onclick="doGetValue('#ccb3')">
+                </div>
+                <div style="padding-bottom: 5px;">
+                    Combobox4: <input id="ccb4">
+                    <input type="button" value="getValue" onclick="doGetValue('#ccb4')">
+                </div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[7,8,9,10,11,12,13,15,21,22,23,24,25,26,27,29,35,36,37,38,39,40,41,43,49,50,51,53]">
+                        $(function(){
+                            $('#ccb1').combobox({
+                                valueField: 'id',
+                                textField: 'text',
+                                editable: false,
+                                url: '../combobox/combobox_data1.json',
+                                customAttr:{
+                                    headervalue: '--请选择--',
+                                    slave:{
+                                        id: 'ccb2',
+                                        url: '../combobox/combobox_data1.json'
+                                    }
+                                }
+                            })
+                            .combobox('followCustomHandle');
+
+                            $('#ccb2').combobox({
+                                valueField: 'id',
+                                textField: 'text',
+                                editable: false,
+                                customAttr:{
+                                    headervalue: '--请选择--',
+                                    slave:{
+                                        id: 'ccb3',
+                                        url: '../combobox/combobox_data1.json'
+                                    }
+                                }
+                            })
+                            .combobox('followCustomHandle');
+
+                            $('#ccb3').combobox({
+                                valueField: 'id',
+                                textField: 'text',
+                                editable: false,
+                                customAttr:{
+                                    headervalue: '--请选择--',
+                                    slave:{
+                                        id: 'ccb4',
+                                        url: '../combobox/combobox_data1.json'
+                                    }
+                                }
+                            })
+                            .combobox('followCustomHandle');
+
+                            $('#ccb4').combobox({
+                                valueField: 'id',
+                                textField: 'text',
+                                editable: false,
+                                customAttr:{
+                                    headervalue: '--请选择--'
+                                }
+                            })
+                            .combobox('followCustomHandle');
+
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h2>使用服务端数据级联操作</h2>
+                        <div style="padding-bottom: 5px;">
+                            Combobox1: <input id="ccb1">
+                            <input type="button" value="clear" onclick="doClear('#ccb1')">
+                            <input type="button" value="getValue" onclick="doGetValue('#ccb1')">
+                        </div>
+                        <div style="padding-bottom: 5px;">
+                            Combobox2: <input id="ccb2">
+                            <input type="button" value="clear" onclick="doClear('#ccb2')">
+                            <input type="button" value="getValue" onclick="doGetValue('#ccb2')">
+                        </div>
+                        <div style="padding-bottom: 5px;">
+                            Combobox3: <input id="ccb3">
+                            <input type="button" value="clear" onclick="doClear('#ccb3')">
+                            <input type="button" value="getValue" onclick="doGetValue('#ccb3')">
+                        </div>
+                        <div style="padding-bottom: 5px;">
+                            Combobox4: <input id="ccb4">
+                            <input type="button" value="getValue" onclick="doGetValue('#ccb4')">
+                        </div>
+                    </body>
+                </textarea>
+            </div>
         </div>
     </body>
 </html>

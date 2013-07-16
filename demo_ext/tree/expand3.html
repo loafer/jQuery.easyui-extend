@@ -9,7 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tree({
@@ -33,11 +41,61 @@
         </script>
     </head>
     <body>
-        <h3>expandTo增强演示</h3>
-        <p>原始功能演示：展开到达指定节点。 增强功能演示： 展开到第几层</p>
-        <input type="button" id="btn1" value="原始功能演示">
-        <input type="button" id="btn2" value="增强功能演示">
-        <input type="button" id="btn3" value="收合树">
-        <ul id="tt"></ul>
+        <!--<h3>expandTo增强演示</h3>-->
+        <!--<p>原始功能演示：展开到达指定节点。 增强功能演示： 展开到第几层</p>-->
+        <!--<input type="button" id="btn1" value="原始功能演示">-->
+        <!--<input type="button" id="btn2" value="增强功能演示">-->
+        <!--<input type="button" id="btn3" value="收合树">-->
+        <!--<ul id="tt"></ul>-->
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>expandTo增强演示</h3>
+                <p>原始功能演示：展开到达指定节点。 增强功能演示： 展开到第几层</p>
+                <input type="button" id="btn1" value="原始功能演示">
+                <input type="button" id="btn2" value="增强功能演示">
+                <input type="button" id="btn3" value="收合树">
+                <ul id="tt"></ul>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[13]">
+                        $(function(){
+                            $('#tt').tree({
+                                lines: true,
+                                url: '../tree/tree_data2.json'
+                            });
+
+                            $('#btn1').click(function(){
+                                var children = $('#tt').tree('getChildren');
+                                $('#tt').tree('expandTo', children[3].target);
+                            });
+
+                            $('#btn2').click(function(){
+                                $('#tt').tree('expandTo', 2);
+                            });
+
+                            $('#btn3').click(function(){
+                                $('#tt').tree('collapseAll');
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>expandTo增强演示</h3>
+                        <p>原始功能演示：展开到达指定节点。 增强功能演示： 展开到第几层</p>
+                        <input type="button" id="btn1" value="原始功能演示">
+                        <input type="button" id="btn2" value="增强功能演示">
+                        <input type="button" id="btn3" value="收合树">
+                        <ul id="tt"></ul>
+                    </body>
+                </textarea>
+            </div>
+        </div>
+
     </body>
 </html>

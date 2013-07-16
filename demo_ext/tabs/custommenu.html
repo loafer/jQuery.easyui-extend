@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.tabs.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tabs({
@@ -44,17 +50,89 @@
         </script>
     </head>
     <body>
-        <h3>自定义标签页右键菜单项演示</h3>
-        <p>请点击[ Add ]菜单项，查看Menu item的onclick事件参数演示说明</p>
-        <div id="tt"  style="width:500px;height:250px;">
-            <div title="Tab1" style="padding: 5px;">
-                tab1
+        <!--<h3>自定义标签页右键菜单项演示</h3>-->
+        <!--<p>请点击[ Add ]菜单项，查看Menu item的onclick事件参数演示说明</p>-->
+        <!--<div id="tt"  style="width:500px;height:250px;">-->
+            <!--<div title="Tab1" style="padding: 5px;">-->
+                <!--tab1-->
+            <!--</div>-->
+            <!--<div title="Tab2" style="padding: 5px;" data-options="closable: true">-->
+                <!--tab2-->
+            <!--</div>-->
+            <!--<div title="Tab3" style="padding: 5px;" data-options="closable: true">-->
+                <!--tab3-->
+            <!--</div>-->
+        <!--</div>-->
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'" style="padding-left: 20px; padding-top: 20px;">
+                <h3>自定义标签页右键菜单项演示</h3>
+                <p>请点击[ Add ]菜单项，查看Menu item的onclick事件参数演示说明</p>
+                <div id="tt"  style="width:500px;height:250px;">
+                    <div title="Tab1" style="padding: 5px;">
+                        tab1
+                    </div>
+                    <div title="Tab2" style="padding: 5px;" data-options="closable: true">
+                        tab2
+                    </div>
+                    <div title="Tab3" style="padding: 5px;" data-options="closable: true">
+                        tab3
+                    </div>
+                </div>
             </div>
-            <div title="Tab2" style="padding: 5px;" data-options="closable: true">
-                tab2
-            </div>
-            <div title="Tab3" style="padding: 5px;" data-options="closable: true">
-                tab3
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,26]">
+                        $(function(){
+                            $('#tt').tabs({
+                                plain: true,
+                                tabPosition: 'top',
+                                customAttr: {
+                                    contextMenu: {
+                                        isShow: true,
+                                        isMerge: false,
+                                        items: [{
+                                            text: 'Add',
+                                            iconCls: 'icon-add',
+                                            onclick: function(item, title, index, target){
+                                                var msg = '你当前点击的是[ '+item.text+' ]菜单项<br>'
+                                                        + '此右键菜单是由标签页[ '+title+' ]触发<br>'
+                                                        + '此标签页索引是[ '+index+' ]<br>'
+                                                        + '你当前操作的是id为[ '+$(target).attr('id')+' ]的Tabs。'
+                                                $.messager.alert('信息', msg, 'info');
+                                            }
+                                        },{
+                                            text: 'remove',
+                                            iconCls: 'icon-remove'
+                                        }]
+                                    }
+                                }
+                            })
+                            .tabs('followCustomHandle');
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>自定义标签页右键菜单项演示</h3>
+                        <p>请点击[ Add ]菜单项，查看Menu item的onclick事件参数演示说明</p>
+                        <div id="tt"  style="width:500px;height:250px;">
+                            <div title="Tab1" style="padding: 5px;">
+                                tab1
+                            </div>
+                            <div title="Tab2" style="padding: 5px;" data-options="closable: true">
+                                tab2
+                            </div>
+                            <div title="Tab3" style="padding: 5px;" data-options="closable: true">
+                                tab3
+                            </div>
+                        </div>
+                    </body>
+                </textarea>
             </div>
         </div>
     </body>

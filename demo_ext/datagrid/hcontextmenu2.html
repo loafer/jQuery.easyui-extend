@@ -9,9 +9,15 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
-        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
         <script type="text/javascript">
             $(function(){
                 $('#datagrid').datagrid({
@@ -51,8 +57,68 @@
         </script>
     </head>
     <body>
-        <h3>向Header ContextMenu中追加自定义菜单项 和 菜单项onclick事件扩展演示</h3>
-        <p>请点击菜单项[other]，查看菜单项onclick事件扩展</p>
-        <table id="datagrid"></table>
+        <!--<h3>向Header ContextMenu中追加自定义菜单项 和 菜单项onclick事件扩展演示</h3>-->
+        <!--<p>请点击菜单项[other]，查看菜单项onclick事件扩展</p>-->
+        <!--<table id="datagrid"></table>-->
+
+
+
+
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>向Header ContextMenu中追加自定义菜单项 和 菜单项onclick事件扩展演示</h3>
+                <p>请点击菜单项[other]，查看菜单项onclick事件扩展</p>
+                <table id="datagrid"></table>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight: [19,20,21,22,23,24,25,26,27,28,29,30,31,32,34]">
+                        $(function(){
+                            $('#datagrid').datagrid({
+                                columns:[[
+                                    {field: 'ck', checkbox: true},
+                                    {field: 'itemid', width: 80, title: 'Item ID', sortable: true},
+                                    {field: 'productid', width: 100, title: 'Product ID'},
+                                    {field: 'listprice', width: 80, align: 'right', title: 'List Price', sortable: true},
+                                    {field: 'unitcost', width: 80, align: 'right', title: 'Unit Cost'},
+                                    {field: 'attr1', width: 250, title: 'Attribute'},
+                                    {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
+                                ]],
+                                singleSelect: true,
+                                rownumbers: true,
+                                remoteSort: false,
+                                title: 'Basic DataGrid',
+                                url: '../datagrid/datagrid_data1.json',
+                                height: 250,
+                                width: 700,
+                                customAttr:{
+                                    headerContextMenu:{
+                                        isShow: true,
+                                        items:[
+                                            {text: 'other', iconCls: 'icon-add', onclick:function(item, field, target){
+                                                var msg = '当前点击的菜单项是[ '+item.text+' ]<br>'
+                                                        + '此右键菜单在[ '+field+' ]列上触发<br>'
+                                                        + '这是在ID为[ '+$(target).attr('id')+' ]DataGrid上的右键菜单响应事件';
+
+                                                $.messager.alert('信息', msg, 'info');
+                                            }}
+                                        ]
+                                    }
+                                }
+                            })
+                            .datagrid('followCustomHandle');
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <h3>向Header ContextMenu中追加自定义菜单项 和 菜单项onclick事件扩展演示</h3>
+                        <p>请点击菜单项[other]，查看菜单项onclick事件扩展</p>
+                        <table id="datagrid"></table>
+                    </body>
+                </textarea>
+            </div>
+        </div>
     </body>
 </html>
