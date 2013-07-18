@@ -192,12 +192,6 @@
                 "attributes": {
                     "url": "datagrid/rcontextmenu3.html"
                 }
-            },{
-                "id": "datagrid_rowcontextmenu_onclick",
-                "text": "Row ContextMenu onClick事件",
-                "attributes": {
-                    "url": "datagrid/rcontextmenu4.html"
-                }
             }]
         },{
             "id": "datagrid_tooltip",

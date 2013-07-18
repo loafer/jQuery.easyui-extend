@@ -9,6 +9,8 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>-->
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>-->
         <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
@@ -45,17 +47,17 @@
             <div data-options="title: 'Code'" style="font-size: 14px;">
                 <p>javascript:</p>
                 <textarea class="brush: js; highlight: [6,7,8,10]">
-                    $(function(){
-                    $('#cc').combo({
-                    required: true,
-                    multiple: true,
-                    editable: true,
-                    customAttr:{
-                    headervalue: '--请选择--'
-                    }
-                    })
-                    .combo('followCustomHandle');
-                    });
+                        $(function(){
+                            $('#cc').combo({
+                                required: true,
+                                multiple: true,
+                                editable: true,
+                                customAttr:{
+                                    headervalue: '--请选择--'
+                                }
+                            })
+                            .combo('followCustomHandle');
+                        });
                 </textarea>
 
                 <p>html:</p>

@@ -9,6 +9,8 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>-->
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>-->
         <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
         <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
@@ -45,15 +47,26 @@
 
 
 
-                $('#datagrid').datagrid('getRowContextMenu').menu({
-                    onClick: function(item, rowIndex, rowData, target){
-                        alert("id: "+ item.id + ", rowIndex: " + rowIndex + ", rowData: " + rowData);
-                        if(item.text =="删除"){
-                            //返回true，则终止默认行为
-                            return true;
-                        }
-                    }
-                })
+//                $('#datagrid').datagrid('getRowContextMenu').menu({
+//                    onClick: function(item, rowIndex, rowData, target){
+//                        alert("id: "+ item.id + ", rowIndex: " + rowIndex + ", rowData: " + rowData);
+//                        if(item.text =="删除"){
+//                            //返回true，则终止默认行为
+//                            return true;
+//                        }
+//                    }
+//                });
+
+//                $('#datagrid').datagrid('getRowContextMenu').menu('addEventListener', {
+//                    name: 'onClick',
+//                    handler: function(item, rowIndex, rowData, target){
+//                        alert("id: "+ item.id + ", rowIndex: " + rowIndex + ", rowData: " + rowData);
+//                        if(item.text =="删除"){
+//                            //返回true，则终止默认行为
+//                            return true;
+//                        }
+//                    }
+//                });
             });
         </script>
     </head>

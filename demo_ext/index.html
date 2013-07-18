@@ -9,15 +9,22 @@
         <script type="text/javascript" src="../jquery.min.js"></script>
         <script type="text/javascript" src="../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../jquery.easyui.extend.min.js"></script>
         <script type="text/javascript">
             $(function(){
                 $('#tt').tree({
+                    lines: true,
+                    fit: true,
+                    url: 'left_menu_data.json',
                     onClick: function(node){
                         if(node.attributes && node.attributes.url){
                             $('#ifrm').attr('src', node.attributes.url);
                         }
+                    },
+                    customAttr: {
+                        expandOnNodeClick: true
                     }
-                })
+                }).tree('followCustomHandle');
             });
 
             function doExpand(){
@@ -40,7 +47,7 @@
                         </div>
                     </div>
                     <div data-options="region: 'center', border: false">
-                        <ul id="tt" class="easyui-tree" data-options="url:'left_menu_data.json', fit: true, lines: true"></ul>
+                        <ul id="tt"></ul>
                     </div>
                 </div>
             </div>
