@@ -1,5 +1,7 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
  *
  * depend on:
@@ -155,6 +157,35 @@
  *      2) 数字， 层级数（增强功能），表示从根开始，展开到第几层
  *
  *
+ *  7、新增方法 addEventListener，用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
+ *      7.1 事件对象属性说明
+ *          name:       事件名称
+ *          override:   是否覆盖事件默认处理行为，值:true|false，默认:false
+ *          handler:    定义事件处理行为
+ *
+ *      7.1 单个事件处理方法注册
+ *          $('#tt').tree('addEventListener', {
+ *              name: 'onClick',
+ *              handler: function(node){}
+ *          });
+ *
+ *      7.2 多个事件处理方法注册
+ *          $('#tt').tree('addEventListener', [{
+ *              name: 'onClick',
+ *              handler: function(node){}
+ *          },{
+ *              name: 'onLoadSuccess',
+ *              handler: function(node, data){}
+ *          }])
+ *
+ *      7.3 覆盖事件默认处理行为
+ *          $('#tt').tree('addEventListener', {
+ *              name: 'onClick',
+ *              override: true,
+ *              handler: function(node){}
+ *          });
+ *
+ *
  */
 (function($){
     function getContextMenuId(target){
@@ -214,13 +245,17 @@
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
         var contextmenu = buildContextMenu(target, menuitems);
-        $(target).tree({
-            onContextMenu: function(e, node){
+
+        $(target).tree('addEventListener', {
+            name: 'onContextMenu',
+            handler: function(e, node){
                 e.preventDefault();
 
                 $(target).tree('select', node.target);
-                contextmenu.menu({
-                    onClick: function(item){
+                contextmenu.menu('addEventListener', {
+                    name: 'onClick',
+                    override: true,
+                    handler: function(item){
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, node, target);
@@ -292,22 +327,21 @@
 
 
         if(options.customAttr.expandOnNodeClick){
-            var onClickCallback = options.onClick;
-            $(target).tree({
-                onClick: function(node){
+            $(target).tree('addEventListener', {
+                name: 'onClick',
+                handler: function(node){
                     $(target).tree('toggle', node.target);
-                    onClickCallback && onClickCallback.call(this, node);
                 }
             });
+
             return;
         }
 
         if(options.customAttr.expandOnDblClick){
-            var onDblClickCallback = options.onDblClick;
-            $(target).tree({
-                onDblClick: function(node){
+            $(target).tree('addEventListener', {
+                name: 'onDblClick',
+                handler: function(node){
                     $(target).tree('toggle', node.target);
-                    onDblClickCallback && onDblClickCallback.call(this, node);
                 }
             });
         }
@@ -315,15 +349,15 @@
     }
 
     function getLevel(target, node){
-//        var n = 1;
-//        var parentNode = $(target).tree('getParent', node.target);
-//        if(!parentNode){
-//            return 1;
-//        }
-//
-//        return n + getLevel(target, parentNode);
-        var p = $(node.target).parentsUntil('ul.tree', 'ul');
-        return p.length + 1;
+//        var p = $(node.target).parentsUntil('ul.tree', 'ul');
+//        return p.length + 1;
+
+        var n = 1;
+        var parentNode = $(target).tree('getParent', node.target);
+        if(!parentNode){
+            return 1;
+        }
+        return n + getLevel(target, parentNode);
     }
 
     function expandTo(target, level, node){
@@ -347,10 +381,9 @@
         var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
         if(!options.customAttr.onlyNodeExpand) return;
 
-        var onBeforeExpandCallback = options.onBeforeExpand;
-        $(target).tree({
-            onBeforeExpand: function(node){
-                onBeforeExpandCallback.call(this, node);
+        $(target).tree('addEventListener', {
+            name: 'onBeforeExpand',
+            handler: function(node){
                 var parent = $(target).tree('getParent', node.target);
                 if(parent){
                     var children = getChildren(target, parent.target, false);
@@ -364,6 +397,133 @@
                 }
             }
         });
+    }
+
+    function addEventListener(target, eventName, handler, override){
+        var options = $(target).tree('options');
+        var defaultActionEvent = options[eventName];
+        switch (eventName){
+            case 'onBeforeLoad':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(node, param){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadSuccess':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(node, data){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadError':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(arguments){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeCheck':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(node, checked){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCheck':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(node, checked){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onContextMenu':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(e, node){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDragEnter':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(target, source){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDragOver':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(target, source){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDragLeave':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(target, source){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeDrop':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(target,source,point){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDrop':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(target,source,point){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            default :
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(node){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+        }
     }
 
     $.fn.tree.contextmenu={};
@@ -481,6 +641,15 @@
                 }else{
                     defaultMethods.expandTo(jq, target);
                 }
+            });
+        },
+        addEventListener: function(jq, param){
+            return jq.each(function(){
+                var eventList = $.isArray(param) ? param : [param];
+                var target = this;
+                $.each(eventList, function(i, event){
+                    addEventListener(target, event.name, event.handler|| function(){}, event.override);
+                });
             });
         }
     });

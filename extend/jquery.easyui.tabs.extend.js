@@ -1,5 +1,7 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
  *
  * depend on:
@@ -92,8 +94,37 @@
  *              content: 'url:http://www.baidu.com'
  *          });
  *
+ *
+ * 4、新增方法 addEventListener, 用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
+ *      4.1 事件对象属性说明
+ *          name:       事件名称
+ *          override:   是否覆盖事件默认处理行为，值:true|false，默认:false
+ *          handler:    定义事件处理行为
+ *
+ *
+ *      4.2 单个事件处理方法注册
+ *          $('#tt').tabs('addEventListener', {
+ *              name: 'onLoad',
+ *              handler: function(panel){}
+ *          });
+ *
+ *      4.3 多个事件处理方法注册
+ *          $('#tt').tabs('addEventListener', [{
+ *              name: 'onLoad',
+ *              handler: function(panel){}
+ *          },{
+ *              name: 'onSelect',
+ *              handler: function(title, index){}
+ *          }]);
+ *
+ *      4.4 覆盖事件默认处理行为
+ *          $('#tt').tabs('addEventListener', {
+ *              name: 'onSelect',
+ *              override: true,
+ *              handler: function(title, index){}
+ *          });
+ *
  */
-
 (function($){
     function getContextMenuId(target){
         return $(target).attr('id')+'_contextmenu';
@@ -148,12 +179,16 @@
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
         var contextmenu = buildContextMenu(target, menuitems);
-        $(target).tabs({
-            onContextMenu: function(e, title, index){
+
+        $(target).tabs('addEventListener', {
+            name: 'onContextMenu',
+            handler: function(e, title, index){
                 e.preventDefault();
                 modifyItemText(target, contextmenu, index);
-                contextmenu.menu({
-                    onClick: function(item){
+                contextmenu.menu('addEventListener', {
+                    name: 'onClick',
+                    override: true,
+                    handler: function(item){
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, title, index, target);
@@ -372,6 +407,43 @@
         }
     }
 
+    function addEventListener(target, eventName, handler, override){
+        var options = $(target).tabs('options');
+        var defaultActionEvent = options[eventName];
+        switch (eventName){
+            case 'onLoad':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(panel){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onContextMenu':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(e, title, index){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            default :
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(title, index){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+        }
+    }
+
     $.fn.tabs.defaults.customAttr={
         fixedtabs:[0],
         contextMenu: {
@@ -410,6 +482,15 @@
                 }else{
                     defaultMethods.add(jq, options);
                 }
+            });
+        },
+        addEventListener: function(jq, param){
+            return jq.each(function(){
+                var eventList = $.isArray(param) ? param : [param];
+                var target = this;
+                $.each(eventList, function(i, event){
+                    addEventListener(target, event.name, event.handler|| function(){}, event.override);
+                });
             });
         }
     });

@@ -1,5 +1,7 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
  *
  *

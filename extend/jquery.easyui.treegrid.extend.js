@@ -1,5 +1,7 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
  *
  * depend on:
@@ -337,6 +339,34 @@
  *
  *
  *
+ *  9、新增方法 addEventListener ,用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
+ *      9.1 事件对象属性说明
+ *          name:       事件名称
+ *          override:   是否覆盖默认事件处理行为
+ *          handler:    定义事件处理行为
+ *
+ *      9.2 单事件处理方法注册
+ *          $('#tt').treegrid('addEventListener', {
+ *              name: 'onClickRow',
+ *              handler: function(row){}
+ *          });
+ *
+ *      9.3 多事件处理方法注册
+ *          $('#tt').treegrid('addEventListener', [{
+ *              name: 'onClickRow',
+ *              handler: function(row){}
+ *          },{
+ *              name: 'onExpand',
+ *              handler: function(row){}
+ *          }]);
+ *
+ *      9.4 覆盖事件默认行为
+ *          $('#tt').treegrid('addEventListener', {
+ *              name: 'onClickRow',
+ *              override: true,
+ *              handler: function(row){}
+ *          });
+ *
  *
  */
 (function($){
@@ -409,23 +439,26 @@
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
         var contextmenu = buildContextMenu(target, menuitems, 'rowContextMenu');
-        $(target).treegrid({
-            onContextMenu: function(e, row){
-                e.preventDefault();
 
+        $(target).treegrid('addEventListener', {
+            name: 'onContextMenu',
+            handler: function(e, row){
+                e.preventDefault();
                 $(target).treegrid('select', row[options.idField]);
 
                 var menuOptions = contextmenu.menu('options');
                 menuOptions.onClickCallback = menuOptions.onClickCallback || menuOptions.onClick;
 
-                contextmenu.menu({
-                    onClick: function(item){
+                contextmenu.menu('addEventListener', {
+                    name: 'onClick',
+                    override: true,
+                    handler: function(item){
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, row, target);
                         }
                     }
-                }).menu('show',{
+                }).menu('show', {
                     left: e.pageX,
                     top: e.pageY
                 });
@@ -511,24 +544,25 @@
 
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
-        var onHeaderContextMenuCallback = options.onHeaderContextMenu;
         var headerContextMenu = buildContextMenu(target, menuitems, 'headerContextMenu');
-        $(target).treegrid({
-            onHeaderContextMenu: function(e, field){
+
+        $(target).treegrid('addEventListener', {
+            name: 'onHeaderContextMenu',
+            handler: function(e, field){
                 e.preventDefault();
-                headerContextMenu.menu({
-                    onClick: function(item){
+                headerContextMenu.menu('addEventListener', {
+                    name: 'onClick',
+                    override: true,
+                    handler: function(item){
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, field, target);
                         }
                     }
-                }).menu('show',{
-                        left: e.pageX,
-                        top: e.pageY
-                    });
-
-                onHeaderContextMenuCallback.call(this, e, field);
+                }).menu('show', {
+                    left: e.pageX,
+                    top: e.pageY
+                });
             }
         });
     }
@@ -541,13 +575,12 @@
         var treeField = options.treeField;
         var idField = options.idField;
         if(options.customAttr.expandOnNodeClick){
-            var onClickCellCallback = options.onClickCell;
-            $(target).treegrid({
-                onClickCell: function(field, row){
+            $(target).treegrid('addEventListener', {
+                name: 'onClickCell',
+                handler: function(field, row){
                     if(treeField == field){
                         $(target).treegrid('toggle', row[idField]);
                     }
-                    onClickCellCallback.call(this, field, row);
                 }
             });
 
@@ -555,13 +588,12 @@
         }
 
         if(options.customAttr.expandOnDblClick){
-            var onDblClickCellCallback = options.onDblClickCell;
-            $(target).treegrid({
-                onDblClickCell: function(field, row){
+            $(target).treegrid('addEventListener', {
+                name: 'onDblClickCell',
+                handler: function(field, row){
                     if(treeField == field){
                         $(target).treegrid('toggle', row[idField]);
                     }
-                    onDblClickCellCallback.call(this, field, row);
                 }
             });
         }
@@ -659,29 +691,28 @@
             $(edtBtnPanelId).hide();
         }
 
-        var onLoadSuccessCallBack = options.onLoadSuccess;
-        var onBeforeEditCallBack = options.onBeforeEdit;
-        var onAfterEditCallBack = options.onAfterEdit;
-        var onCancelEditCallBack = options.onCancelEdit;
-
-        $(target).treegrid({
-            onLoadSuccess: function(row, data){
-                onLoadSuccessCallBack.call(this, row, data);
+        $(target).treegrid('addEventListener', [{
+            name: 'onLoadSuccess',
+            handler: function(row, data){
                 buildEditorButtonsPanel(this);
-            },
-            onBeforeEdit: function(row){
-                showEditorButtonsPanel(target, row);
-                onBeforeEditCallBack.call(this, row);
-            },
-            onAfterEdit: function(row, changes){
-                hideEditorButtonsPanel(target);
-                onAfterEditCallBack.call(this, row, changes);
-            },
-            onCancelEdit: function(row){
-                hideEditorButtonsPanel(target);
-                onCancelEditCallBack.call(this, row);
             }
-        });
+        },{
+            name: 'onBeforeEdit',
+            handler: function(row){
+                showEditorButtonsPanel(target, row);
+            }
+        },{
+            name: 'onAfterEdit',
+            handler: function(row, changes){
+                hideEditorButtonsPanel(target);
+            }
+        },{
+            name: 'onCancelEdit',
+            handler: function(row){
+                hideEditorButtonsPanel(target);
+            }
+        }]);
+
     }
 
 
@@ -768,13 +799,176 @@
             }
         }
 
-        var onLoadSuccessCallback = options.onLoadSuccess;
-        $(target).treegrid({
-            onLoadSuccess: function(row, data){
-                onLoadSuccessCallback.call(this, row, data);
+        $(target).treegrid('addEventListener', {
+            name: 'onLoadSuccess',
+            handler: function(row, data){
                 initTooltip();
             }
         });
+    }
+
+    function addEventListener(target, eventName, handler, override){
+        var options = $(target).treegrid('options');
+        var defaultActionEvent = options[eventName];
+        switch (eventName){
+            case 'onClickRow':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDblClickRow':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onClickCell':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(field, row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDblClickCell':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(field, row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeLoad':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row, param){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadSuccess':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row, data){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadError':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(arguments){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeExpand':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onExpand':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeCollapse':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCollapse':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onContextMenu':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(e, row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onAfterEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row, changes){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCancelEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            default :
+                $(target).datagrid('addEventListener', {
+                    name: eventName,
+                    override: override,
+                    handler: handler
+                });
+                break;
+        }
     }
 
     $.fn.treegrid.headerContextMenu = {};
@@ -864,7 +1058,15 @@
             });
 
             return editingRow.length>0?editingRow[0]:null;
+        },
+        addEventListener: function(jq, param){
+            return jq.each(function(){
+                var eventList = $.isArray(param) ? param : [param];
+                var target = this;
+                $.each(eventList, function(i, event){
+                    addEventListener(target, event.name, event.handler|| function(){}, event.override);
+                });
+            });
         }
     });
 })(jQuery);
-

@@ -1,6 +1,13 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
+ *
+ *
+ * depend on:
+ *  jquery.easyui.validatebox.extend.js
+ *  jquery.easyui.combo.extend.js
  *
  *
  * 扩展如下：
@@ -8,7 +15,6 @@
  *
  * 2、联动数据支持本地数据联动和服务端数据联动，默认服务端数据。
  *
- * ================  服务端数据联动  ===================
  *  2.1服务端数据联动
  *      2.1.1 使用被联动combobox组件的url查询数据
  *          a.主combobox控件：
@@ -100,6 +106,35 @@
  *
  * 7、调用followCustomHandle此方法之后，以上自定义功能才会生效。
  *
+ * 8、新增方法 addEventListener ,用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
+ *      8.1 事件对象属性说明
+ *          name:       事件名称
+ *          override:   是否覆盖事件默认处理行为，值: true|false，默认:false
+ *          handler:    定义事件处理行为
+ *
+ *
+ *      8.2 单个事件处理方法注册
+ *          $('#cc').combobox('addEventListener', {
+ *              name: 'onSelect',
+ *              handler: function(record){}
+ *          });
+ *
+ *      8.3 多个事件处理方法注册
+ *          $('#cc').combobox('addEventListener', [{
+ *              name: 'onChange',
+ *              handler: function(newValue, oldValue){}
+ *          },{
+ *              name: 'onSelect',
+ *              handler: function(record){}
+ *          }]);
+ *
+ *      8.4 覆盖事件默认处理行为
+ *          $('#cc').combobox('addEventListener', {
+ *              name: 'onSelect',
+ *              override: true,
+ *              handler: function(record){}
+ *          });
+ *
  */
 (function($){
     function slaveHandle(target){
@@ -114,24 +149,21 @@
 
 
         if(!optioins.multiple && !optioins.editable){
-            var onSelectCallback = optioins.onSelect;
-            $(target).combobox({
-                onSelect: function(record){
-                    onSelectCallback.call(target, record);
+
+            $(target).combobox('addEventListener', [{
+                name: 'onSelect',
+                handler: function(record){
                     loadSlaveData(target, slaveOptions, record);
                 }
-            });
-
-            var onChangeCallback = optioins.onChange;
-            $(target).combo({
-                onChange: function(newValue, oldValue){
-                    onChangeCallback.call(target, newValue, oldValue);
+            },{
+                name: 'onChange',
+                handler: function(newValue, oldValue){
                     if(newValue == null || newValue ==''){
                         $(slaveOptions.id).combobox('clear').combobox('loadData',[]);
-                        $(target).combo('textbox').trigger('blur');
+                        $(target).combobox('textbox').trigger('blur');
                     }
                 }
-            })
+            }]);
         }
 
     }
@@ -154,13 +186,77 @@
         var optioins = $(target).combobox('options');
         var opts = $.extend(true, {}, $.fn.combobox.defaults, optioins);
         if(!opts.customAttr.headervalue) return;
-        var onLoadSuccessCallback = optioins.onLoadSuccess;
-        $(target).combobox({
-            onLoadSuccess: function(){
-                onLoadSuccessCallback.call(target);
+
+        $(target).combobox('addEventListener', {
+            name: 'onLoadSuccess',
+            handler: function(){
                 $(target).combobox('textbox').trigger('blur');
             }
-        })
+        });
+    }
+
+    function addEventListener(target, eventName, handler, override){
+        var options = $(target).combobox('options');
+        var defaultActionEvent = options[eventName];
+        switch (eventName){
+            case 'onBeforeLoad':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(param){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadSuccess':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadError':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onSelect':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(record){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onUnselect':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(record){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            default :
+                $(target).combo('addEventListener', {
+                    name: eventName,
+                    override: override,
+                    handler: handler
+                });
+                break;
+        }
     }
 
 
@@ -179,6 +275,15 @@
                 fixShowHeaderValue(this);
                 slaveHandle(this);
                 $(this).combo('followCustomHandle');
+            });
+        },
+        addEventListener: function(jq, param){
+            return jq.each(function(){
+                var eventList = $.isArray(param) ? param : [param];
+                var target = this;
+                $.each(eventList, function(i, event){
+                    addEventListener(target, event.name, event.handler|| function(){}, event.override);
+                });
             });
         }
     });

@@ -1,5 +1,7 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
  *
  * depend on:
@@ -44,6 +46,36 @@
  *
  * 5、以上扩展属性和方法都可以被继承自combo的组件所获得。
  *
+ * 6、新增 addEventListener 方法，用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
+ *      6.1 事件对象属性说明
+ *          name:       事件名称
+ *          override:   是否覆盖事件默认处理行为,值：true|false ,默认:false
+ *          handler:    事件处理行为
+ *
+ *      6.2 单个事件处理方法注册
+ *          $('#cc').combo('addEventListener', {
+ *              name: 'onChange',
+ *              handler: function(newValue, oldValue){}
+ *          });
+ *
+ *
+ *      6.3 多个事件处理方法注册
+ *          $('#cc').combo('addEventListener', [{
+ *              name: 'onShowPanel',
+ *              handler: function(){}
+ *          },{
+ *              name: 'onHidePanel',
+ *              handler: function(){}
+ *          }]);
+ *
+ *
+ *      6.4 覆盖事件默认处理行为
+ *          $('#cc').combo('addEventListener', {
+ *              name: 'onChange',
+ *              override: true,
+ *              handler: function(newValue, oldValue){}
+ *          });
+ *
  *
  */
 (function($){
@@ -69,14 +101,12 @@
             }
         }
 
-        var onChangeCallback = optioins.onChange;
-        $(target).combo({
-                onChange: function(newValue, oldValue){
-                    if(newValue == null || newValue == '') $(target).combo('setText', opts.customAttr.headervalue);
-                    onChangeCallback.call(target, newValue, oldValue);
-                }
-            })
-            .combo('textbox')
+        $(target).combo('addEventListener',{
+            name: 'onChange',
+            handler: function(newValue, oldValue){
+                if(newValue == null || newValue == '') $(target).combo('setText', opts.customAttr.headervalue);
+            }
+        }).combo('textbox')
             .val(opts.customAttr.headervalue)
             .attr('prompt', opts.customAttr.headervalue)
             .focus(function(){
@@ -93,16 +123,16 @@
      * @param target
      */
     function clear(target){
+        var value = $(target).combo('getValue');
+        if(!value) return;
+
         var options = $.data(target, "combo").options;
-
         $(target).combo('setText', '');
-
         if(options.multiple){
             $(target).combo('setValues', []);
         }else{
             $(target).combo('setValue', '');
         }
-
     }
 
     function getValue(target){
@@ -151,6 +181,45 @@
 
     }
 
+    function addEventListener(target, eventName, handler, override){
+        var options = $(target).combo('options');
+        var defaultActionEvent = options[eventName];
+        switch (eventName){
+            case 'onShowPanel':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onHidePanel':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onChange':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(newValue, oldValue){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            default :
+                break;
+        }
+    }
+
     $.fn.combo.defaults.customAttr={
         headervalue: null,
         autocomplete: {
@@ -174,6 +243,15 @@
         }
         ,getValue: function(jq){
             return getValue(jq[0]);
+        },
+        addEventListener: function(jq, param){
+            return jq.each(function(){
+                var eventList = $.isArray(param) ? param : [param];
+                var target = this;
+                $.each(eventList, function(i, event){
+                    addEventListener(target, event.name, event.handler|| function(){}, event.override);
+                });
+            });
         }
     });
 })(jQuery);

@@ -1,5 +1,7 @@
 /**
  * Created with IntelliJ IDEA.
+ * Licensed under the GPL licenses
+ * http://www.gnu.org/licenses/gpl.txt
  * @author: 爱看书不识字<zjh527@163.com>
  *
  *
@@ -89,6 +91,37 @@
  *          });
  *
  * 24、修复当列字段过长时，加载的数据个数为0时，列字段显示不全问题。
+ *
+ *
+ * 25、新增方法 addEventListener，用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
+ *      25.1 事件对象属性说明
+ *          name:       事件名称
+ *          override:   是否覆盖原事件处理方法，值: true|false, 默认:false
+ *          handler:    事件处理
+ *
+ *      25.2 单个事件处理方法注册
+ *          $('#dg').datagrid('addEventListener', {
+ *              name: 'onClickRow',
+ *              handler: function(rowIndex, rowData){}
+ *          });
+ *
+ *      25.3 多个事件处理方法注册
+ *          $('#dg').datagrid('addEventListener', [{
+ *              name: 'onLoadSuccess',
+ *              handler: function(data){}
+ *          },{
+ *              name: 'onClickRow',
+ *              handler: function(rowIndex, rowData){}
+ *          }]);
+ *
+ *      25.4 覆盖默认事件处理方法
+ *          $('#dg').datagrid('addEventListener', {
+ *              name: 'onClickRow',
+ *              override: true,
+ *              handler: function(rowIndex, rowData){}
+ *          });
+ *
+ *
  */
 (function($){
     function buildContextMenu(target, menuitems, type){
@@ -219,37 +252,44 @@
 
         if(!headerContentMenuOptions.isMerge &&
                 $.isArray(headerContentMenuOptions.items) &&
-                    headerContentMenuOptions.items > 0){
+                    headerContentMenuOptions.items.length > 0){
             menuitems = headerContentMenuOptions.items;
         }
 
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
-        var onHeaderContextMenuCallback = options.onHeaderContextMenu;
         var headerContextMenu = buildContextMenu(target, menuitems, 'headerContextMenu');
-        $(target).datagrid({
-            onHeaderContextMenu: function(e, field){
+
+        $(target).datagrid('addEventListener',{
+            name: 'onHeaderContextMenu',
+            handler: function(e, field){
                 e.preventDefault();
-                headerContextMenu.menu({
-                    onClick: function(item){
+                headerContextMenu.menu('addEventListener', [{
+                    name: 'onClick',
+                    override: true,
+                    handler: function(item){
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, field, target);
                         }
-                    },
-                    onShow: function(){
+                    }
+                },{
+                    name: 'onShow',
+                    override: true,
+                    handler: function(){
 //                        switchFreezeAndUnfreezeMenuItem(field, target);
                         headerContentMenuOptions.onShow && headerContentMenuOptions.onShow.call(this, field, target);
-                    },
-                    onHide: function(){
+                    }
+                },{
+                    name: 'onHide',
+                    override: true,
+                    handler: function(){
                         headerContentMenuOptions.onHide && headerContentMenuOptions.onHide.call(this);
                     }
-                }).menu('show',{
+                }]).menu('show',{
                     left: e.pageX,
                     top: e.pageY
                 });
-
-                onHeaderContextMenuCallback.call(this, e, field);
             }
         });
     }
@@ -257,53 +297,25 @@
     function getDefaultRowContextMenuItems(target){
         var menuid = getContextMenuId(target, 'rowContextMenu');
         var defaultMenuItems=[{
-            id: menuid + '_add',
-            text: '增加',
-            iconCls: 'icon-add',
-            onclick: function(){}
-        },{
-            id: menuid + '_edit',
-            text: '编辑',
-            iconCls: 'icon-edit',
-            onclick: function(){}
-        },{
             id: menuid + '_delete',
             text: '删除',
             iconCls: 'icon-remove',
             onclick: function(item, rowIndex, rowData, t){
-                $.messager.confirm('疑问','您确定要删除已选中的行？', function(r){
-                    if(r){
-                        $(t).datagrid('deleteRows', $(t).datagrid('getSelections'));
-                    }
-                })
+                $.fn.datagrid.rowContextMenu.defaultEvents.doDelete(item, rowIndex, rowData, t);
             }
         },'-',{
             id: menuid + '_reload',
             text: '刷新',
             iconCls: 'icon-reload',
             onclick: function(item, rowIndex, rowData, t){
-                $(t).datagrid('load');
+                $.fn.datagrid.rowContextMenu.defaultEvents.doReload(item, rowIndex, rowData, t);
             }
         },{
             id: menuid + '_reload_this_page',
             text: '刷新当前页',
             onclick: function(item, rowIndex, rowData, t){
-                $(t).datagrid('reload');
+                $.fn.datagrid.rowContextMenu.defaultEvents.doReloadThisPage(item, rowIndex, rowData, t);
             }
-        },'-',{
-            text: '导出',
-            iconCls: 'icon-table-export',
-            submenu:[{
-                id: menuid + '_export_this_page',
-                text: '本页',
-                iconCls: 'icon-export-excel',
-                onclick: function(){}
-            },{
-                id: menuid + '_export_all',
-                text: '全部',
-                iconCls: 'icon-table-excel',
-                onclick: function(){}
-            }]
         }]
 
         return defaultMenuItems;
@@ -326,30 +338,27 @@
         }
 
         var onClickHandlerCache = getMenuItemOnClickHandler(menuitems);
-        var onRowContextMenuCallback = options.onRowContextMenu;
         var rowContextMenu = buildContextMenu(target, menuitems, 'rowContextMenu');
-        $(target).datagrid({
-            onRowContextMenu: function(e, rowIndex, rowData){
+
+        $(target).datagrid('addEventListener',{
+            name: 'onRowContextMenu',
+            handler: function(e, rowIndex, rowData){
                 e.preventDefault();
-//                $(target).datagrid('selectRow', rowIndex);
-                var menuOptions = rowContextMenu.menu('options');
-                menuOptions.onClickCallback = menuOptions.onClickCallback || menuOptions.onClick;
+                $(target).datagrid('selectRow', rowIndex);
 
-                rowContextMenu.menu({
-                    onClick: function(item){
-                        if(menuOptions.onClickCallback.call(this, item, rowIndex, rowData, target)) return;
-
+                rowContextMenu.menu('addEventListener', {
+                    name: 'onClick',
+                    override: true,
+                    handler: function(item){
                         var name = item.id || item.text;
                         if(onClickHandlerCache[name]){
                             onClickHandlerCache[name].call(this, item, rowIndex, rowData, target);
                         }
-
                     }
                 }).menu('show', {
                     left: e.pageX,
                     top: e.pageY
                 });
-                onRowContextMenuCallback.call(this, e, rowIndex, rowData);
             }
         });
     }
@@ -388,8 +397,10 @@
 
 
         if(slaveOptions.activeSlave == $.fn.datagrid.defaults.customAttr.activeSlave){
-            jq.datagrid({
-                onDblClickRow: function(rowIndex, rowData){
+
+            jq.datagrid('addEventListener', {
+                name: 'onDblClickRow',
+                handler: function(rowIndex, rowData){
                     for(var j in commands){
                         commands[j].params[relatedfieldName] = rowData[relatedfieldName];
                         $('#' + commands[j].id).datagrid('load', commands[j].params);
@@ -486,29 +497,28 @@
             $(edtBtnPanelId).hide();
         }
 
-        var onLoadSuccessCallBack = options.onLoadSuccess;
-        var onBeforeEditCallBack = options.onBeforeEdit;
-        var onAfterEditCallBack = options.onAfterEdit;
-        var onCancelEditCallBack = options.onCancelEdit;
 
-        $(target).datagrid({
-            onLoadSuccess: function(data){
-                onLoadSuccessCallBack.call(this, data);
+        $(target).datagrid('addEventListener', [{
+            name: 'onLoadSuccess',
+            handler: function(data){
                 buildEditorButtonsPanel(this);
-            },
-            onBeforeEdit: function(index, data){
-                showEditorButtonsPanel(target, index);
-                onBeforeEditCallBack.call(this, index, data);
-            },
-            onAfterEdit: function(index, data, changes){
-                hideEditorButtonsPanel(target);
-                onAfterEditCallBack.call(this, index, data, changes);
-            },
-            onCancelEdit: function(index, data){
-                hideEditorButtonsPanel(target);
-                onCancelEditCallBack.call(this, index, data);
             }
-        });
+        },{
+            name: 'onBeforeEdit',
+            handler: function(index, data){
+                showEditorButtonsPanel(target, index);
+            }
+        },{
+            name: 'onAfterEdit',
+            handler: function(index, data, changes){
+                hideEditorButtonsPanel(target);
+            }
+        },{
+            name: 'onCancelEdit',
+            handler: function(index, data){
+                hideEditorButtonsPanel(target);
+            }
+        }]);
     }
 
     function buildTooltip(target){
@@ -590,12 +600,11 @@
         }
 
 
-        var onLoadSuccessCallback = options.onLoadSuccess;
-        $(target).datagrid({
-           onLoadSuccess: function(data){
-               onLoadSuccessCallback.call(this, data);
-               initTooltip();
-           }
+        $(target).datagrid('addEventListener', {
+            name: 'onLoadSuccess',
+            handler: function(data){
+                initTooltip();
+            }
         });
 
     }
@@ -604,12 +613,10 @@
         var options = $.extend(true, {}, $.fn.datagrid.defaults, $(target).datagrid('options'));
         if(!options.pagination) return;
 
-        var onLoadSuccessCallback = options.onLoadSuccess;
-        $(target).datagrid({
-            onLoadSuccess: function(data){
+        $(target).datagrid('addEventListener', {
+            name: 'onLoadSuccess',
+            handler: function(data){
                 $(target).datagrid('setPagination', options.customAttr.pagination);
-                onLoadSuccessCallback.call(this, data);
-
             }
         });
     }
@@ -629,18 +636,17 @@
 
         }
 
-        var onLoadSuccessCallback = options.onLoadSuccess;
-        var onLoadErrorCallback = options.onLoadError;
-        $(target).datagrid({
-            onLoadSuccess: function(data){
+        $(target).datagrid('addEventListener', [{
+            name: 'onLoadSuccess',
+            handler: function(data){
                 fixBug(data);
-                onLoadSuccessCallback.call(this, data);
-            },
-            onLoadError: function(){
-                fixBug({rows: []});
-                onLoadErrorCallback.call(this);
             }
-        })
+        },{
+            name: 'onLoadError',
+            handler: function(){
+                fixBug({rows: []});
+            }
+        }])
     }
 
     /**
@@ -809,6 +815,237 @@
         moveColumn(target, field, 1, 2);
     }
 
+
+    function addEventListener(target, eventName, handler, override){
+        var options = $(target).datagrid('options');
+        var defaultActionEvent = options[eventName];
+        switch (eventName){
+            case 'onLoadSuccess':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(data){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onLoadError':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeLoad':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(param){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onClickRow':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDblClickRow':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onClickCell':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, field, value){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onDblClickCell':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, field, value){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onSortColumn':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(sort, order){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onResizeColumn':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(field, width){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onSelect':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onUnselect':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onSelectAll':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rows){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onUnselectAll':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rows){
+                        defaultActionEvent.apply(this, arguments);
+                        handlerapply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCheck':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex,rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onUncheck':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex,rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCheckAll':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rows){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onUncheckAll':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rows){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onBeforeEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onAfterEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData, changes){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCancelEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onHeaderContextMenu':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(e, field){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onRowContextMenu':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(e, rowIndex, rowData){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            default :
+                break;
+        }
+    }
+
+
     $.fn.datagrid.headerContextMenu = {};
     $.fn.datagrid.headerContextMenu.defaultEvents = {
         /**
@@ -854,7 +1091,34 @@
 
     };
 
-
+    $.fn.datagrid.rowContextMenu = {};
+    $.fn.datagrid.rowContextMenu.defaultEvents = {
+        doAdd: function(item, rowIndex, rowData, target){
+//            console.log('===>doAdd');
+        },
+        doEdit: function(item, rowIndex, rowData, target){
+//            console.log('===>doEdit');
+        },
+        doDelete: function(item, rowIndex, rowData, target){
+            $.messager.confirm('疑问','您确定要删除已选中的行？', function(r){
+                if(r){
+                    $(target).datagrid('deleteRows', $(target).datagrid('getSelections'));
+                }
+            })
+        },
+        doReload: function(item, rowIndex, rowData, target){
+            $(target).datagrid('load');
+        },
+        doReloadThisPage: function(item, rowIndex, rowData, target){
+            $(target).datagrid('reload');
+        },
+        doExportThisPage: function(item, rowIndex, rowData, target){
+//            console.log('===>doExportThisPage');
+        },
+        doExprotAll: function(item, rowIndex, rowData, target){
+//            console.log('===>doExprotAll');
+        }
+    }
 
     $.extend($.fn.datagrid.defaults.editors, {
         my97:{
@@ -1076,6 +1340,15 @@
         unfreezColumn: function(jq, field){
             return jq.each(function(){
                 unfreezeColumn(this, field);
+            });
+        },
+        addEventListener: function(jq, param){
+            return jq.each(function(){
+                var eventList = $.isArray(param) ? param : [param];
+                var target = this;
+                $.each(eventList, function(i, event){
+                    addEventListener(target, event.name, event.handler|| function(){}, event.override);
+                });
             });
         }
     });
