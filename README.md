@@ -1,6 +1,7 @@
 jQuery.easyui-extend
 ====================
-基于jQuery.easyui 1.3+ 对部分组件扩展了额外属性和方法。目前已扩展的部分组件如下：<br>
+一个基于jquery.easyui-1.3.2+的扩展。将一些常用的、需要重复编码的功能，内置到扩展中，并通过扩展属性实现轻松配置，以减少使用者的代码编写量。
+目前已实现扩展的部分组件如下：<br>
 <ul>
   <li>panel</li>
   <li>tabs</li>
@@ -15,8 +16,8 @@ jQuery.easyui-extend
   <li>toolbar</li>
 </ul>
 
-快速了解各组件扩展信息，请查看demo_ext/left_menu_data.json<br>
-具体了解每个组件的扩展内容，请查看extend下相应文件的开头说明。<br>
+快速了解各组件扩展信息，请直接访问在线<a href="http://loafer.sturgeon.mopaas.com" target="_blank">Demo</a><br>
+具体了解每个组件的扩展内容及使用方法，请查看extend下相应文件的开头说明。<br>
 要使扩展属性生效，必须执行方法followCustomHandle。<br>
 
 
@@ -47,6 +48,10 @@ jQuery.easyui-extend
 
 
 
+<h3>licenses</h3>
+GPL licenses
+
+
 
 <h3>其他</h3>
 
@@ -63,6 +68,7 @@ Blog：http://blog.csdn.net/zjh527
          </li>
     </ul>
 </i>
+
 
 
 
