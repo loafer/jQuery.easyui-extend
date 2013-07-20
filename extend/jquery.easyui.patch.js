@@ -54,9 +54,9 @@
                     frame[0].contentWindow.document.write('');
                     frame[0].contentWindow.close();
                     frame.remove();
-                    if($.browser.msie){
-                        CollectGarbage();
-                    }
+//                    if($.browser.msie){
+//                        CollectGarbage();
+//                    }
                 }
             }
         });
