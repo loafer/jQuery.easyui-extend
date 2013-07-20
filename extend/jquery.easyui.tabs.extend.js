@@ -94,6 +94,13 @@
  *              content: 'url:http://www.baidu.com'
  *          });
  *
+ *      3.3 通过css属性控制tab panel 样式
+ *          $('#tt').tabs('add', {
+ *              title: 'New Tab',
+ *              href: 'http://www.baidu.com',
+ *              css: {padding: '2px'}
+ *          });
+ *
  *
  * 4、新增方法 addEventListener, 用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
  *      4.1 事件对象属性说明
@@ -481,6 +488,10 @@
                     }
                 }else{
                     defaultMethods.add(jq, options);
+                }
+
+                if(options.css){
+                    $(this).tabs('getTab', options.title).css(options.css);
                 }
             });
         },
