@@ -1,3 +1,8 @@
+2013-7-31 更新
+1、$.showWindow、$.showModalDialog 这两个方法增加返回值，返回值指向当前弹出窗的引用。
+2、移除根据$.browser.msie判断浏览器版本。
+
+
 2013-7-18 更新
 1、menu、datagrid、combo、combobox、panel、tabs、tree、treegrid  增加 addEventListener 方法。
 2、修复menu、datagrid、combo、combobox、panel、tabs、tree、treegrid 因事件注册造成多次重复渲染的问题（包括多次请求后台数据）。
