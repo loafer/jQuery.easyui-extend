@@ -43,6 +43,8 @@
  *
  *      7、窗体大小，默认计算规则：父页面大小*0.6 ，如用户指定大小，则不使用默认规则。
  *
+ *      8、方法返回对当前窗体的引用。
+ *
  */
 (function($){
 
@@ -89,6 +91,7 @@
         /**
          *
          * @param options
+         * @return 返回当前窗体的引用
          *
          * 1、新增属性：
          *      useiframe: true|false，指定是否使用iframe加载页面。
@@ -208,7 +211,7 @@
                 target = $('<div>').appendTo(locate).dialog($.extend({}, winOpts, {inline: true}));
             }
 
-
+            return target;
         },
         showModalDialog: function(options){
             options = options || {};
@@ -219,7 +222,8 @@
                 resizable: false,
                 collapsible: false
             });
-            $.showWindow(opts);
+
+            return $.showWindow(opts);
         }
     })
 })(jQuery);
