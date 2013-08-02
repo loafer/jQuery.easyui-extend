@@ -153,7 +153,7 @@
             $(target).combobox('addEventListener', [{
                 name: 'onSelect',
                 handler: function(record){
-                    loadSlaveData(target, slaveOptions, record);
+                    loadSlaveData(target, slaveOptions, record, optioins.valueField);
                 }
             },{
                 name: 'onChange',
@@ -168,17 +168,17 @@
 
     }
 
-    function loadSlaveData(target, slaveOpts, record){
+    function loadSlaveData(target, slaveOpts, record, valueField){
         if(slaveOpts.remote){
             var url = slaveOpts.url || $(slaveOpts.id).combobox('options').url;
             if(url.indexOf("?")>-1){
-                url += '&swd='+$(target).combobox('getValue');
+                url += '&swd=' + record[valueField];
             }else{
-                url += '?swd='+$(target).combobox('getValue');
+                url += '?swd=' + record[valueField];
             }
-            $(slaveOpts.id).combobox('reload', url);
+            $(slaveOpts.id).combobox('clear').combobox('reload', url);
         }else{
-            $(slaveOpts.id).combobox('loadData', record.data);
+            $(slaveOpts.id).combobox('clear').combobox('loadData', record.data);
         }
     }
 
