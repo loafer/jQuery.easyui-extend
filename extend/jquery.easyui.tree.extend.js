@@ -15,6 +15,7 @@
  *          textField:      节点文本字段
  *          iconField:      节点图标字段
  *          parentField:    父节点字段，无此属性设置，则不会执行简单JSON数据格式加载
+ *          attributes:     自定义属性字段,数组类型,将要当作属性的字段名写入数组
  *
  *     1.2、如果某条数据中idField和parentField属性指向的字段对应值相等，或者不包含
  *          parentField属性指定的字段时，则这条数据被视为根（子数根）节点。
@@ -28,7 +29,8 @@
  *              customAttr: {
  *                  textField: 'region',
  *                  iconField: 'icon',
- *                  parentField: '_parentId'
+ *                  parentField: '_parentId',
+ *                  attributes: ['f1', 'f2', 'f3']
  *              }
  *          }).tree('followCustomHandle');
  *
@@ -560,6 +562,7 @@
         textField: null,
         parentField: null,
         iconField: null,
+        attributes: null,
         /**
          * 单击节点展开收缩
          */
@@ -588,7 +591,9 @@
             var idField = cusOptions.idField || 'id',
                 textField = cusOptions.textField || 'text',
                 iconField = cusOptions.iconField || 'icon',
-                parentField = cusOptions.parentField || 'pid';
+                parentField = cusOptions.parentField || 'pid',
+                attributes = cusOptions.attributes;
+
 
             var treeData = [], tmpMap = [];
 
@@ -604,10 +609,23 @@
 
                     data[i]['text'] = data[i][textField];
                     data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
+                    addNodeAttributes(data[i]);
                     tmpMap[data[i][parentField]]['children'].push(data[i]);
                 }else{
                     data[i]['text'] = data[i][textField];
+                    addNodeAttributes(data[i]);
                     treeData.push(data[i]);
+                }
+            }
+
+            function addNodeAttributes(node){
+                if(null == attributes && !$.isArray(attributes)){
+                    return;
+                }
+
+                node['attributes'] = {};
+                for(var j=0; j<attributes.length; j++){
+                    node['attributes'][attributes[j]] = node[attributes[j]];
                 }
             }
 
