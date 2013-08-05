@@ -1040,6 +1040,26 @@
                     }
                 }
                 break;
+            case 'onExpandRow':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(index, row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onCollapseRow':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(index, row){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
             default :
                 break;
         }
