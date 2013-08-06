@@ -135,6 +135,8 @@
  *              handler: function(record){}
  *          });
  *
+ *
+ * 9、增加 getSelected 方法， 返回选中item的data值
  */
 (function($){
     function slaveHandle(target){
@@ -285,6 +287,21 @@
                     addEventListener(target, event.name, event.handler|| function(){}, event.override);
                 });
             });
+        },
+        getSelected: function(jq){
+            var options = jq.combobox('options');
+            var key = options.valueField;
+            var value = jq.combobox('getValue');
+            var data = jq.combobox('getData');
+
+            for(var i=0; i<data.length; i++){
+                var item = data[i];
+                if(item[key] == value){
+                    return item;
+                }
+            }
+
+            return null;
         }
     });
 })(jQuery);
