@@ -595,6 +595,17 @@
                 attributes = cusOptions.attributes;
 
 
+            var addNodeAttributes = function(node){
+                if(null == attributes && !$.isArray(attributes)){
+                    return;
+                }
+
+                node['attributes'] = {};
+                for(var j=0; j<attributes.length; j++){
+                    node['attributes'][attributes[j]] = node[attributes[j]];
+                }
+            }
+
             var treeData = [], tmpMap = [];
 
             for(var i= 0, len = data.length; i<len; i++){
@@ -615,17 +626,6 @@
                     data[i]['text'] = data[i][textField];
                     addNodeAttributes(data[i]);
                     treeData.push(data[i]);
-                }
-            }
-
-            function addNodeAttributes(node){
-                if(null == attributes && !$.isArray(attributes)){
-                    return;
-                }
-
-                node['attributes'] = {};
-                for(var j=0; j<attributes.length; j++){
-                    node['attributes'][attributes[j]] = node[attributes[j]];
                 }
             }
 
