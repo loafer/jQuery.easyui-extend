@@ -122,6 +122,35 @@
  *          });
  *
  *
+ * 26、增加 getAllExpandRowIndex 方法，返回值：数组，用于在detailView视图下获取所有展开行索引。
+ *
+ * 27、增加 getExpandRowIndex方法，返回是number,用于在detailView视图下获取第一个展开行索引。没有展开行，则返回-1.
+ *
+ * 28、增加 fixDetailRowWidth 方法，用于detailView视图下处理rowDetail中内容宽度，
+ *      此方法主要用于在拖拽列宽度时改变rowDetail中内容宽度
+ *
+ *      28.1 参数说明，此方法接收一个简单对象
+ *          index: row索引号，可以是一个整数或整数数组
+ *          handler: 处理函数,此函数接收两个参数index:行索引 , width: header2宽度
+ *
+ *          eg-1.
+ *              $('#dg').datagrid('fixDetailRowWidth',{
+ *                  index: 1,
+ *                  handler: function(index, width){
+ *                      $('#sub_dg').datagrid('resize', width);
+ *                  }
+ *              });
+ *
+ *
+ *         eg-2. 前提，当前展开1、2、3、4行，现修改展开这几行中嵌套datagrid的宽度
+ *              $('#dg').datagrid('fixDetailRowWidth', {
+ *                  index: [1,2,3,4],
+ *                  handler: function(index, width){
+ *                      $('#sub_dg').datagrid('resize', width);
+ *                  }
+ *              });
+ *
+ *
  */
 (function($){
     function buildContextMenu(target, menuitems, type){
@@ -1045,7 +1074,7 @@
                     options[eventName] = handler;
                 }else{
                     options[eventName] = function(index, row){
-                        defaultActionEvent.apply(this, arguments);
+                        defaultActionEvent && defaultActionEvent.apply(this, arguments);
                         handler.apply(this, arguments);
                     }
                 }
@@ -1055,7 +1084,7 @@
                     options[eventName] = handler;
                 }else{
                     options[eventName] = function(index, row){
-                        defaultActionEvent.apply(this, arguments);
+                        defaultActionEvent && defaultActionEvent.apply(this, arguments);
                         handler.apply(this, arguments);
                     }
                 }
@@ -1063,6 +1092,17 @@
             default :
                 break;
         }
+    }
+
+    function getAllExpandRowIndex(target){
+        var options = $(target).datagrid('options');
+        var index = [];
+        options.finder.getTr(target, '', 'allbody', 1).each(function(){
+            if($('span.datagrid-row-collapse', this).length>0){
+                index.push($(this).attr('datagrid-row-index'));
+            }
+        });
+        return index;
     }
 
 
@@ -1370,6 +1410,29 @@
                     addEventListener(target, event.name, event.handler|| function(){}, event.override);
                 });
             });
+        },
+        /**
+         * 用于detail View视图下，修改detailRow的宽度
+         * @param jq
+         * @param options 接收两个参数
+         *          index: row索引
+         *          handler: function(index, width) 可以在此方法中操作需要修改宽度的组件
+         *
+         * @returns {*}
+         */
+        fixDetailRowWidth: function(jq, options){
+            return jq.each(function(){
+                var state = $.data(this, 'datagrid');
+                var table = state.dc.header2.children();
+                options.handler && options.handler.call(this, options.index, table.width());
+            });
+        },
+        getAllExpandRowIndex: function(jq){
+            return getAllExpandRowIndex(jq[0]);
+        },
+        getExpandRowIndex: function(jq){
+            var indexArr = jq.datagrid('getAllExpandRowIndex');
+            return indexArr.length > 0 ? indexArr[0] : -1;
         }
     });
 })(jQuery);
