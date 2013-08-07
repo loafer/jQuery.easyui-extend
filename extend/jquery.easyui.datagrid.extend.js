@@ -122,9 +122,9 @@
  *          });
  *
  *
- * 26、增加 getAllExpandRowIndex 方法，返回值：数组，用于在detailView视图下获取所有展开行索引。
+ * 26、增加 getAllExpandRowIndex 方法，返回值：数组，用于在detailView视图下获取当前页下所有展开行索引。
  *
- * 27、增加 getExpandRowIndex方法，返回是number,用于在detailView视图下获取第一个展开行索引。没有展开行，则返回-1.
+ * 27、增加 getExpandRowIndex 方法，返回是number,用于在detailView视图下获取当前页下第一个展开行索引。没有展开行，则返回-1.
  *
  * 28、增加 fixDetailRowWidth 方法，用于detailView视图下处理rowDetail中内容宽度，
  *      此方法主要用于在拖拽列宽度时改变rowDetail中内容宽度
