@@ -495,6 +495,11 @@
             var opts = $.data(target, "datagrid").options;
             var tr = opts.finder.getTr(target, index, "body", 2);
             var position = tr.position();
+
+            var edtBtnPanelId = '#'+getEditorButtonsPanelId(target);
+            var state = $.data(target, 'datagrid');
+            var datagrid_body = state.dc.body2;
+
             var fixPosition = function(){
                 var trHeight = tr.height(), trWidth = tr.width();
                 var top = position.top + datagrid_body.scrollTop(), left = position.left;
@@ -514,8 +519,6 @@
 
                 return {top: top, left: left};
             }
-
-            var edtBtnPanelId = '#'+getEditorButtonsPanelId(target);
 
             $(edtBtnPanelId).css(fixPosition()).show();
         }
