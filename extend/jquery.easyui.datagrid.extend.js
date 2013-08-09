@@ -453,7 +453,8 @@
             if($('#'+panelId).length > 0) return;
 
             var panel = $(target).datagrid('getPanel');
-            var datagrid_body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
+            var state = $.data(target, 'datagrid');
+            var datagrid_body = state.dc.body2;
             datagrid_body.css('position', 'relative');
 
             var edtBtnPanel = $('<div>', {id: panelId})
@@ -515,8 +516,6 @@
             }
 
             var edtBtnPanelId = '#'+getEditorButtonsPanelId(target);
-            var panel = $(target).datagrid('getPanel');
-            var datagrid_body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
 
             $(edtBtnPanelId).css(fixPosition()).show();
         }
@@ -535,6 +534,7 @@
         },{
             name: 'onBeforeEdit',
             handler: function(index, data){
+                buildEditorButtonsPanel(target);
                 showEditorButtonsPanel(target, index);
             }
         },{
@@ -618,7 +618,8 @@
             }else{
                 if(options.customAttr.tooltip.fields && $.isArray(options.customAttr.tooltip.fields)){
                     var panel = $(target).datagrid('getPanel');
-                    var datagrid_body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
+                    var state = $.data(target, 'datagrid');
+                    var datagrid_body = state.dc.body2;
                     $.each(options.customAttr.tooltip.fields, function(){
                         var field = this;
                         bindCell($('td[field='+field+']', datagrid_body), options.customAttr.tooltip.formatter);
