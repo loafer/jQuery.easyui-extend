@@ -1427,9 +1427,19 @@
                 options.handler && options.handler.call(this, options.index, table.width());
             });
         },
+        /**
+         * 用于DetailView视图，获取所有展开行的索引
+         * @param jq
+         * @returns {*}
+         */
         getAllExpandRowIndex: function(jq){
             return getAllExpandRowIndex(jq[0]);
         },
+        /**
+         * 用于DetailView视图，获取第一个展开行索引
+         * @param jq
+         * @returns {*}
+         */
         getExpandRowIndex: function(jq){
             var indexArr = jq.datagrid('getAllExpandRowIndex');
             return indexArr.length > 0 ? indexArr[0] : -1;
