@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Fix Bug -- jQUery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <!--<script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>-->
+        <script type="text/javascript" src="../../datagridview/datagrid-detailview.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
+        <script type="text/javascript">
+            $(function(){
+                $('#datagrid').datagrid({
+                    columns:[[
+                        {field: 'grade', title: '年级', width: 200},
+                        {field: 'class_name', title: '班级', width: 200},
+                        {field: 'teacher', title: '班主任', width: 150},
+                        {field: 'total', title: '人数', width: 150}
+                    ]],
+                    url: '../datagrid/datagrid_data3.json',
+                    singleSelect: true,
+                    rownumbers: true,
+                    view: detailview,
+                    detailFormatter: function(rowIndex, rowData){
+                        return '<table id="sub_' + rowData.id + '"></table>';
+                    },
+                    onExpandRow: function(index, row){
+                        var target = this;
+                        var container = $(target).datagrid('getRowDetail', index);
+                        container.css('padding', '4px');
+                        if(container.data('finished')){
+                            return;
+                        }
+
+                        $('table', container).each(function(){
+                            $(this).datagrid({
+                                columns: [[
+                                    {field: 'username', title: 'User Name', width: 100},
+                                    {field: 'sex', title: 'Sex', width: 100},
+                                    {field: 'age', title: 'Age', width: 100},
+                                    {field: 'brithday', title: 'Birthday', width: 100}
+                                ]],
+                                url: '../datagrid/datagrid_data4.json',
+                                height: 150,
+                                singleSelect: true,
+                                onLoadSuccess: function(data){
+                                    $(container).data('finished', true).data('detail', 'sub_'+row.id);
+                                }
+                            });
+                        });
+
+                        $(target).datagrid('fixDetailRowHeight', index);
+                    },
+                    onResizeColumn: function(field, width){
+                        var index = $(this).datagrid('getAllExpandRowIndex');
+                        $(this).datagrid('fixDetailRowWidth', {
+                            index: index,
+                            handler: function(index, width){
+                                var container = $(this).datagrid('getRowDetail', index);
+                                $('#'+container.data('detail')).datagrid('resize', {width: width-10});
+                            }
+                        });
+                        $(this).datagrid('fixColumnSize', field);
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+    <div class="easyui-tabs" data-options="fit: true, plain: true">
+        <div data-options="title: 'Demo'">
+            <h3>解决DetailView 因鼠标拖拽列宽错位现象</h3>
+            <p>此示例使用了两个扩展方法 getAllExpandRowIndex 和 fixDetailRowWidth 来解决问题</p>
+            <table id="datagrid"></table>
+        </div>
+        <div data-options="title: 'Code'" style="font-size: 14px;">
+            <p>javascript:</p>
+            <textarea class="brush: js; highlight: [12,13,14,15,17,18,19,20,21,22,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,41,44,45,46,47,48,49,50,51,52]">
+                    $(function(){
+                        $('#datagrid').datagrid({
+                            columns:[[
+                                {field: 'grade', title: '年级', width: 200},
+                                {field: 'class_name', title: '班级', width: 200},
+                                {field: 'teacher', title: '班主任', width: 150},
+                                {field: 'total', title: '人数', width: 150}
+                            ]],
+                            url: '../datagrid/datagrid_data3.json',
+                            singleSelect: true,
+                            rownumbers: true,
+                            view: detailview,
+                            detailFormatter: function(rowIndex, rowData){
+                                return '<table id="sub_' + rowData.id + '"></table>';
+                            },
+                            onExpandRow: function(index, row){
+                                var target = this;
+                                var container = $(target).datagrid('getRowDetail', index);
+                                container.css('padding', '4px');
+                                if(container.data('finished')){
+                                    return;
+                                }
+
+                                $('table', container).each(function(){
+                                    $(this).datagrid({
+                                        columns: [[
+                                            {field: 'username', title: 'User Name', width: 100},
+                                            {field: 'sex', title: 'Sex', width: 100},
+                                            {field: 'age', title: 'Age', width: 100},
+                                            {field: 'brithday', title: 'Birthday', width: 100}
+                                        ]],
+                                        url: '../datagrid/datagrid_data4.json',
+                                        height: 150,
+                                        singleSelect: true,
+                                        onLoadSuccess: function(data){
+                                            $(container).data('finished', true).data('detail', 'sub_'+row.id);
+                                        }
+                                    });
+                                });
+
+                                $(target).datagrid('fixDetailRowHeight', index);
+                            },
+                            onResizeColumn: function(field, width){
+                                var index = $(this).datagrid('getAllExpandRowIndex');
+                                $(this).datagrid('fixDetailRowWidth', {
+                                    index: index,
+                                    handler: function(index, width){
+                                        var container = $(this).datagrid('getRowDetail', index);
+                                        $('#'+container.data('detail')).datagrid('resize', {width: width-10});
+                                    }
+                                });
+                                $(this).datagrid('fixColumnSize', field);
+                            }
+                        });
+                    });
+            </textarea>
+        </div>
+    </div>
+    </body>
+</html>
