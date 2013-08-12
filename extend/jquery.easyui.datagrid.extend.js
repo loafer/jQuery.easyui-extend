@@ -803,6 +803,8 @@
 
         var headerContextMenu = $(target).datagrid('getHeaderContextMenu');
         var item = headerContextMenu.menu('findItem', fieldOption.title);
+        if(!item) return;
+
         if(disabled){
             headerContextMenu.menu('disableItem', item.target);
         }else{
