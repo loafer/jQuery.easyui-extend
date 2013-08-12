@@ -1,3 +1,17 @@
+
+1、修复combobox在级联操作时，传递的swd参数值为null，而不是选中值。
+2、datagrid的addEventListener 方法增加对事件onExpandRow和onCollapseRow的控制。
+3、tree增加自定义属性 attributes，用于简单数据加载时，指定那些字段当作node的attributes属性使用。
+4、combobox增加 getSelected 方法， 返回选中item的data值。
+5、combogrid增加 getSelected 方法，返回选中item的data值。
+6、datagrid增加 getAllExpandRowIndex 方法，用于在detailView视图下获取当前页已展开行的索引。
+7、datagrid增加 getExpandRowIndex 方法，用于在detailView视图下获取当前页第一个展开行的索引。
+8、datagrid增加 fixDetailRowWidth 方法，用于detailView视图下修改rowDetial中组件宽度。
+9、getAllExpandRowIndex、getExpandRowIndex、fixDetailRowWidth 这三个方法联合使用可解决detailView视图下列拖拽时显示错位问题。
+10、修复datagrid 的rowEditing编辑风格在没有数据的datagrid中增加数据后，再编辑时无法显示的问题。
+11、datagrid增加自定义事件 onConfirmEdit , 用于rowEditing编辑风格点击“确定”按钮时触发。当事件返回false时终止endEdit方法调用。
+
+
 2013-7-31 更新
 1、$.showWindow、$.showModalDialog 这两个方法增加返回值，返回值指向当前弹出窗的引用。
 2、移除根据$.browser.msie判断浏览器版本。
