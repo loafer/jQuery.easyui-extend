@@ -1,4 +1,4 @@
-
+2013-8-12 更新
 1、修复combobox在级联操作时，传递的swd参数值为null，而不是选中值。
 2、datagrid的addEventListener 方法增加对事件onExpandRow和onCollapseRow的控制。
 3、tree增加自定义属性 attributes，用于简单数据加载时，指定那些字段当作node的attributes属性使用。
