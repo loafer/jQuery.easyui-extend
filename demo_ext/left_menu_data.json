@@ -218,7 +218,8 @@
             }]
         },{
             "id": "datagrid_view",
-            "text": "datagrid view",
+            "text": "Datagrid View",
+            "state": "closed",
             "children": [{
                 "id": "datagrid_detail_view",
                 "text": "DetailView",
