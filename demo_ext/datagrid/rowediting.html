@@ -76,7 +76,10 @@
                         }
                     }],
                     customAttr: {
-                        rowediting: true
+                        rowediting: true,
+                        onConfirmEdit: function(rowIndex){
+                            return confirm('提交修改？');
+                        }
                     },
                     onClickRow: function(index){
                         var editingRow = $('#datagrid').datagrid('getEditingRow');
@@ -110,12 +113,13 @@
                 <ul>
                     <li>Ext rowediting编辑风格</li>
                     <li>自定义Editor(my97、datetimebox、numberspinner、timespinner、combogrid)</li>
+                    <li>onConfirmEdit事件演示</li>
                 </ul>
                 <table id="datagrid"></table>
             </div>
             <div data-options="title: 'Code'" style="font-size: 14px;">
                 <p>javascript:</p>
-                <textarea class="brush: js; highlight:[6,7,8,9,52,53,54,66]">
+                <textarea class="brush: js; highlight:[6,7,8,9,52,53,54,55,56,57,69]">
                         $(function(){
                             $('#datagrid').datagrid({
                                 columns:[[
@@ -168,7 +172,10 @@
                                     }
                                 }],
                                 customAttr: {
-                                    rowediting: true
+                                    rowediting: true,
+                                    onConfirmEdit: function(rowIndex){
+                                        return confirm('提交修改？');
+                                    }
                                 },
                                 onClickRow: function(index){
                                     var editingRow = $('#datagrid').datagrid('getEditingRow');

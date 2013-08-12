@@ -70,6 +70,17 @@
                         }
                     }
                 }).datagrid('followCustomHandle');
+
+
+                $('#dg').datagrid('addEventListener',{
+                    name: 'onBeforeLoad',
+                    handler: function(param){
+                        var fields = $('#dg').datagrid('getColumnFields');
+                        $.each(fields, function(i, field){
+                            $('#dg').datagrid('unfreezColumn', field);
+                        });
+                    }
+                });
             });
 
             /**
