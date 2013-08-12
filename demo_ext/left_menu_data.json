@@ -217,6 +217,16 @@
                 }
             }]
         },{
+            "id": "datagrid_view",
+            "text": "datagrid view",
+            "children": [{
+                "id": "datagrid_detail_view",
+                "text": "DetailView",
+                "attributes": {
+                    "url": "datagrid/detailview.html"
+                }
+            }]
+        },{
             "id": "datagrid_masterslave",
             "text": "级联操作",
             "attributes": {
