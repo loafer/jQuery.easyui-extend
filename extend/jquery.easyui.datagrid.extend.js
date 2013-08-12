@@ -151,6 +151,20 @@
  *              });
  *
  *
+ * 29、 增加自定义事件 onConfirmEdit 用于 Ext.rowediting 编辑风格。
+ *          a) 在点击确认按钮触发
+ *          b) 当此事件返回值为false时终止 endEdit 方法执行
+ *          c) 接收一个rowIndex 参数
+ *
+ *          $('dg').datagrid({
+ *              .....
+ *              customAttr: {
+ *                  rowediting: true,
+ *                  onConfirmEdit: function(rowIndex){
+ *                      return confirm('提交修改？');
+ *                  }
+ *              }
+ *          });
  */
 (function($){
     function buildContextMenu(target, menuitems, type){
@@ -477,6 +491,7 @@
                 .linkbutton({iconCls: 'icon-ok'})
                 .click(function(){
                     var editIndex = $(target).datagrid('getRowIndex', $(target).datagrid('getEditingRow'));
+                    if(!options.customAttr.onConfirmEdit.call(target, editIndex)) return;
                     $(target).datagrid('endEdit', editIndex);
                 })
                 .appendTo(edtBtnPanel);
@@ -1335,8 +1350,8 @@
             position: 'bottom',
             fields: undefined,
             formatter: undefined
-        }
-
+        },
+        onConfirmEdit: function(rowIndex, rowData){}
     };
 
     $.extend($.fn.datagrid.methods, {
