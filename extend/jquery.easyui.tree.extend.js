@@ -614,6 +614,7 @@
                 tmpMap[data[i][parentField]]['children'].push(data[i]);
             }else{
                 data[i]['text'] = data[i][textField];
+                data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
                 appendAttibutes(data[i], attributes);
                 treeData.push(data[i]);
             }
@@ -722,7 +723,6 @@
         var cusOptions = $(this).tree('options').customAttr;
         if(cusOptions){
             if(cusOptions.dataModel == 'simpleData'){
-                console.log('simpleData');
                 return simpleDataTransform(cusOptions, data);
             }else{
                 return standardTransform(cusOptions, data);
