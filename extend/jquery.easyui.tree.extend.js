@@ -8,31 +8,69 @@
  *  jquery.easyui.menu.extend.js
  *
  * 扩展说明：
- *  1、支持简单JSON格式数据加载。
+ *  1、支持“简单数据格式”和“类标准数据格式”数据加载
+ *      1.1 属性说明：
+ *          idField:            值字段
+ *          textField:          节点文本字段
+ *          iconField:          节点图标字段
+ *          parentField:        父节点字段，无此属性设置，则不会执行简单JSON数据格式加载
+ *          childrenField:      子节点字段，用于类标准格式加载，而非简单格式加载
+ *          attributesField:    属性节点字段，用于类标准格式加载，而非简单格式加载
+ *          attributes:         属性字段名数组
+ *          dataModel:          加载数据结构，值为simpleData则按简单数据格式解析，
+ *                              不设置此属性则按标准格式或类标准格式加载
  *
- *     1.1、属性说明：
- *          idField:        值字段
- *          textField:      节点文本字段
- *          iconField:      节点图标字段
- *          parentField:    父节点字段，无此属性设置，则不会执行简单JSON数据格式加载
- *          attributes:     自定义属性字段,数组类型,将要当作属性的字段名写入数组
- *
- *     1.2、如果某条数据中idField和parentField属性指向的字段对应值相等，或者不包含
- *          parentField属性指定的字段时，则这条数据被视为根（子数根）节点。
  *
  *
- *     1.3、加载时idField、textField、 iconField、parentField 分别默认查找id、text、icon、pid
+ *      1.1 简单数据格式(simpleData)
+ *          [
+ *              {id: 1, text: 'My Documents', iconCls: 'icon-document', state: 'closed},
+ *              {id: 11, text: 'Photos', total: 20, pid: 1},
+ *              {id: 12, text: 'Wife', total: 5, pid: 1},
+ *              {id: 12, text: 'Company', total: 40, pid: 1},
+ *              {id: 2, text: 'Program Files'},
+ *              {id: 21, text: 'Intel', pid: 2},
+ *              {id: 22, text: 'Java', pid: 2}
+ *          ]
  *
- *     1.4、示例：
- *          $('#tt').tree({
- *              url: '../tree/tree_data1.json',
- *              customAttr: {
- *                  textField: 'region',
- *                  iconField: 'icon',
- *                  parentField: '_parentId',
- *                  attributes: ['f1', 'f2', 'f3']
- *              }
- *          }).tree('followCustomHandle');
+ *          1.1.1 如果某条数据中idField和parentField属性指向的字段对应值相等，或者不包含
+ *                parentField属性指定的字段时，则这条数据被视为根（子数根）节点。
+ *
+ *          1.1.2 示例：
+ *              $('#tt').tree({
+ *                  url: '../tree/tree_data1.json',
+ *                  customAttr: {
+ *                      dataModel: 'simpleData',
+ *                      textField: 'region',
+ *                      iconField: 'icon',
+ *                      parentField: '_parentId',
+ *                      attributes: ['f1', 'f2', 'f3']
+ *                  }
+ *              }).tree('followCustomHandle');
+ *
+ *      1.2 类标准数据格式
+ *          [
+ *              {id: 1, name: 'My Documents', iconCls: 'icon-document', files: [
+ *                  {id: 11, name: 'Photos', total: 20},
+ *                  {id: 12, name: 'Wife', total: 5},
+ *                  {id: 13, name: 'Company', total: 50}
+ *              ]},
+ *              {id: 2, name: 'Program Files', files: [
+ *                  {id: 21, name: 'Intel'},
+ *                  {id: 22, name: 'Java'}
+ *              ]}
+ *          ]
+ *
+ *          1.2.1 示例
+ *              $().tree({
+ *                  url: '../../tree/tree_data3.json',
+ *                  customAttr:{
+ *                      textField: 'name',
+ *                      childrenField: 'files',
+ *                      attributes: ['total']
+ *                  }
+ *              }).tree('followCustomHandle');
+ *
  *
  *
  *  2、支持右键菜单
@@ -528,6 +566,98 @@
         }
     }
 
+    function appendAttibutes(node, attributes){
+        if(!node['attributes']){
+            node['attributes'] = {};
+        }
+
+        for(var i=0; i<attributes.length; i++){
+            node['attributes'][attributes[i]] = node[attributes[i]];
+        }
+    }
+
+    function isTransfrom(options){
+        var flag = options.idField ||
+            options.textField ||
+            options.iconField ||
+            options.childrenField ||
+            options.attributesField ||
+            options.attributes || false;
+
+        return flag ? true : false;
+    }
+
+    function simpleDataTransform(options, data){
+        if(!isTransfrom(options)) return data;
+
+        var idField = options.idField || 'id',
+            textField = options.textField || 'text',
+            iconField = options.iconField || 'iconCls',
+            parentField = options.parentField || 'pid',
+            attributes = options.attributes || [];
+
+        var treeData = [], tmpMap = [];
+
+        for(var i= 0, len = data.length; i<len; i++){
+            tmpMap[data[i][idField]] = data[i];
+        }
+
+        for(var i= 0, len = data.length; i<len; i++){
+            if(tmpMap[data[i][parentField]] && data[i][idField] != data[i][parentField]){
+                if(!tmpMap[data[i][parentField]]['children']){
+                    tmpMap[data[i][parentField]]['children'] = [];
+                }
+
+                data[i]['text'] = data[i][textField];
+                data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
+                appendAttibutes(data[i], attributes);
+                tmpMap[data[i][parentField]]['children'].push(data[i]);
+            }else{
+                data[i]['text'] = data[i][textField];
+                appendAttibutes(data[i], attributes);
+                treeData.push(data[i]);
+            }
+        }
+
+        return treeData;
+    }
+
+    function standardTransform(options, data){
+        if(!isTransfrom(options)) return data;
+
+        var idField = options.idField || 'id',
+            textField = options.textField || 'text',
+            iconField = options.iconField || 'iconCls',
+            childrenField = options.childrenField || 'children',
+            attributesField = options.attributesField || 'attributes',
+            attributes = options.attributes || [];
+
+        var transform = function(node){
+            if(!node['id'] && node[idField]) node['id'] = node[idField];
+            if(!node['text'] && node[textField]) node['text'] = node[textField];
+            if(!node['iconCls'] && node[iconField]) node['iconCls'] = node[iconField];
+            if(!node['children'] && node[childrenField]) node['children'] = node[childrenField];
+            if(!node['attributes'] && node[attributesField]) node['attributes'] = node[attributesField];
+
+            if(attributes && $.isArray(attributes)){
+                appendAttibutes(node, attributes);
+            }
+
+            if(node['children']){
+                for(var i=0; i<node['children'].length; i++){
+                    transform(node['children'][i]);
+                }
+            }
+        }
+
+        for(var i=0; i<data.length; i++){
+            transform(data[i]);
+        }
+
+        return data;
+    }
+
+
     $.fn.tree.contextmenu={};
     $.fn.tree.contextmenu.defaultEvents={
         moveup: function(item, node, target){
@@ -562,7 +692,10 @@
         textField: null,
         parentField: null,
         iconField: null,
+        childrenField: null,
+        attributesField: null,
         attributes: null,
+        dataModel: null,
         /**
          * 单击节点展开收缩
          */
@@ -587,51 +720,14 @@
 
     $.fn.tree.defaults.loadFilter = function(data, parent){
         var cusOptions = $(this).tree('options').customAttr;
-        if(cusOptions && cusOptions.parentField){
-            var idField = cusOptions.idField || 'id',
-                textField = cusOptions.textField || 'text',
-                iconField = cusOptions.iconField || 'icon',
-                parentField = cusOptions.parentField || 'pid',
-                attributes = cusOptions.attributes;
-
-
-            var addNodeAttributes = function(node){
-                if(null == attributes && !$.isArray(attributes)){
-                    return;
-                }
-
-                node['attributes'] = {};
-                for(var j=0; j<attributes.length; j++){
-                    node['attributes'][attributes[j]] = node[attributes[j]];
-                }
+        if(cusOptions){
+            if(cusOptions.dataModel == 'simpleData'){
+                console.log('simpleData');
+                return simpleDataTransform(cusOptions, data);
+            }else{
+                return standardTransform(cusOptions, data);
             }
-
-            var treeData = [], tmpMap = [];
-
-            for(var i= 0, len = data.length; i<len; i++){
-                tmpMap[data[i][idField]] = data[i];
-            }
-
-            for(var i= 0, len = data.length; i<len; i++){
-                if(tmpMap[data[i][parentField]] && data[i][idField] != data[i][parentField]){
-                    if(!tmpMap[data[i][parentField]]['children']){
-                        tmpMap[data[i][parentField]]['children'] = [];
-                    }
-
-                    data[i]['text'] = data[i][textField];
-                    data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
-                    addNodeAttributes(data[i]);
-                    tmpMap[data[i][parentField]]['children'].push(data[i]);
-                }else{
-                    data[i]['text'] = data[i][textField];
-                    addNodeAttributes(data[i]);
-                    treeData.push(data[i]);
-                }
-            }
-
-            return treeData;
         }
-
         return data;
     }
 
