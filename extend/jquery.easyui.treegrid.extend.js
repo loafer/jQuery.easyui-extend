@@ -15,8 +15,10 @@
  *              parentField:    父节点字段，无此属性设置，则增强功能不会生效。
  *
  *
- *          1.2 如果某条数据中idField和parentField属性指向的字段对应值相等，或者不包含
- *              parentField属性指定的字段时，则这条数据被视为根（子数根）节点。
+ *          1.2 当符合以下条件时，节点被视为树的根节点
+ *              a) idField和parentField属性指向的字段对应值相等。
+ *              b) 数据中不含有parentField属性指定的字段。
+ *              c) parentField属性指定的字段值为0
  *
  *          1.3 加载时iconField默认查找icon
  *
@@ -1024,7 +1026,7 @@
                 iconField = cusOtpions.iconField || 'icon';
 
             for(var i=0, len=data.rows.length; i<len; i++){
-                if(data.rows[i][idField] != data.rows[i][parentField]){
+                if(data.rows[i][parentField] && data.rows[i][parentField] != '0' && data.rows[i][idField] != data.rows[i][parentField]){
                     data.rows[i]['_parentId'] = data.rows[i][parentField];
                 }else{
                     delete data.rows[i][parentField];
