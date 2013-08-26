@@ -1354,7 +1354,7 @@
             fields: undefined,
             formatter: undefined
         },
-        onConfirmEdit: function(rowIndex, rowData){return true;}
+        onConfirmEdit: function(rowIndex){return true;}
     };
 
     $.extend($.fn.datagrid.methods, {
