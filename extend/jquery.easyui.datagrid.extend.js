@@ -1376,6 +1376,10 @@
             return $('#'+getContextMenuId(jq[0], 'rowContextMenu'));
         },
         getEditingRow: function(jq){
+            var editingRows = jq.datagrid('getEditingRows');
+            return editingRows.length ? editingRows[0] : null;
+        },
+        getEditingRows: function(jq){
             var datagrid = $.data(jq[0], "datagrid");
             var opts = datagrid.options;
             var data = datagrid.data;
@@ -1387,7 +1391,7 @@
                 }
             });
 
-            return editingRow.length>0?editingRow[0]:null;
+            return editingRow;
         },
         setPagination: function(jq, opts){
             return jq.each(function(){
