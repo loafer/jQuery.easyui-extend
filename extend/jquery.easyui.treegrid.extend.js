@@ -1050,6 +1050,10 @@
             });
         },
         getEditingRow: function(jq){
+            var editingRows = jq.treegrid('getEditingRows');
+            return editingRows.length ? editingRows[0] : null;
+        },
+        getEditingRows: function(jq){
             var options = jq.treegrid('options');
             var editingRow = [];
             options.finder.getTr(jq[0], "", "allbody").each(function(){
@@ -1059,7 +1063,7 @@
                 }
             });
 
-            return editingRow.length>0?editingRow[0]:null;
+            return editingRow;
         },
         addEventListener: function(jq, param){
             return jq.each(function(){
