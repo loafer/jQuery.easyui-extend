@@ -370,6 +370,22 @@
  *          });
  *
  *
+ *  10、增加自定义事件 onConfirmEdit， 用于 Ext.rowediting 编辑风格。
+ *      a) 在点击确认按钮触发
+ *      b) 当此事件返回值为false时终止 endEdit 方法执行
+ *      c) 接收一个 node 参数，(当前编辑行数据)
+ *
+ *      $('dg').treegrid({
+ *          ....,
+ *          customAttr: {
+ *              rowediting: true,
+ *              onConfirmEdit: function(row){
+ *                  //此处添加你的逻辑，例如确定前的检查
+ *              }
+ *          }
+ *      })
+ *
+ *
  */
 (function($){
     function getContextMenuId(target, surfix){
@@ -640,6 +656,7 @@
                 .click(function(){
                     var idField = options.idField;
                     var editingRow = $(target).treegrid('getEditingRow');
+                    if(!options.customAttr.onConfirmEdit.call(target, editingRow)) return;
                     $(target).treegrid('endEdit', editingRow[idField]);
                 })
                 .appendTo(edtBtnPanel);
@@ -1014,7 +1031,8 @@
             position: 'bottom',
             fields: undefined,
             formatter: undefined
-        }
+        },
+        onConfirmEdit: function(node){return true}
     }
 
     $.fn.treegrid.defaults.loadFilter = function(data, parentId){
