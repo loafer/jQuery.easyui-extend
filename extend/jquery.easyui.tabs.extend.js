@@ -333,7 +333,7 @@
 
     function appendIframeToTab(target, tabTitle, url){
         var iframe = $('<iframe>')
-            .attr('height', '98%')
+            .attr('height', '100%')
             .attr('width', '100%')
             .attr('marginheight', '0')
             .attr('marginwidth', '0')
@@ -344,7 +344,7 @@
         }, 1);
 
         var tab = $(target).tabs('getTab', tabTitle);
-        tab.panel('body').empty().append(iframe);
+        tab.panel('body').css({'overflow':'hidden'}).empty().append(iframe);
     }
 
     $.fn.tabs.defaults.contextMenu={}
@@ -359,7 +359,15 @@
 
     $.fn.tabs.defaults.contextMenu.defaultEventsHandler ={
         reload: function(item, title, index, target){
-            $(target).tabs('getTab', index).panel('refresh');
+            var panel = $(target).tabs('getTab', index);
+            var useiframe = panel.panel('options').useiframe;
+            if(useiframe){
+                $('iframe', panel.panel('body')).each(function(){
+                    this.contentWindow.location.reload();
+                });
+            }else{
+                panel.panel('refresh');
+            }
         },
         fixtab: function(item, title, index, target){
             var tab = $(target).tabs('getTab', index);
