@@ -731,6 +731,8 @@
         return data;
     }
 
+    $.fn.combotree.defaults.loadFilter = $.fn.tree.defaults.loadFilter;
+
     var defaultMethods = $.extend({}, $.fn.tree.methods);
 
     $.extend($.fn.tree.methods, {
