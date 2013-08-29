@@ -126,7 +126,7 @@
                 var url = winOpts.content.substr(4, winOpts.content.length);
                 if(winOpts.useiframe){
                     iframe = $('<iframe>')
-                        .attr('height', '98%')
+                        .attr('height', '100%')
                         .attr('width', '100%')
                         .attr('marginheight', 0)
                         .attr('marginwidth', 0)
@@ -202,7 +202,7 @@
                         onLoadCallback && onLoadCallback.call(this, callbackArguments, iframe[0].contentWindow);
                     });
 
-                    target = _top.$('<div>').append(iframe).dialog(winOpts);
+                    target = _top.$('<div>').css({'overflow':'hidden'}).append(iframe).dialog(winOpts);
                 }else{
                     target = _top.$('<div>').dialog(winOpts);
                 }
