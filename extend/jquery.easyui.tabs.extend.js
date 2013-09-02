@@ -101,6 +101,16 @@
  *              css: {padding: '2px'}
  *          });
  *
+ *      3.4 属性说明：
+ *          1、保持原有方法属性
+ *          2、新增如下属性：
+ *              useiframe: 是否使用iframe加载页面
+ *              css:        控制tab.panel样式
+ *              showMask:   是否显示遮罩。当useiframe=true时生效。
+ *              loadMsg:    遮罩提示信息。当useiframe=true时生效。
+ *
+ *          3、扩展属性content，支持url前缀，自动执行页面加载。
+ *
  *
  * 4、新增方法 addEventListener, 用于初始化之后动态注册事件，支持一个事件可以注册多个处理方法。
  *      4.1 事件对象属性说明
@@ -331,7 +341,7 @@
         return fixedtabs;
     }
 
-    function appendIframeToTab(target, tabTitle, url){
+    function appendIframeToTab(target, tabTitle, url, showMask, loadMsg){
         var iframe = $('<iframe>')
             .attr('height', '100%')
             .attr('width', '100%')
@@ -345,6 +355,28 @@
 
         var tab = $(target).tabs('getTab', tabTitle);
         tab.panel('body').css({'overflow':'hidden'}).empty().append(iframe);
+
+
+
+        //add mask
+        if(showMask){
+            var loadMsg = loadMsg || $.fn.datagrid.defaults.loadMsg;
+            var body = tab.panel('body');
+            body.css('position', 'relative');
+            var mask = $("<div class=\"datagrid-mask\" style=\"display:block;\"></div>").appendTo(body);
+            var msg = $("<div class=\"datagrid-mask-msg\" style=\"display:block; left: 50%;\"></div>").html(loadMsg).appendTo(body);
+            setTimeout(function(){
+                msg.css("marginLeft", -msg.outerWidth() / 2);
+            }, 5);
+        }
+
+        //remove mask
+        iframe.bind('load', function(){
+            if(iframe[0].contentWindow){
+                tab.panel('body').children("div.datagrid-mask-msg").remove();
+                tab.panel('body').children("div.datagrid-mask").remove();
+            }
+        });
     }
 
     $.fn.tabs.defaults.contextMenu={}
@@ -477,6 +509,20 @@
                 initContextMenu(this);
             });
         },
+        /**
+         *
+         * @param jq
+         * @param options
+         *        1、除原有属性外，再扩展如下属性：
+         *          useiframe:  是否使用iframe加载远程页面。值：true|false
+         *          showMask:   是否显示遮罩。 值true|false
+         *          loadMsg:    加载提示信息。
+         *          css:        设置panel样式。 其值Object，例如：{padding: '2px'}
+         *        注意：showMask 和 loadMsg 属性当 useiframe=true 时生效。
+         *
+         *        2、增强content属性，支持url前缀，自动识别加载页面。
+         * @returns {*}
+         */
         add: function(jq, options){
             return jq.each(function(){
                 var url = null;
@@ -490,7 +536,7 @@
                 if(url){
                     if(options.useiframe){
                         defaultMethods.add(jq, options);
-                        appendIframeToTab(this, options.title, url);
+                        appendIframeToTab(this, options.title, url, options.showMask, options.loadMsg);
                     }else{
                         defaultMethods.add(jq, $.extend(options, {href: url}));
                     }
