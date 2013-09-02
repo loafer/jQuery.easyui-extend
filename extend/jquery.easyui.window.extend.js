@@ -45,6 +45,10 @@
  *
  *      8、方法返回对当前窗体的引用。
  *
+ *      9、 当useiframe=true 添加遮罩控制。
+ *          9.1 属性说明：
+ *              showMask:   控制是否显示遮罩。其值：true|false
+ *              loadMsg:    加载提示信息
  */
 (function($){
 
@@ -116,6 +120,8 @@
                 maximizable: true,
                 collapsible: true,
                 resizable: true,
+                loadMsg: '正在加载，请稍待...',
+                showMask: false,
                 onClose: function(){target.dialog('destroy');}
             }, options);
 
@@ -143,7 +149,7 @@
                 delete winOpts.content;
             }
 
-            var callbackArguments={
+            var selfRefrence={
                 getData: function(name){
                     return winOpts.data ? winOpts.data[name]:null;
                 },
@@ -156,19 +162,19 @@
             var warpHandler = function(handler){
                 if(typeof handler == 'function'){
                     return function(){
-                        handler(callbackArguments);
+                        handler(selfRefrence);
                     };
                 }
 
                 if(typeof handler == 'string' && winOpts.useiframe){
                     return function(){
-                        iframe[0].contentWindow[handler](callbackArguments);
+                        iframe[0].contentWindow[handler](selfRefrence);
                     }
                 }
 
                 if(typeof handler == 'string'){
                     return function(){
-                        eval(_top[handler])(callbackArguments);
+                        eval(_top[handler])(selfRefrence);
                     }
                 }
             }
@@ -193,13 +199,32 @@
 
             var onLoadCallback = winOpts.onLoad;
             winOpts.onLoad = function(){
-                onLoadCallback && onLoadCallback.call(this, callbackArguments, _top);
+                onLoadCallback && onLoadCallback.call(this, selfRefrence, _top);
             }
 
             if(winOpts.locate == 'top' || winOpts.locate == 'document'){
                 if(winOpts.useiframe && iframe){
+                    if(winOpts.showMask){
+                        winOpts.onBeforeOpen = function(){
+                            var panel = $(this).panel('panel');
+                            var header = $(this).panel('header');
+                            var body = $(this).panel('body');
+                            var mask = $("<div class=\"datagrid-mask\" style=\"display:block;\"></div>").appendTo(body);
+                            var msg = $("<div class=\"datagrid-mask-msg\" style=\"display:block; left: 50%;\"></div>").html(winOpts.loadMsg).appendTo(body);
+                            //避免遮挡 collapsible button、minimizable button、maximizable button、closed button
+                            mask.css("marginTop", panel.height()-body.height());
+                            setTimeout(function(){
+                                msg.css("marginLeft", -msg.outerWidth() / 2);
+                            }, 5);
+                        }
+                    }
+
                     iframe.bind('load', function(){
-                        onLoadCallback && onLoadCallback.call(this, callbackArguments, iframe[0].contentWindow);
+                        if(iframe[0].contentWindow){
+                            onLoadCallback && onLoadCallback.call(this, selfRefrence, iframe[0].contentWindow);
+                            target.panel('body').children("div.datagrid-mask-msg").remove();
+                            target.children("div.datagrid-mask").remove();
+                        }
                     });
 
                     target = _top.$('<div>').css({'overflow':'hidden'}).append(iframe).dialog(winOpts);
