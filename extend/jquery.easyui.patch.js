@@ -57,6 +57,9 @@
 //                    if($.browser.msie){
 //                        CollectGarbage();
 //                    }
+                    if(navigator.userAgent.indexOf('MSIE')>0){
+                        CollectGarbage();
+                    }
                 }
             }
         });
