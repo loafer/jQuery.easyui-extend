@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Add Tab - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>-->
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.tabs.extend.js"></script>-->
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tabs({
+                    plain: true,
+                    customAttr: {
+                        contextMenu: {
+                            isShow: true
+                        }
+                    }
+                }).tabs('followCustomHandle');
+
+                $('#btn4').click(function(){
+                    if($('#tt').tabs('exists', 'Mask')){
+                        $('#tt').tabs('select', 'Mask');
+                        return;
+                    }
+
+                    $('#tt').tabs('add',{
+                        title: 'Mask',
+                        content: 'url:dispatch.jsp',
+                        useiframe: true,
+                        showMask: true,
+                        loadMsg: 'lalalala....',
+                        closable: true
+                    });
+                });
+            });
+
+        </script>
+    </head>
+    <body>
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'" style="padding-left: 20px; padding-top: 20px;">
+                <h3>add方法遮罩演示</h3>
+                <p>此效果只有在add方法参数中useiframe=true时，参数属性showMask、loadMsg才生效</p>
+                <input type="button" id="btn4" value="添加tab(content&&useiframe)">
+                <br>
+                <div id="tt"  style="width:500px;height:250px;">
+                    <div title="Tab1" style="padding: 5px;">
+                        tab1
+                    </div>
+                </div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[11,12,13]">
+                        $(function(){
+                            $('#btn4').click(function(){
+                                if($('#tt').tabs('exists', 'Mask')){
+                                    $('#tt').tabs('select', 'Mask');
+                                    return;
+                                }
+
+                                $('#tt').tabs('add',{
+                                    title: 'Mask',
+                                    content: 'url:dispatch.jsp',
+                                    useiframe: true,
+                                    showMask: true,
+                                    loadMsg: 'lalalala....',
+                                    closable: true
+                                });
+                            });
+                        });
+                </textarea>
+
+            </div>
+        </div>
+    </body>
+</html>
