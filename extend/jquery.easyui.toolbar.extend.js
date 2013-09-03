@@ -30,38 +30,47 @@
 (function($){
     function init(target){
         var options = $(target).toolbar('options');
-        var tb = $(target).addClass('dialog-toolbar panel-body');
+        var tb = $(target).addClass('datagrid-toolbar').css({
+            'border-top-width': 1
+        });
 
-        if(options.data || options.url){
-            tb.append('<table cellspacing=\"0\" cellpadding=\"0\"><tr></tr></table>');
-            if(options.buttonPosition == 'right'){
-                tb.find('table').css('float', 'right');
-            }
+        tb.append('<table cellspacing=\"0\" cellpadding=\"0\"><tr></tr></table>');
+        if(options.buttonPosition == 'right'){
+            tb.find('table').css('float', 'right');
+        }
 
-            if($.isArray(options.data)){
-                add(target, options.data);
-            }
-
-//            if($.trim(options.url) != ''){
-//                options.loader.call(this, function(data){
-//                    add(target, data);
-//                }, function(){});
-//            }
+        if(options.data){
+            addItems(target, options.data);
+        }else{
+            options.loader.call(target, function(data){
+                options.data = data;
+                addItems(target, options.data);
+            }, function(){
+               options.onLoadError.apply(target, arguments);
+            });
         }
     }
 
-    function add(target, items){
+    function add(target, item){
         var tr = $(target).find('tr');
-        for(var i=0; i<items.length; i++){
-            var item = items[i];
-            if(item == '-'){
+        if(typeof item == 'string' && $.trim(item) == '-'){
+            $('<td><div class=\"dialog-tool-separator\"></div></td>').appendTo(tr);
+        }else{
+            if($.trim(item.text) == '-'){
                 $('<td><div class=\"dialog-tool-separator\"></div></td>').appendTo(tr);
             }else{
                 var td = $('<td></td>').appendTo(tr);
                 var button = $("<a href=\"javascript:void(0)\"></a>").appendTo(td);
-                button[0].onclick = eval(item.handler || function(){});
+                button[0].onclick = eval(item.handler || function () {});
                 button.linkbutton($.extend({}, item, {plain: true}));
             }
+        }
+    }
+
+    function addItems(target, items){
+        if(!$.isArray(items)) return;
+        for(var i=0; i<items.length; i++){
+            add(target, items[i]);
         }
     }
 
@@ -90,7 +99,7 @@
         },
         add: function(jq, items){
             return jq.each(function(){
-                add(this, items);
+                addItems(this, items);
             });
         }
     }
@@ -98,19 +107,21 @@
     $.fn.toolbar.defaults = {
         data: null,
         url: undefined,
-        buttonPosition: 'left'
-//        loader: function(success, error){
-//            var options = $(this).toolbar('options');
-//            $.ajax({
-//                type: 'POST',
-//                cache: false,
-//                url: options.url,
-//                dataType: 'json',
-//                success: function(data){
-//                    success(data);
-//                },
-//                error: function(){error.apply(this, arguments);}
-//            });
-//        }
+        buttonPosition: 'left',
+        loader: function(success, error){
+            var options = $(this).toolbar('options');
+            $.ajax({
+                type: 'POST',
+                url: 'toolbar_data.json',
+                dataType: 'json',
+                success: function(data){
+                    success(data);
+                },
+                error: function(){
+                    error.apply(this, arguments);
+                }
+            });
+        },
+        onLoadError: function(){}
     }
 })(jQuery);
