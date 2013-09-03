@@ -120,7 +120,7 @@
                 maximizable: true,
                 collapsible: true,
                 resizable: true,
-                loadMsg: '正在加载，请稍待...',
+                loadMsg: $.fn.datagrid.defaults.loadMsg,
                 showMask: false,
                 onClose: function(){target.dialog('destroy');}
             }, options);
@@ -209,10 +209,9 @@
                             var panel = $(this).panel('panel');
                             var header = $(this).panel('header');
                             var body = $(this).panel('body');
+                            body.css('position', 'relative');
                             var mask = $("<div class=\"datagrid-mask\" style=\"display:block;\"></div>").appendTo(body);
                             var msg = $("<div class=\"datagrid-mask-msg\" style=\"display:block; left: 50%;\"></div>").html(winOpts.loadMsg).appendTo(body);
-                            //避免遮挡 collapsible button、minimizable button、maximizable button、closed button
-                            mask.css("marginTop", panel.height()-body.height());
                             setTimeout(function(){
                                 msg.css("marginLeft", -msg.outerWidth() / 2);
                             }, 5);
@@ -223,7 +222,7 @@
                         if(iframe[0].contentWindow){
                             onLoadCallback && onLoadCallback.call(this, selfRefrence, iframe[0].contentWindow);
                             target.panel('body').children("div.datagrid-mask-msg").remove();
-                            target.children("div.datagrid-mask").remove();
+                            target.panel('body').children("div.datagrid-mask").remove();
                         }
                     });
 
