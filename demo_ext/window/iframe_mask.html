@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Basic Window - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.window.extend.js"></script>-->
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
+        <script type="text/javascript">
+            $(function(){
+                $('#btn').click(function(){
+                    $.showWindow({
+                        title: 'Mask',
+                        useiframe: true,
+                        showMask: true,
+                        loadMsg: 'lalalala....',
+                        locate: 'document',
+                        content: 'url:dispatch.jsp'
+                    });
+                });
+            });
+        </script>
+    </head>
+    <body>
+
+        <div class="easyui-tabs" data-options="fit:true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>遮罩演示</h3>
+                <p>注意此效果只在useiframe=true时起作用</p>
+                <input type="button" id="btn" value="showWidnow">
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight: [5,6,7]">
+                        $(function(){
+                            $('#btn').click(function(){
+                                $.showWindow({
+                                    title: 'Mask',
+                                    useiframe: true,
+                                    showMask: true,
+                                    loadMsg: 'lalalala....',
+                                    locate: 'document',
+                                    content: 'url:dispatch.jsp'
+                                });
+                            });
+                        });
+                </textarea>
+
+            </div>
+        </div>
+
+    </body>
+</html>

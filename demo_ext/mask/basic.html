@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title></title>
+        <style type="text/css">
+            body{
+                font-size: 12px;
+            }
+        </style>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <!--<link rel="stylesheet" type="text/css" href="../../extend/themes/easyui.extend.css">-->
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.mask.extend.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
+        <script type="text/javascript">
+            $(function(){
+                $.mask({target: 'body'});
+                setTimeout(function(){
+                    $.unmask({target: 'body'});
+                }, 1000);
+
+                $('#btn1').click(function(){
+                    var body = $('#pp').panel('body');
+                    $.mask({target: body});
+                });
+
+                $('#btn2').click(function(){
+                    var body = $('#pp').panel('body');
+                    $.unmask({target: body});
+                });
+
+
+                $('#btn3').click(function(){
+                    var body = $('#tt').tabs('getTab', 'Tab1').panel('body');
+                    $.mask({loadMsg: 'lalalala....', target: body});
+                });
+
+                $('#btn4').click(function(){
+                    var body = $('#tt').tabs('getTab', 'Tab1').panel('body');
+                    $.unmask({target: body});
+                });
+
+                $('#btn5').click(function(){
+                    $.mask({loadMsg: 'lalalala....', target: '#dd'});
+                });
+
+                $('#btn6').click(function(){
+                    $.unmask({target: '#dd'});
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>遮罩演示</h3>
+                <input type="button" id="btn1" value="show Mask"> <input type="button" id="btn2" value="close"><br>
+                <div class="easyui-panel" id="pp" data-options="title:'Mask Test', height: 150, width: 500"></div>
+
+                <br>
+                <input type="button" id="btn3" value="show Mask"> <input type="button" id="btn4" value="close"><br>
+                <div id="tt" class="easyui-tabs" data-options="height: 150, width: 500">
+                    <div title="Tab1"></div>
+                </div>
+
+                <br>
+                <input type="button" id="btn5" value="show Mask"> <input type="button" id="btn6" value="close"><br>
+                <div id="dd" style="border: 1px solid; height: 100px; width: 200px;"></div>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[2,4,8,9,13,14,19,20,24,25,29,33]">
+                        $(function(){
+                            $.mask({target: 'body'});
+                            setTimeout(function(){
+                                $.unmask({target: 'body'});
+                            }, 1000);
+
+                            $('#btn1').click(function(){
+                                var body = $('#pp').panel('body');
+                                $.mask({target: body});
+                            });
+
+                            $('#btn2').click(function(){
+                                var body = $('#pp').panel('body');
+                                $.unmask({target: body});
+                            });
+
+
+                            $('#btn3').click(function(){
+                                var body = $('#tt').tabs('getTab', 'Tab1').panel('body');
+                                $.mask({loadMsg: 'lalalala....', target: body});
+                            });
+
+                            $('#btn4').click(function(){
+                                var body = $('#tt').tabs('getTab', 'Tab1').panel('body');
+                                $.unmask({target: body});
+                            });
+
+                            $('#btn5').click(function(){
+                                $.mask({loadMsg: 'lalalala....', target: '#dd'});
+                            });
+
+                            $('#btn6').click(function(){
+                                $.unmask({target: '#dd'});
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html; highlight: []">
+                    <body>
+                        <div class="easyui-panel" id="pp" data-options="title:'Mask Test', height: 150, width: 500"></div>
+
+                        <br>
+                        <div id="tt" class="easyui-tabs" data-options="height: 150, width: 500">
+                            <div title="Tab1"></div>
+                        </div>
+
+                        <br>
+                        <div id="dd" style="border: 1px solid; height: 100px; width: 200px;"></div>
+                    </body>
+                </textarea>
+            </div>
+        </div>
+    </body>
+</html>

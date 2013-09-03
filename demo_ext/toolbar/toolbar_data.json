@@ -1,0 +1,12 @@
+[{
+    "text": "Edit",
+    "iconCls": "icon-edit",
+    "handler": "doSave"
+},{
+    "text": "-"
+},{
+    "text": "Help",
+    "iconCls": "icon-help",
+    "disabled": true,
+    "handler": "doAdd"
+}]

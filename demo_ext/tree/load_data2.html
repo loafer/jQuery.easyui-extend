@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>Simple Data - jQuery EasyUI Demo</title>
+        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
+        <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
+        <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>-->
+        <!--<script type="text/javascript" src="../../extend/jquery.easyui.tree.extend.js"></script>-->
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
+        <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushXml.js"></script>
+        <script type="text/javascript">
+            SyntaxHighlighter.config.tagName = "textarea";
+            SyntaxHighlighter.all();
+        </script>
+        <script type="text/javascript">
+            $(function(){
+                $('#tt').tree({
+                    data: [{
+                        folder_id: 1,
+                        folder_name: 'My Documents',
+                        childrens: [{
+                            folder_name: 'Photos',
+                            f1: 'Photos_f1'
+                        },{
+                            folder_name: 'Company',
+                            icon: 'icon-save',
+                            f2: 'Company_f2'
+                        }]
+                    }],
+                    customAttr:{
+                        idField: 'folder_id',
+                        textField: 'folder_name',
+                        childrenField: 'childrens',
+                        iconField: 'icon',
+                        attributes: ['f1', 'f2', 'f3']
+                    },
+                    onClick: function(node){
+                        alert($.toJSON(node));
+                    }
+                });
+            });
+        </script>
+    </head>
+    <body>
+        <div class="easyui-tabs" data-options="fit: true, plain: true">
+            <div data-options="title: 'Demo'">
+                <h3>类标准格式</h3>
+                <ul>
+                    <li>所谓“类标准格式”是指与“标准格式”结构相同，不同是属性名。</li>
+                    <li>可通过扩展属性idField、textField、childrenField、iconField、attributes向标准格式转化。</li>
+                </ul>
+                <ul id="tt"></ul>
+            </div>
+            <div data-options="title: 'Code'" style="font-size: 14px;">
+                <p>javascript:</p>
+                <textarea class="brush: js; highlight:[4,5,6,7,8,9,10,11,12,13,16,17,18,19,20]">
+                        $(function(){
+                            $('#tt').tree({
+                                data: [{
+                                    folder_id: 1,
+                                    folder_name: 'My Documents',
+                                    childrens: [{
+                                        folder_name: 'Photos',
+                                        f1: 'Photos_f1'
+                                    },{
+                                        folder_name: 'Company',
+                                        icon: 'icon-save',
+                                        f2: 'Company_f2'
+                                    }]
+                                }],
+                                customAttr:{
+                                    idField: 'folder_id',
+                                    textField: 'folder_name',
+                                    childrenField: 'childrens',
+                                    iconField: 'icon',
+                                    attributes: ['f1', 'f2', 'f3']
+                                },
+                                onClick: function(node){
+                                    alert($.toJSON(node));
+                                }
+                            });
+                        });
+                </textarea>
+
+                <p>html:</p>
+                <textarea class="brush: html;">
+                    <body>
+                        <ul id="tt"></ul>
+                    </body>
+                </textarea>
+            </div>
+        </div>
+    </body>
+</html>
