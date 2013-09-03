@@ -8,8 +8,15 @@
                 font-size: 12px;
             }
         </style>
+        <script type="text/javascript" src="../../jquery.min.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $('#c').html((new Date()).valueOf());
+            });
+        </script>
     </head>
     <body>
         <p>我是通过useiframe=ture并且content内容为"url:"形式加载的。我被放在了iframe中。</p>
+        <p id="c"></p>
     </body>
 </html>

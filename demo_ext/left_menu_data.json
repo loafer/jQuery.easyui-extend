@@ -46,6 +46,12 @@
             "attributes": {
                 "url": "tabs/addtab.html"
             }
+        },{
+            "id": "tabs_add",
+            "text": "add 方法遮罩演示",
+            "attributes": {
+                "url": "tabs/mask.html"
+            }
         }]
     }]
 },{
@@ -100,6 +106,23 @@
                 "url": "combobox/related2.html"
             }
         }]
+    },{
+        "id": "form_combotree",
+        "text": "combotree",
+        "state": "closed",
+        "children": [{
+            "id": "form_combotree_simpledata",
+            "text": "简单数据加载",
+            "attributes": {
+                "url": "combotree/simpledata.html"
+            }
+        },{
+            "id": "form_combotree_loaddata",
+            "text": "类标准数据加载",
+            "attributes": {
+                "url": "combotree/load_data.html"
+            }
+        }]
     }]
 },{
     "id": "window",
@@ -125,6 +148,12 @@
             "text": "与父页面间传值(iframe)",
             "attributes": {
                 "url": "window/iframeparam.html"
+            }
+        },{
+            "id": "window_window_mask",
+            "text": "显示遮罩",
+            "attributes": {
+                "url": "window/iframe_mask.html"
             }
         }]
     },{
@@ -305,6 +334,12 @@
                 "url": "tree/simpledata.html"
             }
         },{
+            "id": "tree_loaddata",
+            "text": "类标准格式数据加载",
+            "attributes": {
+                "url": "tree/load_data2.html"
+            }
+        },{
             "id": "tree_expand3",
             "text": "expandTo增强演示",
             "attributes": {
@@ -422,6 +457,17 @@
             "text": "复杂Toolbar",
             "attributes": {
                 "url": "toolbar/complextoolbar.html"
+            }
+        }]
+    },{
+        "id": "others_mask",
+        "text": "Mask",
+        "state": "closed",
+        "children":[{
+            "id": "others_mask_baisc",
+            "text": "mask",
+            "attributes": {
+                "url": "mask/basic.html"
             }
         }]
     }]
