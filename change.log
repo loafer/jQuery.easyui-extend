@@ -1,4 +1,10 @@
-2013-8-26
+2013-9-3 更新
+1、$.showWindow 和 $.showModalDialog 在useiframe=true时，对窗体body增加遮罩控制。
+2、easyui.tabs的add方法当useiframe=true时，增加遮罩控制。
+3、toolbar增加url属性，可以通过请求后台数据构建。
+4、增加mask（遮罩）扩展。
+
+2013-8-26 更新
 1、tree增加支持类标准数据格式加载，具体看demo或jquery.easyui.tree.extend.js文件开头说明。
 2、修复datagrid在rowediting编辑风格时点击“确定”按钮无法提交问题。
 3、datagrid和treegrid增加getEditingRows方法，用来获取所有正在编辑的行。
