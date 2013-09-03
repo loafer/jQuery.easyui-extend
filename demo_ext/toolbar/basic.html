@@ -3,13 +3,15 @@
     <head>
         <meta charset="utf-8">
         <title></title>
-        <link type="text/css" rel="stylesheet" href="../../themes/bootstrap/easyui.css">
+        <link type="text/css" rel="stylesheet" href="../../themes/default/easyui.css">
         <link rel="stylesheet" type="text/css" href="../../themes/icon.css">
         <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.toolbar.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.json-2.4.min.js"></script>
+        <!--<script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>-->
         <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
@@ -35,7 +37,20 @@
                         }
                     }]
                 });
+
+                $('#tb2').toolbar({
+                    url: 'toobar_data.json'
+                });
+
             });
+
+            function doSave(){
+                alert('doSave')
+            }
+
+            function doAdd(){
+                alert('doAdd');
+            }
         </script>
     </head>
     <body>
@@ -47,7 +62,8 @@
         <div class="easyui-tabs" data-options="fit: true, plain: true">
             <div data-options="title: 'Demo'">
                 <h3>Toolbar演示</h3>
-                <div id="tb"></div>
+                <div id="tb" style="margin-bottom: 10px;"></div>
+                <div id="tb2"></div>
             </div>
             <div data-options="title: 'Code'" style="font-size: 14px;">
                 <p>javascript:</p>
@@ -68,6 +84,11 @@
                                     }
                                 }]
                             });
+
+
+                            $('#tb2').toolbar({
+                                url: 'toobar_data.json'
+                            });
                         });
                 </textarea>
 
@@ -76,6 +97,7 @@
                     <body>
                         <h3>Toolbar演示</h3>
                         <div id="tb"></div>
+                        <div id="tb2"></div>
                     </body>
                 </textarea>
             </div>
