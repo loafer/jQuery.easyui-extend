@@ -42,25 +42,45 @@
     $.fn.panel.defaults.onMove = easyuiPanelOnMove;
 
 
-    /**
-     * 销毁所有panel下的iframe
-     */
-    $.fn.panel.defaults = jQuery.extend({},
-        $.fn.panel.defaults,
-        {
-            onBeforeDestroy: function(){
-                var frame=$('iframe', this);
-                if(frame.length>0){
-                    frame[0].contentWindow.document.write('');
-                    frame[0].contentWindow.close();
-                    frame.remove();
-//                    if($.browser.msie){
+//    /**
+//     * 销毁所有panel下的iframe
+//     */
+//    $.fn.panel.defaults = $.extend({},
+//        $.fn.panel.defaults,
+//        {
+//            onBeforeDestroy: function(){
+//                var frame=$('iframe', this);
+//                if(frame.length>0){
+//                    frame[0].contentWindow.document.write('');
+//                    frame[0].contentWindow.close();
+//                    frame.remove();
+////                    if($.browser.msie){
+////                        CollectGarbage();
+////                    }
+//                    if(navigator.userAgent.indexOf('MSIE')>0){
 //                        CollectGarbage();
 //                    }
-                    if(navigator.userAgent.indexOf('MSIE')>0){
-                        CollectGarbage();
-                    }
-                }
+//                }
+//            }
+//        });
+
+    /**
+     *  销毁panel和window下的iframe并释放内存
+     */
+    var destroyFrameAndFreeTheMemory = function(){
+        var frame=$('iframe', this);
+        if(frame.length>0){
+            frame[0].contentWindow.document.write('');
+            frame[0].contentWindow.close();
+            frame.remove();
+            if(navigator.userAgent.indexOf('MSIE')>0){
+                CollectGarbage();
             }
-        });
+        }
+    }
+
+    $.fn.panel.defaults.onBeforeDestroy = destroyFrameAndFreeTheMemory;
+    $.fn.window.defaults.onBeforeDestroy = destroyFrameAndFreeTheMemory ;
+    $.fn.dialog.defaults.onBeforeDestroy = destroyFrameAndFreeTheMemory ;
+
 })(jQuery);
