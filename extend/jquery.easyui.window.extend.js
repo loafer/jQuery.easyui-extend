@@ -65,13 +65,17 @@
             return w;
         }
 
+        if(options.locate=='document.parent' || _doc.getElementsByTagName('frameset').length >0){
+            return w.parent;
+        }
+
         return w['top'];
     }
 
     function setWindowSize(w, options){
         var _top = getTop(w, options);
         var wHeight = $(_top).height(), wWidth = $(_top).width();
-        if(options.locate == 'top' || options.locate == 'document'){
+        if(!/^#/.test(winOpts.locate)){
             if(options.height == 'auto'){
                 options.height = wHeight * 0.6
             }
@@ -202,7 +206,7 @@
                 onLoadCallback && onLoadCallback.call(this, selfRefrence, _top);
             }
 
-            if(winOpts.locate == 'top' || winOpts.locate == 'document'){
+            if(!/^#/.test(winOpts.locate)){
                 if(winOpts.useiframe && iframe){
                     if(winOpts.showMask){
                         winOpts.onBeforeOpen = function(){
