@@ -70,7 +70,6 @@
     var destroyFrameAndFreeTheMemory = function(){
         var frame=$('iframe', this);
         if(frame.length>0){
-            frame[0].contentWindow.document.write('');
             frame[0].contentWindow.close();
             frame.remove();
             if(navigator.userAgent.indexOf('MSIE')>0){
