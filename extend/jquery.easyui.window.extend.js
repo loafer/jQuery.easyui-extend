@@ -75,7 +75,7 @@
     function setWindowSize(w, options){
         var _top = getTop(w, options);
         var wHeight = $(_top).height(), wWidth = $(_top).width();
-        if(!/^#/.test(winOpts.locate)){
+        if(!/^#/.test(options.locate)){
             if(options.height == 'auto'){
                 options.height = wHeight * 0.6
             }
