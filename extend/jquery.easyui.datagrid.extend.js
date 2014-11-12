@@ -1281,7 +1281,7 @@
             init: function(container, options){
                 var input = $('<input type="text">').appendTo(container);
                 options = options || {};
-                options = $.extend({}, options, {panelWidth: 400, editable: false});
+                options = $.extend({}, {panelWidth: 400, editable: false}, options);
                 return input.combogrid(options);
             },
             getValue: function(target){
