@@ -1061,6 +1061,26 @@
                     }
                 }
                 break;
+            case 'onBeginEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData, changes){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
+            case 'onEndEdit':
+                if(override){
+                    options[eventName] = handler;
+                }else{
+                    options[eventName] = function(rowIndex, rowData, changes){
+                        defaultActionEvent.apply(this, arguments);
+                        handler.apply(this, arguments);
+                    }
+                }
+                break;
             case 'onCancelEdit':
                 if(override){
                     options[eventName] = handler;
