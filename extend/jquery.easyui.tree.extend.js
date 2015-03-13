@@ -225,6 +225,8 @@
  *              handler: function(node){}
  *          });
  *
+ *  8、增加unselect方法
+ *      $('#tt').tree('unselect',node);
  *
  */
 (function($){
@@ -658,6 +660,10 @@
         return data;
     }
 
+    function unselect(target, node){
+        $(node.target).removeClass('tree-node-selected');
+    }
+
 
     $.fn.tree.contextmenu={};
     $.fn.tree.contextmenu.defaultEvents={
@@ -766,6 +772,11 @@
                 $.each(eventList, function(i, event){
                     addEventListener(target, event.name, event.handler|| function(){}, event.override);
                 });
+            });
+        },
+        unselect:function(jq,node){
+            return jq.each(function(){
+                unselect(this,node);
             });
         }
     });
