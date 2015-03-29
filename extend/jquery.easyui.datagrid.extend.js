@@ -1429,12 +1429,10 @@
 
                 var target = this;
                 $.each(delRows, function(i, row){
-                    if($.isPlainObject(row)){
+                    setTimeout(function(){
                         var index = $(target).datagrid('getRowIndex', row);
                         $(target).datagrid('deleteRow', index);
-                    }else{
-                        $(target).datagrid('deleteRow', row);
-                    }
+                    }, 5);
                 });
             });
         },
