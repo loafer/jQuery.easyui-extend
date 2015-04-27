@@ -225,8 +225,10 @@
                     iframe.bind('load', function(){
                         if(iframe[0].contentWindow){
                             onLoadCallback && onLoadCallback.call(this, selfRefrence, iframe[0].contentWindow);
-                            target.panel('body').children("div.datagrid-mask-msg").remove();
-                            target.panel('body').children("div.datagrid-mask").remove();
+                            if(target){
+                                target.panel('body').children("div.datagrid-mask-msg").remove();
+                                target.panel('body').children("div.datagrid-mask").remove();
+                            }
                         }
                     });
 
