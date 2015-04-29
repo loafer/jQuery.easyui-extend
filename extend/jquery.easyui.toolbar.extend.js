@@ -32,9 +32,12 @@
         var options = $(target).toolbar('options');
         var tb = $(target)
 //            .addClass('datagrid-toolbar')
-//            .css({'border-top-width': 1})
             .addClass("panel-header")
-            .css({"border": 0});
+            .css({"border": 0, 'height': '38px', 'line-height':'24px'});
+
+        if($.trim(tb.html()).length > 0){
+            return;
+        }
 
         tb.append('<table cellspacing=\"0\" cellpadding=\"0\"><tr></tr></table>');
         if(options.buttonPosition == 'right'){
