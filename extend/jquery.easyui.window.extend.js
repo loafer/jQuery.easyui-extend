@@ -117,8 +117,8 @@
                 useiframe: false,
                 locate: 'top',
                 data: undefined,
-                width: 'auto',
-                height: 'auto',
+                width: '60%',
+                height: '60%',
                 cache: false,
                 minimizable: true,
                 maximizable: true,
@@ -183,7 +183,7 @@
                 }
             }
 
-            setWindowSize(window, winOpts);
+            //setWindowSize(window, winOpts);
 
 
             //包装toolbar中各对象的handler
@@ -225,7 +225,7 @@
                     iframe.bind('load', function(){
                         if(iframe[0].contentWindow){
                             onLoadCallback && onLoadCallback.call(this, selfRefrence, iframe[0].contentWindow);
-                            if(target){
+                            if(winOpts.showMask){
                                 target.panel('body').children("div.datagrid-mask-msg").remove();
                                 target.panel('body').children("div.datagrid-mask").remove();
                             }
