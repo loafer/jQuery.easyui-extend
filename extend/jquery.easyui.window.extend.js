@@ -185,7 +185,6 @@
 
             //setWindowSize(window, winOpts);
 
-
             //包装toolbar中各对象的handler
             if(winOpts.toolbar && $.isArray(winOpts.toolbar)){
                 $.each(winOpts.toolbar, function(i, button){
