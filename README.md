@@ -18,7 +18,7 @@ jQuery.easyui-extend
 
 快速了解各组件扩展信息，请直接访问在线<a href="http://loafer.sturgeon.mopaas.com" target="_blank">Demo</a><br>
 具体了解每个组件的扩展内容及使用方法，请查看extend下相应文件的开头说明。<br>
-要使扩展属性生效，必须执行方法followCustomHandle。<br>
+~~要使扩展属性生效，必须执行方法followCustomHandle。~~<br>
 
 
 <h3>使用</h3>
