@@ -189,7 +189,9 @@
         var opts = $.extend(true, {}, $.fn.combobox.defaults, optioins);
         if(!opts.customAttr.headervalue) return;
 
-        $(target).combobox('addEventListener', {
+
+        $(target).combobox('setText', opts.customAttr.headervalue)
+            .combobox('addEventListener', {
             name: 'onLoadSuccess',
             handler: function(){
                 $(target).combobox('textbox').trigger('blur');
@@ -273,11 +275,7 @@
 
     $.extend($.fn.combobox.methods,{
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                fixShowHeaderValue(this);
-                slaveHandle(this);
-                $(this).combo('followCustomHandle');
-            });
+            return jq.each(function(){});
         },
         addEventListener: function(jq, param){
             return jq.each(function(){
@@ -304,4 +302,22 @@
             return null;
         }
     });
+
+    var plugin = $.fn.combobox;
+    $.fn.combobox = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+                fixShowHeaderValue(this);
+                slaveHandle(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+
+    $.fn.combobox.methods = plugin.methods;
+    $.fn.combobox.defaults = plugin.defaults;
+    $.fn.combobox.parseOptions = plugin.parseOptions;
+    $.fn.combobox.parseData = plugin.parseData;
 })(jQuery);

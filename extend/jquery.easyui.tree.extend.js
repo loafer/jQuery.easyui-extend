@@ -266,8 +266,8 @@
     function getDefaultContextMenuItems(target){
         var menuid = getContextMenuId(target);
         return [
-            {id: menuid+'_moveup', text: '位置上移', iconCls: 'icon-moveup', onclick: $.fn.tree.contextmenu.defaultEvents.moveup},
-            {id: menuid+'_movedown', text: '位置下移', iconCls: 'icon-movedown', onclick: $.fn.tree.contextmenu.defaultEvents.movedown}
+            {id: menuid+'_moveup', text: '位置上移', iconCls: 'icon-moveup', onclick: plugin.contextmenu.defaultEvents.moveup},
+            {id: menuid+'_movedown', text: '位置下移', iconCls: 'icon-movedown', onclick: plugin.contextmenu.defaultEvents.movedown}
         ];
     }
 
@@ -665,34 +665,34 @@
     }
 
 
-    $.fn.tree.contextmenu={};
-    $.fn.tree.contextmenu.defaultEvents={
-        moveup: function(item, node, target){
-            var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
-            var prevnode = getPrevNode(target, node);
-            if(prevnode){
-                var nodeData = $(target).tree('pop', node.target);
-                $(target).tree('insert',{
-                    before: prevnode.target,
-                    data: nodeData
-                });
-                options.customAttr.onAfterMove.call(this, prevnode, node);
-            }
-        },
-        movedown: function(item, node, target){
-            var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
-            var nextnode = getNextNode(target, node);
-            if(nextnode){
-                var nodeData = $(target).tree('pop', node.target);
-                $(target).tree('insert', {
-                    after: nextnode.target,
-                    data: nodeData
-                });
-                options.customAttr.onAfterMove.call(this, nextnode, node);
+    $.fn.tree.contextmenu={
+        defaultEvents:{
+            moveup: function(item, node, target){
+                var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
+                var prevnode = getPrevNode(target, node);
+                if(prevnode){
+                    var nodeData = $(target).tree('pop', node.target);
+                    $(target).tree('insert',{
+                        before: prevnode.target,
+                        data: nodeData
+                    });
+                    options.customAttr.onAfterMove.call(this, prevnode, node);
+                }
+            },
+            movedown: function(item, node, target){
+                var options = $.extend(true, {}, $.fn.tree.defaults, $(target).tree('options'));
+                var nextnode = getNextNode(target, node);
+                if(nextnode){
+                    var nodeData = $(target).tree('pop', node.target);
+                    $(target).tree('insert', {
+                        after: nextnode.target,
+                        data: nodeData
+                    });
+                    options.customAttr.onAfterMove.call(this, nextnode, node);
+                }
             }
         }
-    }
-
+    };
 
     $.fn.tree.defaults.customAttr = {
         idField: null,
@@ -740,14 +740,9 @@
     $.fn.combotree.defaults.loadFilter = $.fn.tree.defaults.loadFilter;
 
     var defaultMethods = $.extend({}, $.fn.tree.methods);
-
     $.extend($.fn.tree.methods, {
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                initContextMenu(this);
-                expandHandler(this);
-                onlyNodeExpandHandler(this);
-            });
+            return jq.each(function(){});
         },
         /**
          * 获得节点层级
@@ -780,4 +775,23 @@
             });
         }
     });
+
+    var plugin = $.fn.tree;
+    $.fn.tree = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+                initContextMenu(this);
+                expandHandler(this);
+                onlyNodeExpandHandler(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+
+    $.fn.tree.methods = plugin.methods;
+    $.fn.tree.defaults = plugin.defaults;
+    $.fn.tree.parseOptions = plugin.parseOptions;
+    $.fn.tree.contextMenu = plugin.contextMenu;
 })(jQuery);

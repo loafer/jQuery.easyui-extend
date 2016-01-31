@@ -231,10 +231,7 @@
 
     $.extend($.fn.combo.methods, {
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                showHeaderValue(this);
-                autocompleteHandle(this);
-            });
+            return jq.each(function(){});
         }
         ,clear: function(jq){
             return jq.each(function(){
@@ -254,4 +251,21 @@
             });
         }
     });
+
+    var plugin = $.fn.combo;
+    $.fn.combo = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+                showHeaderValue(this);
+                autocompleteHandle(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+
+    $.fn.combo.methods = plugin.methods;
+    $.fn.combo.defaults = plugin.defaults;
+    $.fn.combo.parseOptions = plugin.parseOptions;
 })(jQuery);

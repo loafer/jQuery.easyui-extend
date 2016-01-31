@@ -97,8 +97,10 @@
             $(toolbar).addClass('dialog-toolbar panel-body').insertBefore(body);
             $(toolbar).show();
         }else{
-            var tb = $('<div></div>').insertBefore(body);
-            tb.toolbar(toolbar);
+            if($.isArray(toolbar.data) && toolbar.data.length >0){
+                var tb = $('<div></div>').insertBefore(body);
+                tb.toolbar(toolbar);
+            }
         }
     }
 
@@ -141,15 +143,13 @@
     $.fn.panel.defaults.customAttr = {
         toolbar: {
             buttonPosition: 'left',
-            data: undefined
+            data: []
         }
     };
 
     $.extend($.fn.panel.methods, {
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                initToolbar(this);
-            });
+            return jq.each(function(){});
         },
         addEventListener: function(jq, param){
             return jq.each(function(){
@@ -161,4 +161,21 @@
             });
         }
     });
+
+    var plugin = $.fn.panel;
+    $.fn.panel = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+
+                initToolbar(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+
+    $.fn.panel.methods = plugin.methods;
+    $.fn.panel.defaults = plugin.defaults;
+    $.fn.panel.parseOptions = plugin.parseOptions;
 })(jQuery);

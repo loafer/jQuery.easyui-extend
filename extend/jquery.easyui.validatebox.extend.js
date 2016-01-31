@@ -101,14 +101,12 @@
         ,english:{
             validator : function(value) {
                 return /^[A-Za-z]+$/i.test(value);
-            },
-            message : $.fn.validatebox.defaults.rules.english.message
+            }
         }
         ,code: {
             validator : function(value) {
                 return /^[A-Za-z0-9_\-]+$/i.test(value);
-            },
-            message : $.fn.validatebox.defaults.rules.code.message
+            }
         }
     });
 
@@ -119,4 +117,10 @@
         $.fn.validatebox.defaults.rules.english.message = '请输入英文字母（大小写不限）';
         $.fn.validatebox.defaults.rules.code.message = '请输入英文字母（大小写不限）、数字、_或-';
     }
+
+
+//    $.fn.validatebox.defaults.rules.minLength.message = '请至少输入{0}个字符。';
+//    $.fn.validatebox.defaults.rules.equals.message = '字段不匹配';
+//    $.fn.validatebox.defaults.rules.english.message = '请输入英文字母（大小写不限）';
+//    $.fn.validatebox.defaults.rules.code.message = '请输入英文字母（大小写不限）、数字、_或-';
 })(jQuery);

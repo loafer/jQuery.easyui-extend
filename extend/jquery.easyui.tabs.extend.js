@@ -505,9 +505,7 @@
 
     $.extend($.fn.tabs.methods, {
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                initContextMenu(this);
-            });
+            return jq.each(function(){});
         },
         /**
          *
@@ -559,4 +557,21 @@
             });
         }
     });
+
+    var plugin = $.fn.tabs;
+    $.fn.tabs = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+
+                initContextMenu(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+
+    $.fn.tabs.methods = plugin.methods;
+    $.fn.tabs.defaults = plugin.defaults;
+    $.fn.tabs.parseOptions = plugin.parseOptions;
 })(jQuery);

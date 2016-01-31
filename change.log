@@ -1,3 +1,5 @@
+2016-1-31 更新
+1、使用时不再需要显示调用followCustomHandle方法，即可生效扩展属性。
 2013-9-3 更新
 1、$.showWindow 和 $.showModalDialog 在useiframe=true时，对窗体body增加遮罩控制。
 2、easyui.tabs的add方法当useiframe=true时，增加遮罩控制。

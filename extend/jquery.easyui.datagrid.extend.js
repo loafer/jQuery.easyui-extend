@@ -439,19 +439,19 @@
             commands.push(cmd);
         }
 
-
-        if(slaveOptions.activeSlave == $.fn.datagrid.defaults.customAttr.activeSlave){
-
-            jq.datagrid('addEventListener', {
-                name: 'onDblClickRow',
-                handler: function(rowIndex, rowData){
-                    for(var j in commands){
-                        commands[j].params[relatedfieldName] = rowData[relatedfieldName];
-                        $('#' + commands[j].id).datagrid('load', commands[j].params);
-                    }
-                }
-            });
+        if(!slaveOptions.activeSlave || $.trim(slaveOptions.activeSlave).length ==0){
+            slaveOptions.activeSlave = 'onDblClickRow';
         }
+
+        jq.datagrid('addEventListener', {
+            name: slaveOptions.activeSlave,
+            handler: function(rowIndex, rowData){
+                for(var j in commands){
+                    commands[j].params[relatedfieldName] = rowData[relatedfieldName];
+                    $('#' + commands[j].id).datagrid('load', commands[j].params);
+                }
+            }
+        });
     }
 
     function registRowEditingHandler(target){
@@ -1148,79 +1148,81 @@
     }
 
 
-    $.fn.datagrid.headerContextMenu = {};
-    $.fn.datagrid.headerContextMenu.defaultEvents = {
-        /**
-         *  对frozenColumns属性中的列不做隐藏控制
-         */
-        doHideColumn: function(target, field, item){
-            $(target).datagrid('hideColumn', field);
-            var menu = $(target).datagrid('getHeaderContextMenu');
-            menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
-        },
-        doShowColumn: function(target, field, item){
-            $(target).datagrid('showColumn', field);
-            var menu = $(target).datagrid('getHeaderContextMenu');
-            menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
-        },
-        doShowAll: function(target){
-            var fields = $(target).datagrid('getColumnFields');
-            var menu = $(target).datagrid('getHeaderContextMenu');
-            for(i in fields){
-                $(target).datagrid('showColumn', fields[i]);
-                var columnOption = $(target).datagrid('getColumnOption', fields[i]);
-                var item = menu.menu('findItem', columnOption.title);
-                if(item){
-                    menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
-                }
-            }
-        },
-        doRestore: function(target){
-            var fields = $(target).datagrid('getColumnFields');
-            var menu = $(target).datagrid('getHeaderContextMenu');
-            for(i in fields){
-                var columnOption = $(target).datagrid('getColumnOption', fields[i]);
-                var item = menu.menu('findItem', columnOption.title);
-                if(!columnOption._hidden){
+    $.fn.datagrid.headerContextMenu = {
+        defaultEvents: {
+            /**
+             *  对frozenColumns属性中的列不做隐藏控制
+             */
+            doHideColumn: function(target, field, item){
+                $(target).datagrid('hideColumn', field);
+                var menu = $(target).datagrid('getHeaderContextMenu');
+                menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
+            },
+            doShowColumn: function(target, field, item){
+                $(target).datagrid('showColumn', field);
+                var menu = $(target).datagrid('getHeaderContextMenu');
+                menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
+            },
+            doShowAll: function(target){
+                var fields = $(target).datagrid('getColumnFields');
+                var menu = $(target).datagrid('getHeaderContextMenu');
+                for(i in fields){
                     $(target).datagrid('showColumn', fields[i]);
-                    item && menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
-                }else{
-                    $(target).datagrid('hideColumn', fields[i]);
-                    item && menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
+                    var columnOption = $(target).datagrid('getColumnOption', fields[i]);
+                    var item = menu.menu('findItem', columnOption.title);
+                    if(item){
+                        menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
+                    }
+                }
+            },
+            doRestore: function(target){
+                var fields = $(target).datagrid('getColumnFields');
+                var menu = $(target).datagrid('getHeaderContextMenu');
+                for(i in fields){
+                    var columnOption = $(target).datagrid('getColumnOption', fields[i]);
+                    var item = menu.menu('findItem', columnOption.title);
+                    if(!columnOption._hidden){
+                        $(target).datagrid('showColumn', fields[i]);
+                        item && menu.menu('setIcon',{target: item.target, iconCls: 'icon-checked'});
+                    }else{
+                        $(target).datagrid('hideColumn', fields[i]);
+                        item && menu.menu('setIcon',{target: item.target, iconCls: 'icon-unchecked'});
+                    }
                 }
             }
-        }
 
+        }
     };
 
-    $.fn.datagrid.rowContextMenu = {};
-    $.fn.datagrid.rowContextMenu.defaultEvents = {
-        doAdd: function(item, rowIndex, rowData, target){
+    $.fn.datagrid.rowContextMenu = {
+        defaultEvents : {
+            doAdd: function(item, rowIndex, rowData, target){
 //            console.log('===>doAdd');
-        },
-        doEdit: function(item, rowIndex, rowData, target){
+            },
+            doEdit: function(item, rowIndex, rowData, target){
 //            console.log('===>doEdit');
-        },
-        doDelete: function(item, rowIndex, rowData, target){
-            $.messager.confirm('疑问','您确定要删除已选中的行？', function(r){
-                if(r){
-                    $(target).datagrid('deleteRows', $(target).datagrid('getSelections'));
-                }
-            })
-        },
-        doReload: function(item, rowIndex, rowData, target){
-            $(target).datagrid('load');
-        },
-        doReloadThisPage: function(item, rowIndex, rowData, target){
-            $(target).datagrid('reload');
-        },
-        doExportThisPage: function(item, rowIndex, rowData, target){
+            },
+            doDelete: function(item, rowIndex, rowData, target){
+                $.messager.confirm('疑问','您确定要删除已选中的行？', function(r){
+                    if(r){
+                        $(target).datagrid('deleteRows', $(target).datagrid('getSelections'));
+                    }
+                })
+            },
+            doReload: function(item, rowIndex, rowData, target){
+                $(target).datagrid('load');
+            },
+            doReloadThisPage: function(item, rowIndex, rowData, target){
+                $(target).datagrid('reload');
+            },
+            doExportThisPage: function(item, rowIndex, rowData, target){
 //            console.log('===>doExportThisPage');
-        },
-        doExprotAll: function(item, rowIndex, rowData, target){
+            },
+            doExprotAll: function(item, rowIndex, rowData, target){
 //            console.log('===>doExprotAll');
+            }
         }
-    }
+    };
 
     $.extend($.fn.datagrid.defaults.editors, {
         my97:{
@@ -1362,7 +1364,7 @@
          *  })
          */
         slaveList: undefined,
-        activeSlave: 'dblclickrow',
+        activeSlave: 'onDblClickRow',
         rowediting: false,
         /**
          * target: row|cell ,tooltip 的触发对象，默认row
@@ -1379,15 +1381,7 @@
 
     $.extend($.fn.datagrid.methods, {
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                fixNoDataBug(this);
-                initHeaderContextMenu(this);
-                initRowContextMenu(this);
-                initPagination(this);
-                setMasterSlave(this);
-                registRowEditingHandler(this);
-                buildTooltip(this);
-            });
+            return jq.each(function(){});
         },
         getHeaderContextMenu: function(jq){
             return $('#'+getContextMenuId(jq[0], 'headerContextMenu'));
@@ -1489,4 +1483,30 @@
             return indexArr.length > 0 ? indexArr[0] : -1;
         }
     });
+
+    var plugin = $.fn.datagrid;
+    $.fn.datagrid = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+
+                fixNoDataBug(this);
+                initHeaderContextMenu(this);
+                initRowContextMenu(this);
+                initPagination(this);
+                setMasterSlave(this);
+                registRowEditingHandler(this);
+                buildTooltip(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+
+    $.fn.datagrid.methods = plugin.methods;
+    $.fn.datagrid.defaults = plugin.defaults;
+    $.fn.datagrid.parseOptions = plugin.parseOptions;
+    $.fn.datagrid.parseData = plugin.parseData;
+    $.fn.datagrid.rowContextMenu = plugin.rowContextMenu;
+    $.fn.datagrid.headerContextMenu = plugin.headerContextMenu;
 })(jQuery);

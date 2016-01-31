@@ -9,8 +9,8 @@
     $.extend($.fn.combotree.methods, {
         followCustomHandle: function(jq){
             return jq.each(function(){
-                $(this).combotree('tree').tree('followCustomHandle');
-                $(this).combo('followCustomHandle');
+//                $(this).combotree('tree').tree('followCustomHandle');
+//                $(this).combo('followCustomHandle');
             });
         }
     });

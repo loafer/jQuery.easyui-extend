@@ -429,14 +429,14 @@
                 id: menuid+'_delete',
                 text: '删除',
                 iconCls: 'icon-remove',
-                onclick: $.fn.treegrid.headerContextMenu.defaultEvents.doRemove
+                onclick: plugin.headerContextMenu.defaultEvents.doRemove
             },
             '-',
             {
                 id: menuid+'_reload',
                 text: '刷新',
                 iconCls: 'icon-reload',
-                onclick: $.fn.treegrid.headerContextMenu.defaultEvents.doReload
+                onclick: plugin.headerContextMenu.defaultEvents.doReload
             }
         ];
     }
@@ -1059,13 +1059,7 @@
 
     $.extend($.fn.treegrid.methods, {
         followCustomHandle: function(jq){
-            return jq.each(function(){
-                initHeaderContextMenu(this);
-                initContextMenu(this);
-                expandHandle(this);
-                registRowEditingHandler(this);
-                buildTooltip(this);
-            });
+            return jq.each(function(){});
         },
         getEditingRow: function(jq){
             var editingRows = jq.treegrid('getEditingRows');
@@ -1093,4 +1087,24 @@
             });
         }
     });
+
+    var plugin = $.fn.treegrid;
+    $.fn.treegrid = function(options, param){
+        if (typeof options != 'string'){
+            return this.each(function(){
+                plugin.call($(this), options, param);
+
+                initHeaderContextMenu(this);
+                initContextMenu(this);
+                expandHandle(this);
+                registRowEditingHandler(this);
+                buildTooltip(this);
+            });
+        } else {
+            return plugin.call(this, options, param);
+        }
+    };
+    $.fn.treegrid.methods = plugin.methods;
+    $.fn.treegrid.defaults = plugin.defaults;
+    $.fn.treegrid.parseOptions = plugin.parseOptions;
 })(jQuery);

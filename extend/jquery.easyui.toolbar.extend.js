@@ -32,8 +32,9 @@
         var options = $(target).toolbar('options');
         var tb = $(target)
 //            .addClass('datagrid-toolbar')
-            .addClass("panel-header")
-            .css({"border": 0, 'height': '38px', 'line-height':'24px'});
+//            .addClass("panel-header")
+            .addClass("dialog-toolbar panel-body")
+            .css({'height': '28px', 'line-height':'24px', overflow: 'hidden'});
 
         if($.trim(tb.html()).length > 0){
             return;
@@ -117,7 +118,7 @@
             var options = $(this).toolbar('options');
             $.ajax({
                 type: 'POST',
-                url: 'toolbar_data.json',
+                url: options.url,
                 dataType: 'json',
                 success: function(data){
                     success(data);

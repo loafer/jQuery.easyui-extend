@@ -9,7 +9,9 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.datagrid.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.menu.extend.js"></script>
+        <!--<script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>-->
         <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
@@ -30,7 +32,7 @@
                         {field: 'attr1', width: 250, title: 'Attribute'},
                         {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
                     ]],
-                    singleSelect: false,
+                    singleSelect: true,
                     rownumbers: true,
                     title: 'Basic DataGrid',
                     url: '../datagrid/datagrid_data1.json',
@@ -46,7 +48,7 @@
                             ]
                         }
                     }
-                }).datagrid('followCustomHandle');
+                });
             });
         </script>
     </head>
@@ -75,7 +77,7 @@
                                     {field: 'attr1', width: 250, title: 'Attribute'},
                                     {field: 'status', width: 60, align: 'center', title: 'Status', hidden: true}
                                 ]],
-                                singleSelect: false,
+                                singleSelect: true,
                                 rownumbers: true,
                                 title: 'Basic DataGrid',
                                 url: '../datagrid/datagrid_data1.json',
@@ -91,8 +93,7 @@
                                         ]
                                     }
                                 }
-                            })
-                            .datagrid('followCustomHandle');
+                            });
                         });
                 </textarea>
 

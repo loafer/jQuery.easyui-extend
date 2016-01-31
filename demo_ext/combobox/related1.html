@@ -9,10 +9,10 @@
         <script type="text/javascript" src="../../jquery.min.js"></script>
         <script type="text/javascript" src="../../jquery.easyui.min.js"></script>
         <script type="text/javascript" src="../../locale/easyui-lang-zh_CN.js"></script>
-        <!--<script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>-->
-        <!--<script type="text/javascript" src="../../extend/jquery.easyui.combobox.extend.js"></script>-->
-        <!--<script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>-->
-        <script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combo.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.combobox.extend.js"></script>
+        <script type="text/javascript" src="../../extend/jquery.easyui.validatebox.extend.js"></script>
+        <!--<script type="text/javascript" src="../../jquery.easyui.extend.min.js"></script>-->
         <link rel="stylesheet" type="text/css" href="../../syntaxhighlighter/styles/shCoreDefault.css">
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shCore.js"></script>
         <script type="text/javascript" src="../../syntaxhighlighter/scripts/shBrushJScript.js"></script>
@@ -35,8 +35,7 @@
                             url: '../combobox/combobox_data1.json'
                         }
                     }
-                })
-                .combobox('followCustomHandle');
+                });
 
                 $('#ccb2').combobox({
                     valueField: 'id',
@@ -49,8 +48,7 @@
                             url: '../combobox/combobox_data1.json'
                         }
                     }
-                })
-                .combobox('followCustomHandle');
+                });
 
                 $('#ccb3').combobox({
                     valueField: 'id',
@@ -63,8 +61,7 @@
                             url: '../combobox/combobox_data1.json'
                         }
                     }
-                })
-                .combobox('followCustomHandle');
+                });
 
                 $('#ccb4').combobox({
                     valueField: 'id',
@@ -73,8 +70,7 @@
                     customAttr:{
                         headervalue: '--请选择--'
                     }
-                })
-                .combobox('followCustomHandle');
+                });
 
                 $('#btn').click(function(e){
                     $('#ccb1').combobox('clear')
@@ -92,7 +88,7 @@
     </head>
     <body>
         <!--<h2>使用服务端数据级联操作</h2>-->
-        <!--&lt;!&ndash; Using a local data cascade operation &ndash;&gt;-->
+        <!--<!-- Using a local data cascade operation -->
         <!--<div style="padding-bottom: 5px;">-->
             <!--Combobox1: <input id="ccb1">-->
             <!--<input type="button" value="clear" onclick="doClear('#ccb1')">-->
@@ -157,8 +153,7 @@
                                         url: '../combobox/combobox_data1.json'
                                     }
                                 }
-                            })
-                            .combobox('followCustomHandle');
+                            });
 
                             $('#ccb2').combobox({
                                 valueField: 'id',
@@ -171,8 +166,7 @@
                                         url: '../combobox/combobox_data1.json'
                                     }
                                 }
-                            })
-                            .combobox('followCustomHandle');
+                            });
 
                             $('#ccb3').combobox({
                                 valueField: 'id',
@@ -185,8 +179,7 @@
                                         url: '../combobox/combobox_data1.json'
                                     }
                                 }
-                            })
-                            .combobox('followCustomHandle');
+                            });
 
                             $('#ccb4').combobox({
                                 valueField: 'id',
@@ -195,8 +188,7 @@
                                 customAttr:{
                                     headervalue: '--请选择--'
                                 }
-                            })
-                            .combobox('followCustomHandle');
+                            });
 
                         });
                 </textarea>

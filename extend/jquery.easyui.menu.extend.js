@@ -109,7 +109,7 @@
 
     $.extend($.fn.menu.methods, {
         followCustomHandle: function(jq){
-
+            return this.each(function(){});
         },
         appendItems: function(jq, param){
             return jq.each(function(){
