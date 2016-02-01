@@ -26,7 +26,7 @@ jQuery.easyui-extend
 ###
     <link rel="stylesheet" type="text/css" href="../../extend/themes/easyui.extend.css">
     <link rel="stylesheet" type="text/css" href="../../extend/themes/icon.css">
-    <script type="text/javascript" src="jquery.easyui.extend.min.js"></script>
+    <script type="text/javascript" src="jquery.easyui.extension.min.js"></script>
 
 
 然后
