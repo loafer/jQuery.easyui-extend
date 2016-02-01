@@ -40,7 +40,7 @@ jQuery.easyui-extend
        customAttr:{
           headervalue: '--请选择--'
        }
-    }).combo('followCustomHandle');    
+    });    
 
 
 
