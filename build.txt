@@ -1,3 +1,3 @@
-linux cat extend/jquery.easyui.* >> jquery.easyui.extension.js
+linux cat extend/jquery.easyui.* >> jquery.easyui.extensions.js
 
-java -jar tool/yuicompressor-2.4.7.jar --type js --charset utf-8 -v jquery.easyui.extension.js > jquery.easyui.extension.min.js
+java -jar tool/yuicompressor-2.4.7.jar --type js --charset utf-8 -v jquery.easyui.extensions.js > jquery.easyui.extensions.min.js
