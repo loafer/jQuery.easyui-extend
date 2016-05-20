@@ -610,11 +610,13 @@
                     tmpMap[data[i][parentField]]['children'] = [];
                 }
 
+                data[i]['id'] = data[i][idField];
                 data[i]['text'] = data[i][textField];
                 data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
                 appendAttibutes(data[i], attributes);
                 tmpMap[data[i][parentField]]['children'].push(data[i]);
             }else{
+                data[i]['id'] = data[i][idField];
                 data[i]['text'] = data[i][textField];
                 data[i][iconField] && (data[i]['iconCls'] = data[i][iconField]);
                 appendAttibutes(data[i], attributes);
