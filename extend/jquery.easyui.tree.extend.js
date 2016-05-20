@@ -796,4 +796,7 @@
     $.fn.tree.defaults = plugin.defaults;
     $.fn.tree.parseOptions = plugin.parseOptions;
     $.fn.tree.contextMenu = plugin.contextMenu;
+    if(plugin.parseData) {//兼容1.4.5
+        $.fn.tree.parseData = plugin.parseData;
+    }
 })(jQuery);
