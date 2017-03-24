@@ -678,9 +678,9 @@
             if(data.rows.length == 0){
                 var header = $('div.datagrid-view2>div.datagrid-header>div.datagrid-header-inner>table', panel)[0];
                 var body = $('>div.datagrid-view>div.datagrid-view2>div.datagrid-body', panel);
-                $('<div>').html('&nbsp;').width($(header).width()).appendTo(body);
+                $('<div class="datagrid-empty">').html('&nbsp;').width($(header).width()).appendTo(body);
             }else{
-                $('div.datagrid-view2>div.datagrid-body>div', panel).remove();
+                $('div.datagrid-view2>div.datagrid-body>div.datagrid-empty', panel).remove();
             }
 
         }
