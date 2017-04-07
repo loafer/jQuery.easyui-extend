@@ -164,20 +164,18 @@
           .attr('frameborder', 0);
 
         var href = options.href;
-        if(href != null && href.length>0 && param !=null && !$.isEmptyObject(param)){
-          var queryString = $.param(param);
-          if(href.indexOf('?')>0){
-            href += '&'+ queryString;
-          }else{
-            href += '?' + queryString;
-          }
+        var queryString = $.param(param);
+        if(href.indexOf('?')>0){
+          href += '&'+ queryString;
+        }else{
+          href += '?' + queryString;
         }
 
         var body = $(this).panel('body').css({'overflow':'hidden'});
 
         setTimeout(function(){
           body.empty().append(iframe);
-          iframe.attr('src', href);
+          iframe.attr('src', encodeURI(href));
         }, 10);
       }
     },
