@@ -140,12 +140,55 @@
         }
     }
 
-    $.fn.panel.defaults.customAttr = {
-        toolbar: {
-            buttonPosition: 'left',
-            data: []
+  $.extend($.fn.panel.defaults,{
+    loader: function (param, success, error) {
+      var options = $(this).panel("options");
+      if (!options.href) {
+        return false;
+      }
+
+      if(!options.customAttr.useiframe){
+        $.ajax({
+          type: options.method, url: options.href, cache: false, data: param, dataType: "html", success: function (data) {
+            success(data);
+          }, error: function () {
+            error.apply(this, arguments);
+          }
+        });
+      }else{
+        var iframe = $('<iframe>')
+          .attr('height', '100%')
+          .attr('width', '100%')
+          .attr('marginheight', 0)
+          .attr('marginwidth', 0)
+          .attr('frameborder', 0);
+
+        var href = options.href;
+        if(href != null && href.length>0 && param !=null && !$.isEmptyObject(param)){
+          var queryString = $.param(param);
+          if(href.indexOf('?')>0){
+            href += '&'+ queryString;
+          }else{
+            href += '?' + queryString;
+          }
         }
-    };
+
+        var body = $(this).panel('body').css({'overflow':'hidden'});
+
+        setTimeout(function(){
+          body.empty().append(iframe);
+          iframe.attr('src', href);
+        }, 10);
+      }
+    },
+    customAttr:{
+      toolbar: {
+        buttonPosition: 'left',
+        data: []
+      },
+      useiframe:false
+    }
+  });
 
     $.extend($.fn.panel.methods, {
         followCustomHandle: function(jq){
